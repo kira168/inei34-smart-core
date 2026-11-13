@@ -50,23 +50,6 @@ El servidor estará disponible en:
 
 ---
 
-## 🔑 CUENTAS DE PRUEBA Y SELECTOR DEMO
-
-En la pantalla de inicio de sesión (`/login`) y en la barra superior de la Intranet dispones de un **Selector de Modo Demostración (1 Clic)** para alternar al instante entre los 6 roles.
-
-También puedes ingresar manualmente con las siguientes credenciales:
-
-| Rol | Usuario / DNI | Contraseña |
-|---|---|---|
-| **Administrador** | `admin` | `admin123` |
-| **Director** | `director` | `director123` |
-| **Secretaría** | `secretaria` | `secre123` |
-| **Docente** | `docente` | `docente123` |
-| **Estudiante** | `estudiante` | `alumno123` |
-| **Apoderado** | `apoderado` | `padre123` |
-
----
-
 ## 🧪 SUITE DE PRUEBAS AUTOMATIZADAS
 
 Para validar todos los módulos, la base de datos y el motor de IA:
