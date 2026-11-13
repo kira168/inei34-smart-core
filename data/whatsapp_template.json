@@ -1,0 +1,7 @@
+{
+  "header": "🏛️ *CET N° 34 - CHANCAY*",
+  "subHeader": "📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*",
+  "indicator": "1. La asistencia es de carácter *OBLIGATORIO* para garantizar el bienestar académico del estudiante.",
+  "footer": "*CET N° 34 Chancay • UGEL 10 Huaral*",
+  "template": "🏛️ *CET N° 34 - CHANCAY*\n📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimado(a) Sr(a). *{parent}*\nApoderado del alumno(a): *{student}*{studentDni}\n\nPor medio de la presente, la *Dirección y la Coordinación de Tutoría* de la CET N° 34 le cita formalmente a la institución educativa:\n\n📅 *Fecha y Hora:* {datetime}\n📍 *Lugar / Modalidad:* {mode}\n📋 *Motivo / Asunto:* {reason}\n🏷️ *Área:* {category}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚠️ *INDICACIONES IMPORTANTES:*\n1. La asistencia es de carácter *OBLIGATORIO* para garantizar el bienestar académico del estudiante.\n2. Portar su Documento Nacional de Identidad (DNI) al ingresar al plantel.\n3. Si requiere reprogramar por fuerza mayor, responda directamente a este mensaje institucional.\n\n*Lema:* _\"Honradez - Disciplina - Trabajo\"_\n*CET N° 34 Chancay • UGEL 10 Huaral*"
+}

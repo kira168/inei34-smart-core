@@ -1,0 +1,78 @@
+# Python & Entornos virtuales
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Archivos de respaldo y temporales
+*.bak
+*.bak_*
+*.tmp
+*.temp
+*~
+*.swp
+temp_*
+scratch/
+*.log
+*_log.txt
+
+# Binarios y ejecutables grandes
+*.exe
+cloudflared.exe
+*.zip
+*.tar.gz
+
+# Capturas de pantalla e imágenes de prueba
+*.png
+*.jpg
+*.jpeg
+!app/static/**/*.png
+!app/static/**/*.jpg
+!public/**/*.png
+!public/**/*.jpg
+
+# Archivos personales e informes de tesis/prácticas
+*.docx
+*.doc
+INFORME_*
+Figura*.png
+
+# Archivos de pruebas y reportes
+.pytest_cache/
+test_*.py
+tests/
+audit_360/
+eval_report.txt
+phase*.json
+tests_*.json
+run_*_tests.py
+run_phase*.py
+output_demo_*
+prompt_full.txt
+data/test_output/
+data/generated_audit_samples/
+test_*.pdf
+
+# Bases de datos temporales de prueba y backups pesados
+data/temp_*.db
+data/test_*.db
+data/backups/
+data/*.bak*
+*.db.bak*
+database.db
+database.sqlite
+*.db-shm
+*.db-wal
+*.db-journal
+
+# Documentos personales subidos en uploads
+public/uploads/TURNITIN*
+public/uploads/CARTA*
+public/uploads/Internado*
+public/uploads/PPP1*
+public/uploads/SOLICITUD*

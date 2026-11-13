@@ -1,0 +1,598 @@
+[
+  {
+    "id": 8,
+    "code": "MAT-1A-2026",
+    "name": "Matemática",
+    "fullCode": "[MAT-1A-2026] Matemática",
+    "technical_specialty": "Matemática",
+    "area": "Formación General",
+    "grade": "1er Grado",
+    "section": "A",
+    "section_letter": "A",
+    "weekly_hours": 4,
+    "room": "Aula 204",
+    "teacher": "Prof. Roberto Bazán Palacios",
+    "teacher_id": 1,
+    "teacher_first": "Prof.",
+    "teacher_last": "Roberto Bazán Palacios",
+    "puesto": "Nombrado",
+    "progress": 0,
+    "sessions": "2 de 16 Sesiones",
+    "tasksCount": 5,
+    "enrolledCount": 10,
+    "colorBg": "bg-red-600",
+    "image": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&auto=format&fit=crop&q=80",
+    "syllabus_file": "Silabo_MAT-1A-2026_2026.pdf",
+    "units": [
+      {
+        "id": "docUnit1",
+        "num": 1,
+        "title": "Unidad 1: Números, Operaciones y Geometría Aplicada",
+        "ra": "Resuelve problemas de cantidad, regularidad, equivalencia y forma aplicando conceptos matemáticos y normas técnicas",
+        "status": "En curso",
+        "coverImg": "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&auto=format&fit=crop&q=80",
+        "sessions": [
+          {
+            "id": "docSes1",
+            "title": "Sesión 1",
+            "desc": "Resolución de problemas cotidianos mediante ecuaciones de primer grado y aplicación en el taller",
+            "materials": [
+              {
+                "id": "m_1792520633133",
+                "type": "video",
+                "title": "📕MATEMATICAS DESDE CERO 📝✏️| Curso Matemáticas DESDE CERO (COMPLETO)",
+                "cat": "Material Pedagógico Docente",
+                "file": "https://www.youtube.com/watch?v=XkyNwe--2jw"
+              },
+              {
+                "id": "m_1792522816355",
+                "type": "pdf",
+                "title": "Prueva",
+                "cat": "Material Pedagógico Docente",
+                "file": "Documento Oficial - INEI 34 Chancay.pdf"
+              },
+              {
+                "id": "t_1792522932916",
+                "type": "task",
+                "title": "Prueva",
+                "desc": "Prueva",
+                "cat": "Evaluación / Tarea CNEB",
+                "startDate": "2026-11-01",
+                "startTime": "08:00",
+                "dueDate": "2026-11-25",
+                "dueTime": "23:59",
+                "points": 20,
+                "attachedFile": "PPP1-C1-PRA06a-INFORME_PRACTICAS-[APELLIDOS NOMBRES] vF.docx",
+                "submissions": "1/1 entregas",
+                "taskId": 1792522932916
+              },
+              {
+                "id": "e_1792522932917",
+                "type": "exam",
+                "title": "Examen prueva",
+                "cat": "Examen en Línea con Temporizador",
+                "desc": "Evaluación técnica de taller (15 minutos). Modalidad: Autocalificación Instantánea.",
+                "durationMinutes": 15,
+                "startDate": "2026-11-01",
+                "startTime": "08:00",
+                "dueDate": "2026-11-25",
+                "dueTime": "23:59",
+                "questions": [
+                  {
+                    "q": "¿Cuál es el valor de x en la ecuación 2x + 6 = 14?",
+                    "options": [
+                      "x = 4",
+                      "x = 3",
+                      "x = 5",
+                      "x = 2"
+                    ],
+                    "correct": 0,
+                    "explanation": "2x = 8 => x = 4"
+                  },
+                  {
+                    "q": "¿Qué representa el área de una figura geométrica plana?",
+                    "options": [
+                      "La medida de su superficie interior",
+                      "El contorno de la figura",
+                      "El volumen tridimensional",
+                      "El peso del material"
+                    ],
+                    "correct": 0,
+                    "explanation": "El área es la medida bidimensional de la superficie interior."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "docSes_1793618840478",
+            "num": 2,
+            "title": "sesión 2",
+            "desc": "Geometría Aplicada",
+            "materials": [
+              {
+                "id": "m_1793618943733",
+                "type": "pdf",
+                "title": "Matematica",
+                "cat": "Material Pedagógico Docente",
+                "file": "matematica-y-toma-de-decisic3b3n.pdf"
+              },
+              {
+                "id": "t_1793618943734",
+                "type": "task",
+                "title": "Prueba de archivo",
+                "desc": "Desarrollar la guía y subir las evidencias requeridas.",
+                "cat": "Evaluación / Tarea CNEB",
+                "startDate": "2026-11-02",
+                "startTime": "08:00",
+                "dueDate": "2026-11-25",
+                "dueTime": "23:59",
+                "points": 20,
+                "attachedFile": "SOLICITUD y AUTORIZACIÓN.pdf",
+                "submissions": "0/1 entregas",
+                "taskId": 1793618943734
+              },
+              {
+                "id": "e_1793618943735",
+                "type": "exam",
+                "title": "Examen prueva",
+                "cat": "Examen en Línea con Temporizador",
+                "desc": "Evaluación técnica de taller (15 minutos). Modalidad: Autocalificación Instantánea.",
+                "durationMinutes": 15,
+                "startDate": "2026-11-02",
+                "startTime": "08:00",
+                "dueDate": "2026-11-15",
+                "dueTime": "23:59",
+                "questions": [
+                  {
+                    "q": "¿Cuál es la fórmula para calcular el área de un triángulo?",
+                    "options": [
+                      "(Base × Altura) / 2",
+                      "Base × Altura",
+                      "2 × (Base + Altura)",
+                      "Base² + Altura²"
+                    ],
+                    "correct": 0,
+                    "explanation": "Área del triángulo = (b × h) / 2"
+                  },
+                  {
+                    "q": "Si un círculo tiene un radio de 5 cm, ¿cuál es su diámetro?",
+                    "options": [
+                      "10 cm",
+                      "25 cm",
+                      "15 cm",
+                      "5 cm"
+                    ],
+                    "correct": 0,
+                    "explanation": "El diámetro es el doble del radio: 2 × 5 = 10 cm"
+                  }
+                ]
+              },
+              {
+                "id": "t_1794100430469",
+                "type": "task",
+                "title": "Prueba de archivo",
+                "desc": "Prueba de archivo y de envío ",
+                "cat": "Evaluación / Tarea CNEB",
+                "startDate": "2026-10-03",
+                "startTime": "08:00",
+                "dueDate": "2026-10-10",
+                "dueTime": "23:59",
+                "points": 20,
+                "attachedFile": "Internado de enfermería.docx",
+                "submissions": "0/1 entregas",
+                "taskId": 1794100430469
+              },
+              {
+                "id": "t_1794100795072",
+                "type": "task",
+                "title": "Prueba de archivo22",
+                "desc": "Prueba de archivo22",
+                "cat": "Evaluación / Tarea CNEB",
+                "startDate": "2026-11-03",
+                "startTime": "08:00",
+                "dueDate": "2026-11-30",
+                "dueTime": "23:59",
+                "points": 20,
+                "attachedFile": "CARTA DE RENUNCIA.docx",
+                "submissions": "0/1 entregas",
+                "taskId": 1794100795072
+              },
+              {
+                "id": "t_1794103779060",
+                "type": "task",
+                "title": "Prueba de archivo 33",
+                "desc": "Prueba de archivo 33",
+                "cat": "Evaluación / Tarea CNEB",
+                "startDate": "2026-11-03",
+                "startTime": "08:00",
+                "dueDate": "2026-11-10",
+                "dueTime": "23:59",
+                "points": 20,
+                "attachedFile": "🟨 PROYECTO DE ÍNDICE.docx",
+                "submissions": "0/1 entregas",
+                "taskId": 1794103779060
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "is_active": 1
+  },
+  {
+    "id": 7,
+    "code": "EPT-IV-201",
+    "name": "Patronaje y Confección Textil",
+    "fullCode": "[EPT-IV-201] Patronaje y Confección Textil",
+    "technical_specialty": "Industria del Vestido",
+    "area": "Educación para el Trabajo",
+    "grade": "2do Grado",
+    "section": "B",
+    "section_letter": "B",
+    "weekly_hours": 6,
+    "room": "Taller 04 - Industria del Vestido y Confecciones",
+    "teacher": "Prof. Roberto Bazán Palacios",
+    "teacher_id": 1,
+    "teacher_first": "Prof.",
+    "teacher_last": "Roberto Bazán Palacios",
+    "puesto": "Docente Especialista Textil CNEB",
+    "progress": 85,
+    "sessions": "12 de 16 Sesiones",
+    "tasksCount": 3,
+    "enrolledCount": 15,
+    "colorBg": "bg-purple-600",
+    "image": "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&auto=format&fit=crop&q=80",
+    "syllabus_file": "Silabo_Industria_Vestido_2026.pdf",
+    "units": [
+      {
+        "id": "docUnitIV1",
+        "num": 1,
+        "title": "Unidad 1: Trazado de patrones básicos, manejo de máquina recta y seguridad 5S",
+        "ra": "Opera la máquina de coser recta industrial y remalladora con destreza, aplicando normas de seguridad textil (uso de protector de dedos y gafas) y trazado de patrones según tabla de medidas.",
+        "status": "En curso",
+        "coverImg": "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=400&auto=format&fit=crop&q=60",
+        "sessions": [
+          {
+            "id": "docSesIV1",
+            "num": 1,
+            "title": "Sesión 1: Normas de bioseguridad en taller de confección y enhebrado de máquina recta",
+            "desc": "Tema: 1. Bioseguridad y ergonomía postural 2. Partes de la máquina recta industrial 3. Práctica de enhebrado y calibración de tensión.",
+            "materials": [
+              {
+                "id": "m_iv1",
+                "type": "pdf",
+                "title": "Manual de Seguridad 5S y Ergonomía en Taller de Confecciones (PDF)",
+                "cat": "Material Pedagógico Docente",
+                "file": "Manual_Seguridad_Taller_Vestido.pdf"
+              },
+              {
+                "id": "m_iv2",
+                "type": "ppt",
+                "title": "Presentación: Nomenclatura y Mecanismo de Arrastre Textil",
+                "cat": "Presentación Diapositivas",
+                "file": "Clase01_Maquina_Recta.pptx"
+              },
+              {
+                "id": "m_iv3",
+                "type": "video",
+                "title": "Video: Enhebrado correcto y cambio de aguja DBx1 (YouTube)",
+                "cat": "Recurso Multimedia Externo",
+                "file": "https://youtube.com/watch?v=demo_textil"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "is_active": 1
+  },
+  {
+    "id": 3,
+    "code": "EPT-COM-501",
+    "name": "Redes y Conectividad AIP",
+    "fullCode": "[EPT-COM-501] Redes y Conectividad AIP",
+    "technical_specialty": "Computación e Informática",
+    "area": "Educación para el Trabajo",
+    "grade": "5to",
+    "section": "A",
+    "section_letter": "A",
+    "weekly_hours": 6,
+    "room": "Aula Polifuncional",
+    "teacher": "Docente no asignado",
+    "teacher_id": null,
+    "teacher_first": "Docente",
+    "teacher_last": "no asignado",
+    "puesto": "Docente Titular",
+    "progress": 0,
+    "sessions": "0 de 16 Sesiones",
+    "tasksCount": 0,
+    "enrolledCount": 10,
+    "colorBg": "bg-red-600",
+    "image": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&auto=format&fit=crop&q=80",
+    "syllabus_file": "Silabo_Redes_2026.pdf",
+    "units": [],
+    "is_active": 1
+  },
+  {
+    "id": 2,
+    "code": "EPT-MP-502",
+    "name": "Ajuste y Matricería Industrial",
+    "fullCode": "[EPT-MP-502] Ajuste y Matricería Industrial",
+    "technical_specialty": "Mecánica de Producción",
+    "area": "Educación para el Trabajo",
+    "grade": "5to",
+    "section": "A",
+    "section_letter": "A",
+    "weekly_hours": 4,
+    "room": "Aula Polifuncional",
+    "teacher": "Prof. Roberto Bazán Palacios",
+    "teacher_id": 1,
+    "teacher_first": "Prof.",
+    "teacher_last": "Roberto Bazán Palacios",
+    "puesto": "Nombrado",
+    "progress": 0,
+    "sessions": "0 de 16 Sesiones",
+    "tasksCount": 0,
+    "enrolledCount": 10,
+    "colorBg": "bg-red-600",
+    "image": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&auto=format&fit=crop&q=80",
+    "syllabus_file": "Silabo_Matriceria_2026.pdf",
+    "units": [],
+    "is_active": 1
+  },
+  {
+    "id": 5,
+    "code": "EPT-AUT-501",
+    "name": "Diagnóstico de Sistemas de Inyección y Motores",
+    "fullCode": "[EPT-AUT-501] Diagnóstico de Sistemas de Inyección y Motores",
+    "technical_specialty": "Automotores / Mecánica Automotriz",
+    "area": "Educación para el Trabajo",
+    "grade": "5to Grado",
+    "section": "A",
+    "section_letter": "A",
+    "weekly_hours": 6,
+    "room": "Taller de Automotores - Patios",
+    "teacher": "Prof. Roberto Bazán Palacios",
+    "teacher_id": 1,
+    "teacher_first": "Prof.",
+    "teacher_last": "Roberto Bazán Palacios",
+    "puesto": "Docente Especialista Automotriz",
+    "progress": 70,
+    "sessions": "10 de 16 Sesiones",
+    "tasksCount": 2,
+    "enrolledCount": 10,
+    "colorBg": "bg-amber-600",
+    "image": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&auto=format&fit=crop&q=80",
+    "syllabus_file": "Silabo_Automotores_2026.pdf",
+    "units": [],
+    "is_active": 1
+  },
+  {
+    "id": 6,
+    "code": "EPT-EST-501",
+    "name": "Cosmetología y Cuidado Capilar Técnico",
+    "fullCode": "[EPT-EST-501] Cosmetología y Cuidado Capilar Técnico",
+    "technical_specialty": "Estética Personal",
+    "area": "Educación para el Trabajo",
+    "grade": "5to Grado",
+    "section": "A",
+    "section_letter": "A",
+    "weekly_hours": 4,
+    "room": "Taller de Estética Personal",
+    "teacher": "Prof. Roberto Bazán Palacios",
+    "teacher_id": 1,
+    "teacher_first": "Prof.",
+    "teacher_last": "Roberto Bazán Palacios",
+    "puesto": "Docente Especialista Estética",
+    "progress": 65,
+    "sessions": "8 de 14 Sesiones",
+    "tasksCount": 2,
+    "enrolledCount": 10,
+    "colorBg": "bg-pink-600",
+    "image": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&auto=format&fit=crop&q=80",
+    "syllabus_file": "Silabo_Estetica_2026.pdf",
+    "units": [],
+    "is_active": 1
+  },
+  {
+    "id": 1,
+    "code": "EPT-MP-501",
+    "name": "Torno y Mecanizado CNC",
+    "fullCode": "[EPT-MP-501] Torno y Mecanizado CNC",
+    "technical_specialty": "Mecánica de Producción",
+    "area": "Educación para el Trabajo",
+    "grade": "5to Grado",
+    "section": "A",
+    "section_letter": "A",
+    "weekly_hours": 6,
+    "room": "Taller 01 - Mecánica Pesada",
+    "teacher": "Prof. Roberto Bazán Palacios",
+    "teacher_id": 1,
+    "teacher_first": "Prof.",
+    "teacher_last": "Roberto Bazán Palacios",
+    "puesto": "Docente Especialista EPT",
+    "progress": 80,
+    "sessions": "14 de 18 Sesiones",
+    "tasksCount": 3,
+    "enrolledCount": 10,
+    "colorBg": "bg-red-600",
+    "image": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600&auto=format&fit=crop&q=80",
+    "syllabus_file": "Silabo_Torno_CNC_2026.pdf",
+    "units": [
+      {
+        "id": "docUnit1",
+        "num": 1,
+        "title": "Unidad 1: Elaboración del proyecto de mecanizado y ajuste de precisión",
+        "ra": "Planifica y organiza el proceso de mecanizado en torno paralelo y banco de ajuste, cumpliendo con normas de seguridad 5S, tolerancias ISO 2768 y calibración con vernier.",
+        "status": "En curso",
+        "coverImg": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=400&auto=format&fit=crop&q=60",
+        "sessions": [
+          {
+            "id": "docSes1",
+            "num": 1,
+            "title": "Sesión 1: Lineamientos normativos, Proceso técnico y Torno paralelo con EPP 5S",
+            "desc": "Tema: 1. Lineamientos normativos 2. Identificación del proceso técnico 3. Nomenclatura del torno y EPP 5S.",
+            "materials": [
+              {
+                "id": "m1_1",
+                "type": "pdf",
+                "title": "Guía Técnica de Seguridad 5S y Manejo de Torno (PDF)",
+                "cat": "Material Pedagógico Docente",
+                "file": "Guia_01_Seguridad_5S_EPP_Torno.pdf"
+              },
+              {
+                "id": "m1_2",
+                "type": "ppt",
+                "title": "Presentación: Nomenclatura y Cinemática del Torno CQ6230",
+                "cat": "Presentación Diapositivas",
+                "file": "Clase01_Cinematica_Torno.pptx"
+              },
+              {
+                "id": "m1_3",
+                "type": "excel",
+                "title": "Plantilla de Control y Parámetros de Corte (Excel)",
+                "cat": "Hoja de Cálculo Taller",
+                "file": "Calculo_RPM_Avances.xlsx"
+              },
+              {
+                "id": "m1_4",
+                "type": "video",
+                "title": "Video Demostrativo: Centrado y Afilado de Cuchilla HSS (8 min)",
+                "cat": "Recurso Multimedia",
+                "file": "video_afilado_hss.mp4"
+              },
+              {
+                "id": "m1_5",
+                "type": "task",
+                "title": "S1_Protocolo de Seguridad y Checklist EPP",
+                "desc": "Elaborar el checklist de inspección previa del torno paralelo y adjuntar fotografía del EPP completo.",
+                "cat": "Evaluación / Tarea CNEB",
+                "startDate": "2026-10-01",
+                "startTime": "08:00",
+                "dueDate": "2026-10-08",
+                "dueTime": "23:59",
+                "attachedFile": "Guia_01_Seguridad_5S_EPP_Torno.pdf",
+                "points": 20,
+                "submissions": "8/10 entregas",
+                "taskId": 1
+              },
+              {
+                "id": "m1_6",
+                "type": "exam",
+                "title": "Examen Rápido 01: Normas 5S y Seguridad en Torno",
+                "cat": "Examen en Línea con Temporizador",
+                "desc": "Evaluación técnica teórica con temporizador en tiempo real (10 minutos).",
+                "durationMinutes": 10,
+                "startDate": "2026-10-01",
+                "startTime": "08:00",
+                "dueDate": "2026-10-12",
+                "dueTime": "23:59",
+                "questions": [
+                  {
+                    "q": "¿Cuál es el primer paso según la metodología 5S antes de operar el torno paralelo?",
+                    "options": [
+                      "Seiri (Clasificar y despejar herramientas innecesarias)",
+                      "Poner la máxima velocidad de husillo",
+                      "Engrasar la bancada sin limpiar",
+                      "Retirar la guarda de protección"
+                    ],
+                    "correct": 0,
+                    "explanation": "Seiri consiste en separar lo necesario de lo innecesario para un entorno seguro."
+                  },
+                  {
+                    "q": "¿Qué implemento de seguridad está terminantemente PROHIBIDO usar cerca del husillo rotatorio?",
+                    "options": [
+                      "Guantes holgados o bufandas sueltas",
+                      "Gafas de policarbonato con protección lateral",
+                      "Botas con punta de acero",
+                      "Mameluco ajustado"
+                    ],
+                    "correct": 0,
+                    "explanation": "Los guantes holgados y prendas sueltas pueden ser atrapados por el mandril giratorio causando accidentes graves."
+                  },
+                  {
+                    "q": "En el afilado de una cuchilla HSS para desbaste de acero SAE 1045, ¿cuál es el ángulo de ataque típico?",
+                    "options": [
+                      "12° a 15°",
+                      "90° recto",
+                      "45° invertido",
+                      "0° plano"
+                    ],
+                    "correct": 0,
+                    "explanation": "Un ángulo de ataque positivo de 12° a 15° facilita el desprendimiento continuo de la viruta."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "docSes2",
+            "num": 2,
+            "title": "Sesión 2: Cilindrado escalonado, refrentado y verificación dimensional",
+            "desc": "Tema: 1. Cilindrado escalonado y refrentado 2. Medición de diámetros con nonio y micrómetro.",
+            "materials": [
+              {
+                "id": "m2_1",
+                "type": "dwg",
+                "title": "Plano_Tecnico_Eje_Escalonado_02.dwg",
+                "cat": "Plano Técnico AutoCAD",
+                "file": "Plano_Tecnico_Eje_Escalonado_02.dwg"
+              },
+              {
+                "id": "m2_2",
+                "type": "pdf",
+                "title": "Guía de Tolerancias ISO 2768 Grado Medio (PDF)",
+                "cat": "Material Pedagógico Docente",
+                "file": "Norma_ISO_2768.pdf"
+              },
+              {
+                "id": "m2_3",
+                "type": "task",
+                "title": "S2_Reporte de Verificación Dimensional ISO 2768",
+                "desc": "Completar la tabla de tolerancias y subir el escaneo del reporte firmado en taller.",
+                "cat": "Evaluación / Tarea CNEB",
+                "startDate": "2026-10-02",
+                "startTime": "08:00",
+                "dueDate": "2026-10-09",
+                "dueTime": "23:59",
+                "attachedFile": "Plano_Tecnico_Eje_Escalonado_02.dwg",
+                "points": 20,
+                "submissions": "9/10 entregas",
+                "taskId": 2
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "is_active": 1
+  },
+  {
+    "id": 4,
+    "code": "MAT-501",
+    "name": "Matemática Aplicada al Taller",
+    "fullCode": "[MAT-501] Matemática Aplicada al Taller",
+    "technical_specialty": "Matemática",
+    "area": "Formación General",
+    "grade": "5to Grado",
+    "section": "A",
+    "section_letter": "A",
+    "weekly_hours": 4,
+    "room": "Aula 204 - Pabellón Técnico",
+    "teacher": "Prof. Roberto Bazán Palacios",
+    "teacher_id": 1,
+    "teacher_first": "Prof.",
+    "teacher_last": "Roberto Bazán Palacios",
+    "puesto": "Docente Especialista EPT",
+    "progress": 85,
+    "sessions": "12 de 14 Sesiones",
+    "tasksCount": 2,
+    "enrolledCount": 10,
+    "colorBg": "bg-blue-600",
+    "image": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&auto=format&fit=crop&q=80",
+    "syllabus_file": "Silabo_Matematica_2026.pdf",
+    "units": [],
+    "is_active": 1
+  }
+]

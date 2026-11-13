@@ -1,0 +1,32 @@
+[
+  {
+    "id": "reschedule_1794405745533_k3s0y",
+    "fromJid": "96413560078387@lid",
+    "phone": "96413560078387",
+    "pushName": "Arturo La Rosa",
+    "originalMessage": "No podré asistir, si pudiera ser el día viernes en la mañana por favor.",
+    "proposedDate": "Viernes",
+    "proposedTime": "12:00 PM (Mediodía)",
+    "status": "Aceptada por Docente",
+    "createdAt": "2026-11-11T14:02:25.533Z",
+    "confirmedDate": "Viernes",
+    "confirmedTime": "12:00 PM (Mediodía)",
+    "confirmedBy": "Prof. Roberto Bazán Palacios",
+    "confirmedAt": "2026-11-11T14:02:41.569Z"
+  },
+  {
+    "id": "reschedule_1794126512617_egum4",
+    "fromJid": "146351648145456@lid",
+    "phone": "146351648145456",
+    "pushName": "Cesar",
+    "originalMessage": "esta bien voy a ir el viernes 9",
+    "proposedDate": "Viernes 09",
+    "proposedTime": "12:00 PM (Mediodía)",
+    "status": "Aceptada por Docente",
+    "createdAt": "2026-11-08T08:28:32.617Z",
+    "confirmedDate": "Viernes 09",
+    "confirmedTime": "12:00 PM (Mediodía)",
+    "confirmedBy": "Prof. Roberto Bazán Palacios",
+    "confirmedAt": "2026-11-08T08:29:19.126Z"
+  }
+]

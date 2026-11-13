@@ -1,0 +1,438 @@
+"""
+Esquemas Pydantic para la Generación Documental Estructurada de SmartTeacher AI.
+Define la fuente única de verdad pedagógica para Fichas de Aprendizaje,
+Sesiones de Aprendizaje y Unidades Didácticas en la I.E. Emblemática INEI N.º 34.
+"""
+
+from typing import List, Dict, Optional, Any, Union
+import json
+import re
+from pydantic import BaseModel, Field, ValidationError
+
+
+class ActividadPedagogicaItem(BaseModel):
+    """Actividad práctica estructurada para la ficha de trabajo del estudiante."""
+    numero: int = Field(default=1, description="Número de la actividad (1, 2, 3...)")
+    titulo: str = Field(..., description="Título técnico descriptivo de la actividad")
+    instrucciones: str = Field(..., description="Instrucciones operativas paso a paso para el estudiante")
+    evidencia: str = Field(default="Reporte o avance verificado", description="Producto o evidencia verificable que debe registrar el estudiante")
+
+
+class CriterioCotejoItem(BaseModel):
+    """Criterio de evaluación para la lista de cotejo institucional (4 columnas)."""
+    criterio: str = Field(..., description="Criterio de evaluación observable y medible")
+    evidencia: str = Field(default="Evidencia verificable", description="Evidencia o recomendación técnica")
+
+
+class FichaAprendizajeStructured(BaseModel):
+    """
+    Estructura canónica completa de una Ficha de Aprendizaje (CET N.° 34).
+    Alimenta idénticamente a la plantilla DOCX y al generador PDF.
+    """
+    titulo: str = Field(..., description="Título de la ficha de trabajo")
+    area: str = Field(default="Educación para el Trabajo - Computación e Informática", description="Área curricular o especialidad técnica")
+    grado: int = Field(default=1, ge=1, le=5, description="Grado de secundaria (1 a 5)")
+    seccion: str = Field(default="A", description="Sección del aula o taller")
+    fecha: str = Field(default="____ / ____ / 2026", description="Fecha de aplicación")
+    docente: str = Field(default="[Docente Responsable - Por completar]", description="Nombre del docente titular")
+    
+    # Currículo Nacional CNEB (EPT Oficial)
+    competencia: str = Field(
+        default="Gestiona proyectos de emprendimiento económico o social",
+        description="Competencia oficial del Currículo Nacional de Educación Básica (CNEB)"
+    )
+    capacidades: str = Field(
+        default="Aplica habilidades técnicas. Trabaja cooperativamente para lograr objetivos y metas.",
+        description="Capacidades del CNEB asociadas a la competencia"
+    )
+    desempeno: str = Field(
+        default="Ejecuta el procedimiento técnico y conceptual cumpliendo especificaciones y normas de seguridad.",
+        description="Desempeño contextualizado medible"
+    )
+    
+    # 1. Propósito y Objetivos
+    proposito: str = Field(..., description="Propósito de aprendizaje de la sesión o ficha")
+    evidencia_general: str = Field(..., description="Producto o evidencia general a entregar")
+    objetivos_aprendizaje: List[str] = Field(
+        default_factory=list,
+        description="Tres objetivos de aprendizaje específicos (bullet points)"
+    )
+    
+    # 2. Situación de reto
+    situacion_reto: str = Field(..., description="Contexto del problema y desafío técnico a resolver")
+    
+    # 3. Reto y marco teórico
+    marco_teorico: str = Field(..., description="Fundamentación conceptual técnica del tema")
+    ejemplo_modelo_pasos: List[str] = Field(
+        default_factory=list,
+        description="Pasos del ejemplo modelo (Paso 1 Diagnóstico, Paso 2 Planificación, Paso 3 Ejecución, Paso 4 Control)"
+    )
+    ejemplo_modelo_resultado: str = Field(
+        default="",
+        description="Resultado esperado del ejemplo modelo"
+    )
+    
+    # 4. Actividades pedagógicas aplicadas
+    actividades: List[ActividadPedagogicaItem] = Field(
+        default_factory=list,
+        description="Actividades prácticas estructuradas de taller o laboratorio"
+    )
+    
+    # 5. Profundización y extensión
+    actividad_extension: str = Field(..., description="Actividad de extensión y profundización creativa en equipo")
+    ejercicios_consolidacion: List[str] = Field(
+        default_factory=list,
+        description="Ejercicios de consolidación y aplicación práctica"
+    )
+    
+    # 6. Evaluación formativa (Lista de cotejo 4 columnas)
+    lista_cotejo: List[CriterioCotejoItem] = Field(
+        default_factory=list,
+        description="Criterios para la lista de cotejo oficial de 4 columnas"
+    )
+    metacognicion: str = Field(
+        default="¿Qué aprendí hoy y cómo puedo aplicar este aprendizaje en una situación real?",
+        description="Pregunta de metacognición para el estudiante"
+    )
+
+
+class SesionAprendizajeStructured(BaseModel):
+    """
+    Estructura canónica completa de una Sesión de Aprendizaje CNEB / GTZ (CET N.° 34).
+    Alimenta idénticamente a la plantilla DOCX y al generador PDF.
+    """
+    titulo: str = Field(..., description="Título de la sesión de aprendizaje")
+    area: str = Field(default="Educación para el Trabajo - Computación e Informática", description="Área o especialidad")
+    modulo_formativo: str = Field(default="Módulo Formativo de Especialidad", description="Nombre del módulo formativo")
+    grado: int = Field(default=1, ge=1, le=5, description="Grado escolar")
+    seccion: str = Field(default="A", description="Sección")
+    duracion_minutos: int = Field(default=90, description="Duración en minutos (90, 135, 225)")
+    docente: str = Field(default="[Docente Responsable - Por completar]", description="Docente titular")
+    
+    # CNEB
+    competencia: str = Field(
+        default="Gestiona proyectos de emprendimiento económico o social",
+        description="Competencia oficial CNEB"
+    )
+    capacidades: str = Field(
+        default="Aplica habilidades técnicas. Trabaja cooperativamente para lograr objetivos y metas.",
+        description="Capacidades CNEB"
+    )
+    desempeno: str = Field(
+        default="Aplica destrezas técnicas cumpliendo normas de calidad y seguridad.",
+        description="Desempeño contextualizado"
+    )
+    
+    # Propósitos
+    proposito_sesion: str = Field(..., description="Propósito formativo de la sesión")
+    criterios_evaluacion: str = Field(..., description="Criterios de evaluación observables")
+    evidencias_aprendizaje: str = Field(..., description="Evidencia o producto tangible a verificar")
+    
+    # Situación significativa
+    situacion_significativa: str = Field(..., description="Contexto del problema y retos a resolver")
+    
+    # Procesos didácticos GTZ (Tabla de 4 columnas: Paso, Tiempo, Actividad Docente, Actividad Estudiante)
+    procesos_didacticos_gtz: List[Dict[str, str]] = Field(
+        default_factory=list,
+        description="Etapas de acción completa GTZ: Informar, Planificar, Decidir, Realizar, Controlar, Valorar"
+    )
+    
+    # Recursos y Bibliografía
+    materiales: List[str] = Field(default_factory=list, description="Materiales y recursos de aula/taller")
+    bibliografia: List[str] = Field(default_factory=list, description="Bibliografía y fuentes de consulta CNEB/MINEDU")
+
+
+# =============================================================================
+# FUNCIONES DE NORMALIZACIÓN Y GENERACIÓN DETERMINISTA
+# =============================================================================
+
+def normalize_cneb_competence(raw_comp: Optional[str] = None, topic: str = "", specialty: str = "") -> str:
+    """Garantiza que la competencia sea una competencia oficial del CNEB y no una habilidad inventada."""
+    s = str(raw_comp or "").strip().lower()
+    t = f"{topic} {specialty}".lower()
+    
+    # Si es TIC explícito transversal
+    if "entornos virtuales" in s or ("tic" in s and "gestiona" not in s):
+        return "Se desenvuelve en los entornos virtuales generados por las TIC"
+    if "autónom" in s or "autonom" in s:
+        return "Gestiona su aprendizaje de manera autónoma"
+        
+    # Para Educación para el Trabajo y todas las opciones técnicas/computacionales
+    return "Gestiona proyectos de emprendimiento económico o social"
+
+
+def build_ficha_from_dict(raw: Dict[str, Any], default_topic: str = "Actividad Pedagógica") -> FichaAprendizajeStructured:
+    """
+    Construye y valida una FichaAprendizajeStructured con corrección automática controlada.
+    Nunca inventa competencias ni datos institucionales erróneos.
+    """
+    topic = str(raw.get("topic") or raw.get("titulo") or default_topic).strip()
+    specialty = str(raw.get("specialty") or raw.get("area") or "Educación para el Trabajo - Computación e Informática").strip()
+    if any(k in topic.lower() for k in ["carpeta", "digital", "archivo", "computaci", "informati"]):
+        if "computac" not in specialty.lower() and "inform" not in specialty.lower():
+            specialty = "Educación para el Trabajo - Computación e Informática"
+
+    grade = int(raw.get("grade") or raw.get("grado") or 1)
+    if grade < 1 or grade > 5:
+        grade = 1
+
+    clean_teacher = str(raw.get("teacher_name") or raw.get("docente") or "[Docente Responsable - Por completar]").strip()
+    if clean_teacher in ["Docente", "Profesor", "None", ""]:
+        clean_teacher = "[Docente Responsable - Por completar]"
+
+    official_comp = normalize_cneb_competence(raw.get("competence") or raw.get("competencia"), topic, specialty)
+    
+    is_digital = any(k in f"{topic} {specialty}".lower() for k in [
+        "carpeta", "carpetas", "digital", "archivo", "archivos", "ofimática", "nube", "drive", "computaci", "informati"
+    ])
+
+    capacidades = raw.get("capacidades") or f"Aplica habilidades técnicas en {topic}. Trabaja cooperativamente para lograr objetivos y metas."
+    desempeno = raw.get("desempeno") or (
+        f"Ejecuta el procedimiento técnico y conceptual de {topic} cumpliendo con especificaciones técnicas y normas de seguridad en el laboratorio de cómputo y entorno digital."
+        if is_digital else
+        f"Ejecuta el procedimiento técnico y conceptual de {topic} cumpliendo con especificaciones técnicas y normas de seguridad en taller."
+    )
+
+    proposito = str(raw.get("proposito") or raw.get("purpose") or f"Comprender y aplicar los principios y operaciones clave de {topic}, formulando soluciones prácticas y verificables.").strip()
+    evidencia = str(raw.get("evidencia") or raw.get("evidencia_general") or f"Ficha de trabajo desarrollada con ejercicios y reporte técnico de {topic} finalizado.").strip()
+
+    # Objetivos de aprendizaje
+    objs = raw.get("objetivos_aprendizaje") or raw.get("objetivos") or []
+    if not objs or len(objs) < 3:
+        if is_digital:
+            objs = [
+                f"Comprender el fundamento técnico y los pasos operativos de {topic}.",
+                f"Identificar herramientas, estructura de carpetas, nomenclatura y control de acceso para {topic}.",
+                f"Aplicar criterios de organización documental, seguridad digital y mejora continua en {topic}."
+            ]
+        else:
+            objs = [
+                f"Comprender el fundamento técnico y los pasos operativos de {topic}.",
+                f"Identificar herramientas, variables de control y tolerancias para {topic}.",
+                f"Aplicar criterios de control de calidad, seguridad y mejora continua en {topic}."
+            ]
+
+    # Reto
+    reto = str(raw.get("situacion_reto") or raw.get("reto") or raw.get("desafio") or "").strip()
+    if len(reto) < 15:
+        reto = (
+            f"En el laboratorio de cómputo y entorno digital de la I.E. CET N.° 34 de Chancay, los estudiantes deben implementar una solución eficiente relacionada con {topic}. "
+            f"El reto consiste en estructurar los espacios de almacenamiento, normalizar archivos y verificar que el resultado "
+            f"cumpla con los estándares de organización documental y seguridad digital esperados en la comunidad escolar."
+            if is_digital else
+            f"En el taller de la I.E. CET N.° 34 de Chancay, los estudiantes deben implementar una solución eficiente relacionada con {topic}. "
+            f"El reto consiste en identificar las necesidades técnicas, planificar las operaciones requeridas y verificar que el resultado "
+            f"cumpla con los estándares de calidad y seguridad industrial esperados en la comunidad."
+        )
+
+    # Marco teórico
+    clean_spec = specialty.replace("Educación para el Trabajo - ", "").replace("Educacion para el Trabajo - ", "")
+    teor = str(raw.get("marco_teorico") or raw.get("conceptos_clave") or "").strip()
+    if len(teor) < 15:
+        teor = (
+            f"{topic} es fundamental en el área de {clean_spec}. Permite organizar recursos, optimizar tiempos de trabajo "
+            f"y prevenir errores operacionales. La correcta ejecución de sus principios técnicos garantiza resultados precisos, "
+            f"seguros y alineados con las demandas productivas y de servicio de nuestro entorno local."
+        )
+
+    # Pasos del modelo
+    pasos = raw.get("ejemplo_modelo_pasos") or [
+        f"Paso 1 – Diagnóstico y necesidad: Se identifican las condiciones iniciales y requerimientos técnicos de {topic}.",
+        f"Paso 2 – Planificación y recursos: Se seleccionan las plataformas, herramientas y esquemas de trabajo para {topic}.",
+        f"Paso 3 – Ejecución controlada: Se aplica el procedimiento técnico modelado paso a paso estructurando soluciones precisas.",
+        f"Paso 4 – Verificación y control: Se contrastan los resultados obtenidos con las especificaciones técnicas esperadas."
+    ]
+    res_modelo = raw.get("ejemplo_modelo_resultado") or f"El proceso de {topic} se completa con éxito, asegurando orden, respaldos y cumplimiento de normas 5S."
+
+    # Actividades pedagógicas estructuradas
+    raw_acts = raw.get("actividades") or []
+    act_items: List[ActividadPedagogicaItem] = []
+    if isinstance(raw_acts, list) and len(raw_acts) > 0:
+        for idx, a in enumerate(raw_acts):
+            if isinstance(a, dict):
+                act_items.append(ActividadPedagogicaItem(
+                    numero=int(a.get("numero") or idx + 1),
+                    titulo=str(a.get("titulo") or f"Actividad {idx+1}: Aplicación Técnica").strip(),
+                    instrucciones=str(a.get("instrucciones") or a.get("descripcion") or f"Desarrollar el procedimiento técnico sobre {topic}.").strip(),
+                    evidencia=str(a.get("evidencia") or f"Producto verificado de {topic}").strip()
+                ))
+            elif isinstance(a, str):
+                act_items.append(ActividadPedagogicaItem(
+                    numero=idx + 1,
+                    titulo=f"Actividad {idx+1}: Procedimiento Aplicado",
+                    instrucciones=a.strip(),
+                    evidencia=f"Reporte técnico de {topic}"
+                ))
+
+    if len(act_items) < 3:
+        if is_digital:
+            act_items = [
+                ActividadPedagogicaItem(
+                    numero=1,
+                    titulo="Estructuración Jerárquica de Carpetas",
+                    instrucciones=f"Crea en tu unidad de almacenamiento una carpeta principal denominada `EPT_1RO_2026` y dentro de ella tres subcarpetas: `01_Sesiones`, `02_Evidencias`, `03_Evaluaciones`.",
+                    evidencia="Árbol de directorios verificado en pantalla."
+                ),
+                ActividadPedagogicaItem(
+                    numero=2,
+                    titulo="Nomenclatura Estandarizada de Archivos",
+                    instrucciones=f"Aplica la regla de nomenclatura institucional `APELLIDO_NOMBRE_GRADO_ACTIVIDAD.pdf` a todos tus archivos de práctica antes de guardarlos.",
+                    evidencia="Archivos renombrados conforme a la norma."
+                ),
+                ActividadPedagogicaItem(
+                    numero=3,
+                    titulo="Permisos y Copias de Seguridad",
+                    instrucciones=f"Configura los permisos de acceso en modo sólo lectura para el portafolio digital y verifica una copia de respaldo en un medio de almacenamiento externo.",
+                    evidencia="Enlace funcional verificado y copia de respaldo activa."
+                )
+            ]
+        else:
+            act_items = [
+                ActividadPedagogicaItem(
+                    numero=1,
+                    titulo="Identificación y Diagnóstico Técnico",
+                    instrucciones=f"Describe los tres componentes esenciales y herramientas requeridas para la ejecución de {topic}.",
+                    evidencia="Ficha de inspección preliminar completada."
+                ),
+                ActividadPedagogicaItem(
+                    numero=2,
+                    titulo="Ejecución de Operaciones con Seguridad",
+                    instrucciones=f"Aplica la secuencia técnica respetando medidas de seguridad industrial y tolerancias operacionales en {topic}.",
+                    evidencia="Pieza o procedimiento verificado en banco de trabajo."
+                ),
+                ActividadPedagogicaItem(
+                    numero=3,
+                    titulo="Control de Calidad y Mejora Continua",
+                    instrucciones=f"Evalúa las cotas o resultados obtenidos, registra las desviaciones y propone una mejora en el flujo de trabajo de {topic}.",
+                    evidencia="Reporte de control metrológico o técnico finalizado."
+                )
+            ]
+
+    # Extensión y consolidación
+    ext = str(raw.get("actividad_extension") or "").strip()
+    if len(ext) < 15:
+        ext = (
+            f"Elabora en equipo un diagrama o ficha técnica de {topic} que sirva como guía rápida de gestión documental y respaldos en la nube. "
+            f"Incluye recomendaciones prácticas para tus compañeros y formula una conclusión sobre la utilidad de este aprendizaje para tu portafolio digital."
+            if is_digital else
+            f"Elabora en equipo un diagrama o ficha técnica de {topic} que sirva como guía rápida de taller. "
+            f"Incluye recomendaciones prácticas para tus compañeros y formula una conclusión sobre la utilidad de este aprendizaje para tu proyecto formativo."
+        )
+
+    cons = raw.get("ejercicios_consolidacion") or [
+        f"Simula la reorganización de una carpeta de trabajo desordenada aplicando la jerarquía técnica.",
+        f"Configura un enlace seguro en la nube compartida verificando que los permisos restrinjan la edición no autorizada.",
+        f"Elabora una lista de verificación de copias de seguridad (regla 3-2-1: copia local, en la nube y medio externo)."
+    ]
+
+    # Lista de cotejo
+    raw_chk = raw.get("lista_cotejo") or []
+    chk_items: List[CriterioCotejoItem] = []
+    if isinstance(raw_chk, list) and len(raw_chk) > 0:
+        for c in raw_chk:
+            if isinstance(c, dict):
+                crit_t = str(c.get("criterio") or c.get("descripcion") or "").strip()
+                evid_t = str(c.get("evidencia") or c.get("recomendacion") or f"Evidencia de {topic}").strip()
+                if crit_t:
+                    chk_items.append(CriterioCotejoItem(criterio=crit_t, evidencia=evid_t))
+            elif isinstance(c, str) and c.strip():
+                chk_items.append(CriterioCotejoItem(criterio=c.strip(), evidencia=f"Evidencia de {topic}"))
+
+    if len(chk_items) < 2:
+        chk_items = [
+            CriterioCotejoItem(
+                criterio=f"Crea la estructura jerárquica de carpetas solicitada en el entorno digital.",
+                evidencia="Verificación en pantalla del árbol de carpetas."
+            ),
+            CriterioCotejoItem(
+                criterio=f"Aplica la nomenclatura estandarizada institucional a los archivos digitales.",
+                evidencia="Nombres de archivos según la guía institucional."
+            ),
+            CriterioCotejoItem(
+                criterio=f"Comparte los enlaces con los permisos de visualización o edición correctos.",
+                evidencia="Enlace funcional remitido al docente."
+            ),
+            CriterioCotejoItem(
+                criterio=f"Mantiene el orden y seguridad de la información evitando el borrado accidental.",
+                evidencia="Copia de respaldo verificada en la nube."
+            )
+        ]
+
+    meta = str(raw.get("metacognicion") or "¿Qué aprendí hoy y cómo puedo aplicar este aprendizaje en una situación real?").strip()
+
+    return FichaAprendizajeStructured(
+        titulo=f"FICHA DE APRENDIZAJE: {topic.upper()}",
+        area=specialty,
+        grado=grade,
+        seccion=str(raw.get("section_name") or raw.get("seccion") or "A"),
+        fecha=str(raw.get("fecha") or "____ / ____ / 2026"),
+        docente=clean_teacher,
+        competencia=official_comp,
+        capacidades=capacidades,
+        desempeno=desempeno,
+        proposito=proposito,
+        evidencia_general=evidencia,
+        objetivos_aprendizaje=objs,
+        situacion_reto=reto,
+        marco_teorico=teor,
+        ejemplo_modelo_pasos=pasos,
+        ejemplo_modelo_resultado=res_modelo,
+        actividades=act_items,
+        actividad_extension=ext,
+        ejercicios_consolidacion=cons,
+        lista_cotejo=chk_items,
+        metacognicion=meta
+    )
+
+
+def ficha_to_markdown(f: FichaAprendizajeStructured) -> str:
+    """Renderiza una vista Markdown limpia y elegante estrictamente derivada de la estructura validada."""
+    md = f"# {f.titulo}\n\n"
+    md += f"**Área:** {f.area}  \n"
+    md += f"**Grado y Sección:** {f.grado}.° «{f.seccion}» | **Fecha:** {f.fecha}  \n"
+    md += f"**Docente Titular:** {f.docente}  \n"
+    md += f"**Competencia (CNEB):** {f.competencia}  \n"
+    md += f"**Capacidades:** {f.capacidades}  \n"
+    md += f"**Desempeño Contextualizado:** {f.desempeno}  \n\n"
+    md += "---\n\n"
+    md += "### I. PROPÓSITO DE APRENDIZAJE\n"
+    md += f"**Propósito:** {f.proposito}  \n"
+    md += f"**Producto o Evidencia:** {f.evidencia_general}  \n\n"
+    md += "**Objetivos de aprendizaje:**\n"
+    for obj in f.objetivos_aprendizaje:
+        md += f"- {obj}\n"
+    md += "\n---\n\n"
+    md += "### II. SITUACIÓN DE RETO («¡ACEPTA EL DESAFÍO!»)\n"
+    md += f"{f.situacion_reto}\n\n"
+    md += "---\n\n"
+    md += "### III. MARCO TEÓRICO Y CONCEPTOS CLAVE\n"
+    md += f"{f.marco_teorico}\n\n"
+    md += "**Ejemplo Modelo:**\n"
+    for p in f.ejemplo_modelo_pasos:
+        md += f"- {p}\n"
+    if f.ejemplo_modelo_resultado:
+        md += f"- **Resultado:** {f.ejemplo_modelo_resultado}\n"
+    md += "\n---\n\n"
+    md += "### IV. ACTIVIDADES PEDAGÓGICAS APLICADAS\n\n"
+    for a in f.actividades:
+        md += f"#### Actividad {a.numero}: {a.titulo}\n"
+        md += f"**Instrucciones:** {a.instrucciones}  \n"
+        md += f"**Evidencia requerida:** {a.evidencia}  \n"
+        md += "*Respuesta / desarrollo:* __________________________________________________________________________________________\n\n"
+    md += "---\n\n"
+    md += "### V. PROFUNDIZACIÓN Y ACTIVIDAD DE EXTENSIÓN\n"
+    md += f"{f.actividad_extension}\n\n"
+    md += "**Ejercicios de consolidación:**\n"
+    for ej in f.ejercicios_consolidacion:
+        md += f"- {ej}\n"
+    md += "\n---\n\n"
+    md += "### VI. INSTRUMENTO DE EVALUACIÓN: LISTA DE COTEJO (4 COLUMNAS)\n\n"
+    md += "| Criterio de Evaluación | Sí | En proceso | Evidencia / Recomendación |\n"
+    md += "| :--- | :---: | :---: | :--- |\n"
+    for item in f.lista_cotejo:
+        md += f"| {item.criterio} | [   ] | [   ] | {item.evidencia} |\n"
+    md += "\n"
+    md += f"**Metacognición:** {f.metacognicion}  \n"
+    md += "__________________________________________________________________________________________\n"
+    md += "__________________________________________________________________________________________\n"
+    return md

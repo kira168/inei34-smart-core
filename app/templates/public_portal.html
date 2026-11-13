@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I.E. Pública INEI 34 - Chancay | Portal Institucional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ineiRed: '#C8102E', // Rojo Institucional
+                        ineiRedHover: '#A00D24',
+                        ineiBlack: '#1A1A1A',
+                        ineiGold: '#B3A369',
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .university-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        .glow-red {
+            box-shadow: 0 0 25px rgba(200, 16, 46, 0.35);
+        }
+
+        @keyframes pulse-slow {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse-slow 3s infinite ease-in-out;
+        }
+
+        /* Custom scrollbar for modals */
+        .modal-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .modal-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+
+        .modal-scroll::-webkit-scrollbar-thumb:hover {
+            background: #C8102E;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white">
+
+    <!-- BARRA SUPERIOR INFORMATIVA CON TICKER INSTITUCIONAL -->
+    <div class="bg-ineiBlack text-white py-2 text-xs border-b border-zinc-800">
+        <div class="container mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-4 text-[11px] text-zinc-300">
+                <span
+                    class="inline-flex items-center text-amber-400 font-bold bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-1.5"></span>
+                    AÑO ACADÉMICO 2026
+                </span>
+                <span class="hidden sm:inline"><i class="fas fa-phone-alt text-ineiRed mr-1.5"></i> (01) 3771828</span>
+                <span class="hidden lg:inline"><i class="fas fa-envelope text-ineiRed mr-1.5"></i>
+                    informes@inei34chancay.edu.pe</span>
+                <span class="hidden md:inline"><i class="fas fa-clock text-ineiRed mr-1.5"></i> Lun - Vie: 8:00 AM -
+                    1:00 PM</span>
+            </div>
+            <div class="flex items-center space-x-3 text-[11px]">
+                <button onclick="openMesaDePartes()"
+                    class="text-zinc-300 hover:text-white transition flex items-center gap-1 font-semibold hover:underline">
+                    <i class="fas fa-file-alt text-amber-400"></i> Mesa de Partes Virtual
+                </button>
+                <span class="text-zinc-600">|</span>
+                <a href="https://wa.me/51999999999?text=Hola,%20deseo%20información%20sobre%20la%20I.E.%20Pública%20INEI%2034%20de%20Chancay"
+                    target="_blank" rel="noopener noreferrer"
+                    class="text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1 font-semibold">
+                    <i class="fab fa-whatsapp"></i> WhatsApp Secretaría
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENÚ DE NAVEGACIÓN -->
+    <nav class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 py-3 shadow-sm transition-all">
+        <div class="container mx-auto px-4 sm:px-6 flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-3 group">
+                <img src="/imagen/insignia.png" alt="Insignia INEI 34"
+                    class="h-12 sm:h-14 w-auto drop-shadow transition-transform group-hover:scale-105">
+                <div class="leading-tight">
+                    <div class="flex items-center gap-1.5">
+                        <span class="block text-xl sm:text-2xl font-black text-ineiBlack tracking-tight">INEI 34</span>
+                        <span
+                            class="text-[9px] font-extrabold uppercase bg-red-100 text-ineiRed px-1.5 py-0.5 rounded tracking-wider">OFICIAL</span>
+                    </div>
+                    <span class="block text-[10px] tracking-widest uppercase text-ineiRed font-bold">Chancay -
+                        Institución Técnica</span>
+                </div>
+            </a>
+
+            <button class="md:hidden text-2xl text-slate-800 p-2 rounded-lg hover:bg-slate-100 transition"
+                id="mobile-menu-btn" onclick="toggleMenu()" title="Abrir menú de navegación"
+                aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="mobile-menu">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+
+            <ul id="nav-links"
+                class="hidden md:flex space-x-6 lg:space-x-8 font-bold text-xs uppercase tracking-tight text-slate-700 items-center">
+                <li><a href="#"
+                        class="hover:text-ineiRed transition border-b-2 border-transparent hover:border-ineiRed pb-1">Inicio</a>
+                </li>
+                <li><a href="#especialidades"
+                        class="hover:text-ineiRed transition border-b-2 border-transparent hover:border-ineiRed pb-1">Especialidades</a>
+                </li>
+                <li><a href="#noticias"
+                        class="hover:text-ineiRed transition border-b-2 border-transparent hover:border-ineiRed pb-1">Publicaciones</a>
+                </li>
+                <li><a href="javascript:void(0)" onclick="openAcademicCalendarModal()"
+                        class="hover:text-ineiRed transition border-b-2 border-transparent hover:border-ineiRed pb-1">Calendario
+                        2026</a></li>
+                <li><a href="javascript:void(0)" onclick="openMesaDePartes()"
+                        class="hover:text-ineiRed transition border-b-2 border-transparent hover:border-ineiRed pb-1">Mesa
+                        de Partes</a></li>
+                <li><a href="#contacto"
+                        class="hover:text-ineiRed transition border-b-2 border-transparent hover:border-ineiRed pb-1">Contacto</a>
+                </li>
+                <li>
+                    <a href="/login"
+                        class="bg-gradient-to-r from-red-700 via-ineiRed to-red-700 text-white px-5 py-2.5 rounded-lg hover:from-slate-900 hover:to-slate-900 transition-all font-bold flex items-center gap-2 shadow-md shadow-red-900/30 hover:shadow-lg hover:scale-105 active:scale-95">
+                        <i class="fas fa-shield-alt text-amber-300 text-xs"></i>
+                        <span>INTRANET</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-white border-t border-gray-200 px-6 py-4 space-y-3 animate-fadeIn">
+            <a href="#" class="block font-bold text-slate-700 hover:text-ineiRed py-1" onclick="toggleMenu()">Inicio</a>
+            <a href="#especialidades" class="block font-bold text-slate-700 hover:text-ineiRed py-1"
+                onclick="toggleMenu()">Especialidades Técnicas</a>
+            <a href="#noticias" class="block font-bold text-slate-700 hover:text-ineiRed py-1"
+                onclick="toggleMenu()">Publicaciones & Talleres</a>
+            <a href="javascript:void(0)" onclick="toggleMenu(); openAcademicCalendarModal();"
+                class="block font-bold text-slate-700 hover:text-ineiRed py-1">Calendario Académico 2026</a>
+            <a href="javascript:void(0)" onclick="toggleMenu(); openMesaDePartes();"
+                class="block font-bold text-slate-700 hover:text-ineiRed py-1">Mesa de Partes Virtual</a>
+            <a href="#contacto" class="block font-bold text-slate-700 hover:text-ineiRed py-1"
+                onclick="toggleMenu()">Contacto y Ubicación</a>
+            <a href="/login"
+                class="block text-center bg-gradient-to-r from-ineiRed to-red-700 text-white py-3 rounded-lg font-bold shadow-md">
+                <i class="fas fa-shield-alt text-amber-300 mr-2"></i> Acceder a la Intranet
+            </a>
+        </div>
+    </nav>
+
+    <!-- HEADER / HERO (FACHADA ORIGINAL DEL COLEGIO - INTOCABLE SEGÚN INSTRUCCIÓN) -->
+    <header class="relative min-h-[580px] md:h-[620px] flex items-center justify-center overflow-hidden">
+        <img src="/imagen/foto.jpg?v=2026" class="absolute w-full h-full object-cover object-center"
+            alt="Fachada Oficial I.E. Pública INEI 34 Chancay">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/65 to-slate-900/60"></div>
+
+        <div class="relative z-10 text-center text-white px-4 sm:px-6 max-w-4xl mx-auto pt-6 pb-20">
+            <div
+                class="inline-flex items-center gap-2 bg-black/50 backdrop-blur-md border border-red-500/30 text-amber-300 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
+                <i class="fas fa-award text-amber-400"></i> Formación Técnica Industrial • Distrito de Chancay
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
+                Excelencia en <br>
+                <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-400 to-amber-300">Educación
+                    Técnica</span>
+            </h1>
+
+            <p
+                class="text-base sm:text-lg md:text-xl max-w-3xl mx-auto font-normal mb-8 text-slate-200 leading-relaxed">
+                Formamos a los profesionales técnicos líderes de la provincia de Huaral y el distrito de Chancay,
+                articulando sólida base científica, humanista y competencias laborales CNOF.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#especialidades"
+                    class="w-full sm:w-auto bg-white text-ineiBlack font-extrabold py-4 px-8 rounded-lg hover:bg-ineiRed hover:text-white transition-all shadow-xl hover:shadow-2xl flex items-center justify-center gap-2 group hover:scale-105 active:scale-95">
+                    <i class="fas fa-tools text-ineiRed group-hover:text-white transition-colors"></i>
+                    <span>Explorar Especialidades (8)</span>
+                </a>
+                <button onclick="openAdmissionModal()"
+                    class="w-full sm:w-auto bg-transparent border-2 border-white/80 hover:border-amber-400 text-white hover:text-amber-300 font-extrabold py-4 px-8 rounded-lg backdrop-blur-sm hover:bg-white/10 transition-all flex items-center justify-center gap-2 hover:scale-105 active:scale-95">
+                    <i class="fas fa-graduation-cap text-amber-400"></i>
+                    <span>Admisión 2026</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ENLACES DE ACCESO RÁPIDO INTERACTIVOS (MODALES INTEGRADOS) -->
+    <div class="container mx-auto px-4 sm:px-6 -mt-14 relative z-20">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+            <!-- 1. Recursos Digitales -->
+            <div onclick="openDigitalResourcesModal()"
+                class="bg-white p-5 sm:p-6 rounded-xl university-shadow text-center hover:bg-ineiRed hover:text-white transition-all duration-300 group cursor-pointer border-b-4 border-ineiRed hover:-translate-y-1.5">
+                <div
+                    class="w-12 h-12 mx-auto rounded-full bg-red-50 flex items-center justify-center mb-3 group-hover:bg-white/20 transition">
+                    <i class="fas fa-laptop-code text-2xl text-ineiRed group-hover:text-white transition"></i>
+                </div>
+                <h3 class="font-extrabold uppercase text-xs tracking-tight mb-1">Recursos Digitales</h3>
+                <p class="text-[11px] text-slate-500 group-hover:text-red-100 hidden sm:block">Aula virtual, guías & FUT
+                </p>
+                <span
+                    class="inline-block mt-2 text-[10px] font-bold text-ineiRed group-hover:text-white underline">Abrir
+                    módulo &rarr;</span>
+            </div>
+
+            <!-- 2. Calendario Académico -->
+            <div onclick="openAcademicCalendarModal()"
+                class="bg-white p-5 sm:p-6 rounded-xl university-shadow text-center hover:bg-ineiRed hover:text-white transition-all duration-300 group cursor-pointer border-b-4 border-ineiRed hover:-translate-y-1.5">
+                <div
+                    class="w-12 h-12 mx-auto rounded-full bg-red-50 flex items-center justify-center mb-3 group-hover:bg-white/20 transition">
+                    <i class="fas fa-calendar-alt text-2xl text-ineiRed group-hover:text-white transition"></i>
+                </div>
+                <h3 class="font-extrabold uppercase text-xs tracking-tight mb-1">Calendario 2026</h3>
+                <p class="text-[11px] text-slate-500 group-hover:text-red-100 hidden sm:block">Bimestres y feriados</p>
+                <span class="inline-block mt-2 text-[10px] font-bold text-ineiRed group-hover:text-white underline">Ver
+                    cronograma &rarr;</span>
+            </div>
+
+            <!-- 3. Certificaciones -->
+            <div onclick="openCertificationsModal()"
+                class="bg-white p-5 sm:p-6 rounded-xl university-shadow text-center hover:bg-ineiRed hover:text-white transition-all duration-300 group cursor-pointer border-b-4 border-ineiRed hover:-translate-y-1.5">
+                <div
+                    class="w-12 h-12 mx-auto rounded-full bg-red-50 flex items-center justify-center mb-3 group-hover:bg-white/20 transition">
+                    <i class="fas fa-certificate text-2xl text-ineiRed group-hover:text-white transition"></i>
+                </div>
+                <h3 class="font-extrabold uppercase text-xs tracking-tight mb-1">Certificaciones</h3>
+                <p class="text-[11px] text-slate-500 group-hover:text-red-100 hidden sm:block">Técnico Modular CNOF</p>
+                <span class="inline-block mt-2 text-[10px] font-bold text-ineiRed group-hover:text-white underline">Ver
+                    catálogo &rarr;</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- BARRA DINÁMICA DE ESTADÍSTICAS INSTITUCIONALES -->
+    <section class="container mx-auto px-4 sm:px-6 pt-16 pb-8">
+        <div
+            class="bg-gradient-to-r from-slate-900 via-zinc-900 to-slate-950 text-white rounded-2xl p-6 sm:p-8 shadow-xl border border-zinc-800">
+            <div
+                class="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center divide-y lg:divide-y-0 lg:divide-x divide-zinc-800">
+                <div class="pt-2 lg:pt-0">
+                    <div class="text-3xl sm:text-4xl md:text-5xl font-black text-amber-400 mb-1">+350</div>
+                    <div class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-200">Estudiantes
+                        Técnicos</div>
+                    <p class="text-[11px] text-slate-400 mt-1">Matriculados período 2026</p>
+                </div>
+                <div class="pt-4 lg:pt-0">
+                    <div class="text-3xl sm:text-4xl md:text-5xl font-black text-rose-500 mb-1">8</div>
+                    <div class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-200">Especialidades EPT
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-1">Talleres equipados</p>
+                </div>
+                <div class="pt-4 lg:pt-0">
+                    <div class="text-3xl sm:text-4xl md:text-5xl font-black text-emerald-400 mb-1">100%</div>
+                    <div class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-200">Prácticas Reales
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-1">Metodología CNEB / SIAGIE</p>
+                </div>
+                <div class="pt-4 lg:pt-0">
+                    <div class="text-3xl sm:text-4xl md:text-5xl font-black text-blue-400 mb-1">60+</div>
+                    <div class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-200">Años de Tradición
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-1">Liderazgo técnico en Chancay</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE ÚLTIMAS PUBLICACIONES (FEED GENERAL INTERACTIVO) -->
+    <section id="noticias" class="container mx-auto px-4 sm:px-6 py-12">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
+            <div>
+                <span
+                    class="inline-flex items-center gap-1.5 text-ineiRed font-extrabold uppercase tracking-widest text-xs bg-red-50 px-3 py-1 rounded-full border border-red-200">
+                    <i class="fas fa-bullhorn"></i> Actualidad Institucional 2026
+                </span>
+                <h2 class="text-3xl md:text-4xl font-black text-ineiBlack mt-2">Últimas Publicaciones de Talleres</h2>
+                <p class="text-slate-500 text-sm mt-1">Proyectos, ferias tecnológicas y avances de nuestros estudiantes.
+                </p>
+            </div>
+            <a href="/login"
+                class="inline-flex items-center gap-2 bg-slate-900 hover:bg-ineiRed text-white px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow">
+                <span>Ingresar al Portal Interno</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Artículo 1 -->
+            <article
+                class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col justify-between border border-slate-100 group">
+                <div>
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="/uploads/img_6a24e02c7ea684.72789469.jpg"
+                            alt="Taller Práctico sobre Tendencias y Cosmetología"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span
+                            class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider rounded shadow-md">
+                            Estética Personal
+                        </span>
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <span class="text-white text-xs font-semibold"><i
+                                    class="fas fa-calendar-check mr-1.5 text-amber-300"></i> Semana Técnica 2026</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-ineiRed text-xs font-bold uppercase tracking-wider mb-2">Taller Práctico
+                            Demostrativo</p>
+                        <h3
+                            class="text-xl font-extrabold text-slate-900 mb-3 group-hover:text-ineiRed transition-colors">
+                            Tratamientos Capilares y Gestión de Salón de Belleza</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            Demostración técnica en vivo con modelos reales: colorimetría, peinados para eventos y
+                            protocolos de bioseguridad en centros estéticos.
+                        </p>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 pt-0 border-t border-slate-100">
+                    <button onclick="openPublicationDetail(1)"
+                        class="w-full mt-4 bg-slate-100 hover:bg-ineiRed hover:text-white text-slate-800 font-bold py-2.5 px-4 rounded-lg text-xs uppercase tracking-wider transition flex items-center justify-center gap-2">
+                        <i class="fas fa-book-open"></i> Ver Ficha del Proyecto
+                    </button>
+                </div>
+            </article>
+
+            <!-- Artículo 2 -->
+            <article
+                class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col justify-between border border-slate-100 group">
+                <div>
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="/uploads/img_6a24dfed05f183.04307795.jpg"
+                            alt="Nuevas piezas mecánicas fabricadas con tornos CNC"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span
+                            class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider rounded shadow-md">
+                            Mecánica de Producción
+                        </span>
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <span class="text-white text-xs font-semibold"><i
+                                    class="fas fa-cog mr-1.5 text-amber-300"></i> Matricería & CNC</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-ineiRed text-xs font-bold uppercase tracking-wider mb-2">Industria y Mecanizado
+                        </p>
+                        <h3
+                            class="text-xl font-extrabold text-slate-900 mb-3 group-hover:text-ineiRed transition-colors">
+                            Mecanizado de Precisión en Torno y Fresadora</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            Desarrollo de piezas industriales de alta tolerancia para maquinaria pesada y el sector
+                            pesquero del puerto de Chancay.
+                        </p>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 pt-0 border-t border-slate-100">
+                    <button onclick="openPublicationDetail(2)"
+                        class="w-full mt-4 bg-slate-100 hover:bg-ineiRed hover:text-white text-slate-800 font-bold py-2.5 px-4 rounded-lg text-xs uppercase tracking-wider transition flex items-center justify-center gap-2">
+                        <i class="fas fa-book-open"></i> Ver Ficha del Proyecto
+                    </button>
+                </div>
+            </article>
+
+            <!-- Artículo 3 -->
+            <article
+                class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col justify-between border border-slate-100 group">
+                <div>
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="/uploads/img_6a24d671b1c024.76190448.png" alt="Implementación de taller de AIP"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span
+                            class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider rounded shadow-md">
+                            Computación & AIP
+                        </span>
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <span class="text-white text-xs font-semibold"><i
+                                    class="fas fa-network-wired mr-1.5 text-amber-300"></i> Smart-Core IA</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-ineiRed text-xs font-bold uppercase tracking-wider mb-2">Tecnología e Innovación
+                        </p>
+                        <h3
+                            class="text-xl font-extrabold text-slate-900 mb-3 group-hover:text-ineiRed transition-colors">
+                            Plataforma Smart-Core y Red Local AIP</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            Integración del servidor educativo local, intranet escolar y asistencia inteligente para
+                            docentes y estudiantes de la I.E.
+                        </p>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 pt-0 border-t border-slate-100">
+                    <button onclick="openPublicationDetail(3)"
+                        class="w-full mt-4 bg-slate-100 hover:bg-ineiRed hover:text-white text-slate-800 font-bold py-2.5 px-4 rounded-lg text-xs uppercase tracking-wider transition flex items-center justify-center gap-2">
+                        <i class="fas fa-book-open"></i> Ver Ficha del Proyecto
+                    </button>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE LAS 8 ESPECIALIDADES TÉCNICAS (CON FILTRO INTERACTIVO Y DETALLE POR MODAL) -->
+    <section id="especialidades"
+        class="bg-gradient-to-b from-ineiBlack via-zinc-950 to-black text-white py-24 relative overflow-hidden">
+        <!-- Decoración de fondo sutil -->
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none">
+        </div>
+
+        <div class="container mx-auto px-4 sm:px-6 relative z-10">
+            <div class="text-center mb-12">
+                <span
+                    class="inline-block text-ineiRed font-extrabold uppercase tracking-widest text-xs bg-red-950/60 border border-red-800/40 px-4 py-1.5 rounded-full mb-3">
+                    ÁREAS DE FORMACIÓN PROFESIONAL
+                </span>
+                <h2 class="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tight">Nuestras 8 Especialidades
+                    Técnicas</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-red-600 to-amber-400 mx-auto mb-6 rounded-full"></div>
+                <p class="text-slate-400 max-w-2xl mx-auto font-light text-sm sm:text-base">
+                    Equipamiento industrial, docentes titulados con experiencia de campo y certificación modular
+                    progresiva para cada ciclo.
+                </p>
+
+                <!-- BOTONES DE FILTRO DE ESPECIALIDADES -->
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mt-8">
+                    <button onclick="filterSpecialties('all')" id="filter-all"
+                        class="specialty-filter-btn px-4 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider bg-ineiRed text-white shadow-lg transition">
+                        Todas (8)
+                    </button>
+                    <button onclick="filterSpecialties('mecanica')" id="filter-mecanica"
+                        class="specialty-filter-btn px-4 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition">
+                        Mecánica & Automotriz
+                    </button>
+                    <button onclick="filterSpecialties('tecnologia')" id="filter-tecnologia"
+                        class="specialty-filter-btn px-4 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition">
+                        Tecnología & Gestión
+                    </button>
+                    <button onclick="filterSpecialties('confeccion')" id="filter-confeccion"
+                        class="specialty-filter-btn px-4 py-2 rounded-full text-xs font-extrabold uppercase tracking-wider bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition">
+                        Producción & Servicios
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid de las 8 especialidades interactivas -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="specialties-grid">
+
+                <!-- 1. Automotores -->
+                <div data-category="mecanica" onclick="openSpecialtyModal('automotores')"
+                    class="specialty-card group bg-zinc-900/90 border border-zinc-800 rounded-xl p-6 hover:border-red-600 hover:bg-zinc-800/90 transition-all duration-300 cursor-pointer flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-red-900/20">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 group-hover:bg-ineiRed group-hover:text-white transition">
+                                <i class="fas fa-car-side text-2xl"></i>
+                            </div>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-800 px-2.5 py-1 rounded">Taller
+                                I</span>
+                        </div>
+                        <h3
+                            class="text-xl font-extrabold mb-2 uppercase text-white group-hover:text-red-400 transition">
+                            Automotores</h3>
+                        <p class="text-zinc-400 text-xs leading-relaxed mb-6">Mecánica de motores de combustión,
+                            sistemas de frenos ABS, suspensión electrónica y diagnóstico computarizado.</p>
+                    </div>
+                    <div
+                        class="pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs font-bold text-red-400 group-hover:text-white">
+                        <span>Ver Ficha Técnica</span>
+                        <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </div>
+                </div>
+
+                <!-- 2. Estética Personal -->
+                <div data-category="confeccion" onclick="openSpecialtyModal('estetica')"
+                    class="specialty-card group bg-zinc-900/90 border border-zinc-800 rounded-xl p-6 hover:border-red-600 hover:bg-zinc-800/90 transition-all duration-300 cursor-pointer flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-red-900/20">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 group-hover:bg-ineiRed group-hover:text-white transition">
+                                <i class="fas fa-scissors text-2xl"></i>
+                            </div>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-800 px-2.5 py-1 rounded">Taller
+                                II</span>
+                        </div>
+                        <h3
+                            class="text-xl font-extrabold mb-2 uppercase text-white group-hover:text-red-400 transition">
+                            Estética Personal</h3>
+                        <p class="text-zinc-400 text-xs leading-relaxed mb-6">Tratamientos capilares avanzados, cuidado
+                            de la piel, cosmetología integral y gestión empresarial de salones.</p>
+                    </div>
+                    <div
+                        class="pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs font-bold text-red-400 group-hover:text-white">
+                        <span>Ver Ficha Técnica</span>
+                        <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </div>
+                </div>
+
+                <!-- 3. Contabilidad -->
+                <div data-category="tecnologia" onclick="openSpecialtyModal('contabilidad')"
+                    class="specialty-card group bg-zinc-900/90 border border-zinc-800 rounded-xl p-6 hover:border-red-600 hover:bg-zinc-800/90 transition-all duration-300 cursor-pointer flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-red-900/20">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 group-hover:bg-ineiRed group-hover:text-white transition">
+                                <i class="fas fa-calculator text-2xl"></i>
+                            </div>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-800 px-2.5 py-1 rounded">Taller
+                                III</span>
+                        </div>
+                        <h3
+                            class="text-xl font-extrabold mb-2 uppercase text-white group-hover:text-red-400 transition">
+                            Contabilidad</h3>
+                        <p class="text-zinc-400 text-xs leading-relaxed mb-6">Manejo de libros contables físicos y
+                            electrónicos SUNAT, planilla electrónica (PLAME) y software financiero.</p>
+                    </div>
+                    <div
+                        class="pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs font-bold text-red-400 group-hover:text-white">
+                        <span>Ver Ficha Técnica</span>
+                        <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </div>
+                </div>
+
+                <!-- 4. Computación -->
+                <div data-category="tecnologia" onclick="openSpecialtyModal('computacion')"
+                    class="specialty-card group bg-zinc-900/90 border border-zinc-800 rounded-xl p-6 hover:border-red-600 hover:bg-zinc-800/90 transition-all duration-300 cursor-pointer flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-red-900/20">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 group-hover:bg-ineiRed group-hover:text-white transition">
+                                <i class="fas fa-laptop text-2xl"></i>
+                            </div>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-800 px-2.5 py-1 rounded">Laboratorio
+                                AIP</span>
+                        </div>
+                        <h3
+                            class="text-xl font-extrabold mb-2 uppercase text-white group-hover:text-red-400 transition">
+                            Computación</h3>
+                        <p class="text-zinc-400 text-xs leading-relaxed mb-6">Ensamblaje y mantenimiento de
+                            computadoras, cableado estructurado, configuración de redes LAN y ofimática técnica.</p>
+                    </div>
+                    <div
+                        class="pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs font-bold text-red-400 group-hover:text-white">
+                        <span>Ver Ficha Técnica</span>
+                        <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </div>
+                </div>
+
+                <!-- 5. Electricidad -->
+                <div data-category="mecanica" onclick="openSpecialtyModal('electricidad')"
+                    class="specialty-card group bg-zinc-900/90 border border-zinc-800 rounded-xl p-6 hover:border-red-600 hover:bg-zinc-800/90 transition-all duration-300 cursor-pointer flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-red-900/20">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 group-hover:bg-ineiRed group-hover:text-white transition">
+                                <i class="fas fa-bolt text-2xl"></i>
+                            </div>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-800 px-2.5 py-1 rounded">Taller
+                                V</span>
+                        </div>
+                        <h3
+                            class="text-xl font-extrabold mb-2 uppercase text-white group-hover:text-red-400 transition">
+                            Electricidad</h3>
+                        <p class="text-zinc-400 text-xs leading-relaxed mb-6">Instalaciones residenciales e
+                            industriales, tableros de control con contactores, variadores de frecuencia y rebobinado.
+                        </p>
+                    </div>
+                    <div
+                        class="pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs font-bold text-red-400 group-hover:text-white">
+                        <span>Ver Ficha Técnica</span>
+                        <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </div>
+                </div>
+
+                <!-- 6. Ebanistería -->
+                <div data-category="confeccion" onclick="openSpecialtyModal('ebanisteria')"
+                    class="specialty-card group bg-zinc-900/90 border border-zinc-800 rounded-xl p-6 hover:border-red-600 hover:bg-zinc-800/90 transition-all duration-300 cursor-pointer flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-red-900/20">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 group-hover:bg-ineiRed group-hover:text-white transition">
+                                <i class="fas fa-chair text-2xl"></i>
+                            </div>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-800 px-2.5 py-1 rounded">Taller
+                                VI</span>
+                        </div>
+                        <h3
+                            class="text-xl font-extrabold mb-2 uppercase text-white group-hover:text-red-400 transition">
+                            Ebanistería</h3>
+                        <p class="text-zinc-400 text-xs leading-relaxed mb-6">Diseño y fabricación de muebles en
+                            melamine y madera fina, ensamblajes estructurales y acabados en poliuretano.</p>
+                    </div>
+                    <div
+                        class="pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs font-bold text-red-400 group-hover:text-white">
+                        <span>Ver Ficha Técnica</span>
+                        <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </div>
+                </div>
+
+                <!-- 7. Mecánica de Producción -->
+                <div data-category="mecanica" onclick="openSpecialtyModal('mecanica_prod')"
+                    class="specialty-card group bg-zinc-900/90 border border-zinc-800 rounded-xl p-6 hover:border-red-600 hover:bg-zinc-800/90 transition-all duration-300 cursor-pointer flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-red-900/20">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 group-hover:bg-ineiRed group-hover:text-white transition">
+                                <i class="fas fa-cogs text-2xl"></i>
+                            </div>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-800 px-2.5 py-1 rounded">Taller
+                                VII</span>
+                        </div>
+                        <h3
+                            class="text-xl font-extrabold mb-2 uppercase text-white group-hover:text-red-400 transition">
+                            Mecánica Producción</h3>
+                        <p class="text-zinc-400 text-xs leading-relaxed mb-6">Mecanizado con tornos paralelos,
+                            fresadoras universales, procesos de soldadura SMAW, MIG-MAG y TIG.</p>
+                    </div>
+                    <div
+                        class="pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs font-bold text-red-400 group-hover:text-white">
+                        <span>Ver Ficha Técnica</span>
+                        <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </div>
+                </div>
+
+                <!-- 8. Industria del Vestido -->
+                <div data-category="confeccion" onclick="openSpecialtyModal('vestido')"
+                    class="specialty-card group bg-zinc-900/90 border border-zinc-800 rounded-xl p-6 hover:border-red-600 hover:bg-zinc-800/90 transition-all duration-300 cursor-pointer flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-red-900/20">
+                    <div>
+                        <div class="flex items-center justify-between mb-5">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-red-950/60 border border-red-800/50 flex items-center justify-center text-red-500 group-hover:bg-ineiRed group-hover:text-white transition">
+                                <i class="fas fa-shirt text-2xl"></i>
+                            </div>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-800 px-2.5 py-1 rounded">Taller
+                                VIII</span>
+                        </div>
+                        <h3
+                            class="text-xl font-extrabold mb-2 uppercase text-white group-hover:text-red-400 transition">
+                            Industria Vestido</h3>
+                        <p class="text-zinc-400 text-xs leading-relaxed mb-6">Manejo de máquinas de coser industriales
+                            (recta, remalladora, recubridora), patronaje industrial y confección en serie.</p>
+                    </div>
+                    <div
+                        class="pt-4 border-t border-zinc-800/80 flex items-center justify-between text-xs font-bold text-red-400 group-hover:text-white">
+                        <span>Ver Ficha Técnica</span>
+                        <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PIE DE PÁGINA -->
+    <footer id="contacto" class="bg-slate-900 text-slate-300 pt-16 pb-12 border-t border-slate-800">
+        <div
+            class="container mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800 text-sm">
+            <div>
+                <div class="flex items-center space-x-3 mb-4">
+                    <img src="/imagen/insignia.png" class="h-16 w-auto" alt="Insignia INEI 34">
+                    <div>
+                        <h4 class="font-extrabold text-white text-base">I.E. INEI Nº 34</h4>
+                        <p class="text-xs text-red-400 font-semibold">Chancay • Educación Técnica</p>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-xs leading-relaxed mb-4">
+                    Formando líderes técnicos industriales con disciplina, valores y habilidades demandadas por el
+                    desarrollo del distrito y el Megapuerto de Chancay.
+                </p>
+                <div class="flex space-x-3 text-lg">
+                    <a href="https://www.facebook.com/profile.php?id=100063614160757&locale=es_LA" target="_blank"
+                        rel="noopener noreferrer"
+                        class="w-8 h-8 rounded bg-slate-800 hover:bg-blue-600 text-white flex items-center justify-center transition"
+                        title="Facebook Oficial">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://wa.me/51999999999?text=Hola,%20solicito%20información%20sobre%20la%20I.E.%20Pública%20INEI%2034"
+                        target="_blank" rel="noopener noreferrer"
+                        class="w-8 h-8 rounded bg-slate-800 hover:bg-emerald-600 text-white flex items-center justify-center transition"
+                        title="WhatsApp Secretaría">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-4 uppercase tracking-wider text-white text-xs border-l-2 border-ineiRed pl-2">
+                    Área Académica</h4>
+                <ul class="space-y-2.5 text-xs text-slate-400">
+                    <li><a href="#especialidades" class="hover:text-white transition">8 Especialidades EPT</a></li>
+                    <li><a href="javascript:void(0)" onclick="openAcademicCalendarModal()"
+                            class="hover:text-white transition">Cronograma Bimestral 2026</a></li>
+                    <li><a href="javascript:void(0)" onclick="openCertificationsModal()"
+                            class="hover:text-white transition">Certificaciones CNOF / MINEDU</a></li>
+                    <li><a href="javascript:void(0)" onclick="openAdmissionModal()"
+                            class="hover:text-white transition">Admisión & Vacantes 2026</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-4 uppercase tracking-wider text-white text-xs border-l-2 border-ineiRed pl-2">
+                    Servicios en Línea</h4>
+                <ul class="space-y-2.5 text-xs text-slate-400">
+                    <li><a href="/login" class="hover:text-white transition flex items-center gap-1.5"><i
+                                class="fas fa-lock text-amber-400 text-[10px]"></i> Intranet Institucional</a></li>
+                    <li><a href="javascript:void(0)" onclick="openMesaDePartes()"
+                            class="hover:text-white transition flex items-center gap-1.5"><i
+                                class="fas fa-file-signature text-red-400 text-[10px]"></i> Mesa de Partes Virtual</a>
+                    </li>
+                    <li><a href="javascript:void(0)" onclick="openDigitalResourcesModal()"
+                            class="hover:text-white transition flex items-center gap-1.5"><i
+                                class="fas fa-cloud-download-alt text-blue-400 text-[10px]"></i> Descarga de FUT &
+                            Guías</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-4 uppercase tracking-wider text-white text-xs border-l-2 border-ineiRed pl-2">
+                    Ubicación y Atención</h4>
+                <div class="text-xs text-slate-400 space-y-2 leading-relaxed">
+                    <p><i class="fas fa-map-marker-alt text-ineiRed mr-2"></i> Av. Mariscal Cáceres 162, Chancay,
+                        Huaral, Lima - Perú</p>
+                    <p><i class="fas fa-clock text-amber-400 mr-2"></i> Lunes a Viernes: 8:00 AM - 1:00 PM</p>
+                    <p><i class="fas fa-envelope text-blue-400 mr-2"></i> informes@inei34chancay.edu.pe</p>
+                    <p><i class="fas fa-phone-alt text-emerald-400 mr-2"></i> Central: (01) 3771828</p>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="container mx-auto px-4 sm:px-6 pt-8 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-500 gap-2">
+            <span>&copy; 2026 I.E. PÚBLICA INEI Nº 34 CHANCAY. Todos los derechos reservados.</span>
+            <span class="text-slate-400">Plataforma Educativa Smart-Core v2.0</span>
+        </div>
+    </footer>
+
+    <!-- BOTÓN FLOTANTE (FAB) DE ASISTENCIA RÁPIDA Y WHATSAPP -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-3">
+        <!-- Menú desplegable del FAB -->
+        <div id="fab-menu" class="hidden flex flex-col space-y-2 items-end mb-1 transition-all duration-300">
+            <a href="https://wa.me/51999999999?text=Hola,%20deseo%20hacer%20una%20consulta%20a%20Secretaría%20de%20la%20I.E.%20INEI%2034"
+                target="_blank" rel="noopener noreferrer"
+                class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-full shadow-lg text-xs font-bold flex items-center gap-2 hover:scale-105 transition">
+                <span>WhatsApp Secretaría</span>
+                <i class="fab fa-whatsapp text-base"></i>
+            </a>
+            <button onclick="openMesaDePartes()"
+                class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-full shadow-lg text-xs font-bold flex items-center gap-2 hover:scale-105 transition border border-slate-700">
+                <span>Mesa de Partes</span>
+                <i class="fas fa-file-alt text-base text-amber-400"></i>
+            </button>
+            <a href="/login"
+                class="bg-ineiRed hover:bg-red-700 text-white px-4 py-2 rounded-full shadow-lg text-xs font-bold flex items-center gap-2 hover:scale-105 transition">
+                <span>Ingresar a Intranet</span>
+                <i class="fas fa-lock text-base"></i>
+            </a>
+        </div>
+
+        <!-- Botón principal FAB -->
+        <button onclick="toggleFabMenu()" id="fab-main-btn"
+            class="bg-gradient-to-r from-red-600 to-ineiRed text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-xl hover:scale-110 active:scale-95 transition-all glow-red animate-pulse-slow"
+            title="Asistencia y Canales de Atención">
+            <i class="fas fa-headset" id="fab-icon"></i>
+        </button>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- CONTENEDOR MODAL UNIVERSAL PARA INTERACTIVIDAD DINÁMICA -->
+    <!-- ================================================================= -->
+    <div id="universal-modal"
+        class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/75 backdrop-blur-sm p-4 sm:p-6 flex items-center justify-center">
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-slate-200 animate-fadeIn"
+            id="modal-box">
+            <!-- Modal Header -->
+            <div
+                class="bg-gradient-to-r from-slate-900 to-zinc-900 text-white px-6 py-4 flex items-center justify-between border-b border-zinc-800">
+                <div class="flex items-center space-x-3">
+                    <div id="modal-icon-badge"
+                        class="w-10 h-10 rounded-lg bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-400 text-lg">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div>
+                        <h3 id="modal-title" class="font-extrabold text-lg text-white">Título del Módulo</h3>
+                        <p id="modal-subtitle" class="text-xs text-slate-300">I.E. Pública INEI Nº 34 Chancay</p>
+                    </div>
+                </div>
+                <button onclick="closeModal()"
+                    class="text-slate-400 hover:text-white text-xl p-1.5 rounded-lg hover:bg-white/10 transition"
+                    title="Cerrar ventana">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (Scrollable) -->
+            <div class="p-6 overflow-y-auto modal-scroll space-y-5 text-sm" id="modal-body">
+                <!-- Se inyecta dinámicamente -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-slate-50 px-6 py-3.5 border-t border-slate-200 flex justify-end gap-3" id="modal-footer">
+                <button onclick="closeModal()"
+                    class="px-5 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs uppercase tracking-wider transition">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- JAVASCRIPT DINÁMICO & CONTROLADORES DE EVENTOS -->
+    <!-- ================================================================= -->
+    <script>
+        // Data Store de Especialidades
+        const SPECIALTIES_DATA = {
+            'automotores': {
+                name: 'Mecánica Automotriz',
+                icon: 'fa-car-side',
+                tag: 'Taller Técnico I',
+                desc: 'Formación especializada en mantenimiento preventivo, correctivo y predictivo de unidades automotrices modernas a gasolina y diésel.',
+                equipamiento: ['Escáner automotriz multimarca OBD-II', 'Elevador hidráulico de 4 columnas', 'Banco de pruebas de inyectores', 'Analizador de gases y compresión de motor'],
+                horas: '8 horas semanales de taller práctico intensivo',
+                certificacion: 'Auxiliar Técnico en Mantenimiento de Sistemas de Suspensión, Dirección y Frenos (Certificación Modular CNOF)',
+                campo: 'Empresas de transporte de carga y pasajeros, talleres automotrices autorizados, empresas portuarias y emprendimiento propio.'
+            },
+            'estetica': {
+                name: 'Estética Personal & Cosmetología',
+                icon: 'fa-scissors',
+                tag: 'Taller Técnico II',
+                desc: 'Capacitación en técnicas contemporáneas de corte, estilismo, colorimetría, peinados y tratamientos faciales bajo estrictos protocolos de bioseguridad.',
+                equipamiento: ['Sillones profesionales de corte y barbería', 'Lavacabezas ergonómicos', 'Vaporizadores de ozono para limpieza facial', 'Secadoras, planchas cerámicas y esterilizadores UV'],
+                horas: '8 horas semanales en salón de belleza didáctico',
+                certificacion: 'Auxiliar Técnico en Cuidado Capilar y Tratamientos Estéticos Integrales',
+                campo: 'Centros de belleza, cadenas de estética, spa hoteleros, asesoría de imagen y salón propio de estética.'
+            },
+            'contabilidad': {
+                name: 'Contabilidad & Finanzas',
+                icon: 'fa-calculator',
+                tag: 'Taller Técnico III',
+                desc: 'Instrucción en normativa tributaria SUNAT, registro de comprobantes de pago, conciliaciones bancarias, planilla electrónica y costos comerciales.',
+                equipamiento: ['Laboratorio con software contable comercial (SISCONT / Concar)', 'Calculadoras financieras', 'Acceso guiado a plataforma SUNAT Clave SOL didáctica', 'Módulos de archivo y facturación electrónica'],
+                horas: '8 horas semanales en laboratorio contable',
+                certificacion: 'Auxiliar Técnico en Asistencia Contable y Tributaria',
+                campo: 'Estudios contables, áreas de tesorería y facturación de empresas comerciales, almacenes del puerto y microempresas.'
+            },
+            'computacion': {
+                name: 'Computación e Informática',
+                icon: 'fa-laptop',
+                tag: 'Laboratorio de Innovación AIP',
+                desc: 'Dominio de arquitectura de computadoras, soporte preventivo de hardware, instalación de sistemas operativos, ofimática avanzada y redes LAN.',
+                equipamiento: ['30 Estaciones de trabajo de última generación', 'Servidor institucional local Smart-Core', 'Switches administrables y probadores de cableado UTP', 'Kit de herramientas y multímetros para servicio técnico'],
+                horas: '8 horas semanales en laboratorio AIP',
+                certificacion: 'Auxiliar Técnico en Soporte Técnico de TI y Operación de Redes Locales',
+                campo: 'Empresas de soporte tecnológico, centros de cómputo, mesa de ayuda (Help Desk) y servicios informáticos independientes.'
+            },
+            'electricidad': {
+                name: 'Electricidad e Instalaciones',
+                icon: 'fa-bolt',
+                tag: 'Taller Técnico V',
+                desc: 'Instalaciones eléctricas residenciales y comerciales, interpretación de planos unifilares, tableros con disyuntores diferenciales y mantenimiento de motores.',
+                equipamiento: ['Módulos de entrenamiento en instalaciones domiciliarias', 'Tableros de arranque directo y estrella-triángulo', 'Pinzas amperimétricas y megóhmetros para medición de aislamiento', 'Banco de bobinado de motores trifásicos'],
+                horas: '8 horas semanales de taller práctico',
+                certificacion: 'Auxiliar Técnico en Instalaciones Eléctricas en Edificaciones e Industriales',
+                campo: 'Empresas contratistas eléctricas, mantenimiento eléctrico industrial, proyectos de construcción y servicios técnicos domiciliarios.'
+            },
+            'ebanisteria': {
+                name: 'Ebanistería y Melamine',
+                icon: 'fa-chair',
+                tag: 'Taller Técnico VI',
+                desc: 'Tecnología de la madera y derivados (melamine, MDF), corte y optimización de tableros, ensamblajes precisos y acabados profesionales en barniz y laca.',
+                equipamiento: ['Sierra circular de banco y escuadradora', 'Canteadora y cepilladora industrial', 'Fresadoras manuales (Routers) y lijadoras rotoorbitales', 'Compresor y pistolas de pulverización para acabados'],
+                horas: '8 horas semanales de taller industrial',
+                certificacion: 'Auxiliar Técnico en Fabricación de Muebles Modulares y Ebanistería Fina',
+                campo: 'Fábricas de muebles, empresas de diseño de interiores, talleres de carpintería y microempresas de fabricación en melamine.'
+            },
+            'mecanica_prod': {
+                name: 'Mecánica de Producción',
+                icon: 'fa-cogs',
+                tag: 'Taller Técnico VII',
+                desc: 'Fabricación de piezas mecánicas en tornos paralelos, fresadoras y rectificadoras, además de procesos de corte térmico y soldadura en diversas posiciones.',
+                equipamiento: ['Batería de tornos mecánicos paralelos', 'Fresadora universal para tallado de engranajes', 'Equipos de soldadura por arco eléctrico (SMAW) y MIG-MAG', 'Taladros de columna y esmeriles industriales con guardas de seguridad'],
+                horas: '10 horas semanales de taller y metalmecánica',
+                certificacion: 'Auxiliar Técnico en Mecanizado por Arranque de Viruta y Soldadura Estructural',
+                campo: 'Maestranzas industriales, talleres de soldadura y calderería, empresas navieras y de mantenimiento en el puerto de Chancay.'
+            },
+            'vestido': {
+                name: 'Industria del Vestido',
+                icon: 'fa-shirt',
+                tag: 'Taller Técnico VIII',
+                desc: 'Diseño de modas, patronaje industrial femenino y masculino, escalado de tallas y confección textil en serie con máquinas de costura rápida.',
+                equipamiento: ['Máquinas rectas industriales de alta velocidad', 'Remalladoras industriales de 4 y 5 hilos', 'Máquina recubridora para tejido de punto', 'Mesa de corte industrial y planchas a vapor semi-industriales'],
+                horas: '8 horas semanales en taller textil',
+                certificacion: 'Auxiliar Técnico en Operación de Máquinas de Confección Textil en Serie',
+                campo: 'Talleres de confección textil, empresas de producción de uniformes y ropa deportiva, patronaje y marca propia de confección.'
+            }
+        };
+
+        // Modal Helpers
+        const modal = document.getElementById('universal-modal');
+        const modalBox = document.getElementById('modal-box');
+        const modalTitle = document.getElementById('modal-title');
+        const modalSubtitle = document.getElementById('modal-subtitle');
+        const modalIconBadge = document.getElementById('modal-icon-badge');
+        const modalBody = document.getElementById('modal-body');
+        const modalFooter = document.getElementById('modal-footer');
+
+        function showModal(title, subtitle, iconClass, bodyHtml, footerHtml = null) {
+            modalTitle.innerText = title;
+            modalSubtitle.innerText = subtitle;
+            modalIconBadge.innerHTML = `<i class="fas ${iconClass}"></i>`;
+            modalBody.innerHTML = bodyHtml;
+
+            if (footerHtml) {
+                modalFooter.innerHTML = footerHtml;
+            } else {
+                modalFooter.innerHTML = `
+                    <button onclick="closeModal()" class="px-5 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs uppercase tracking-wider transition">
+                        Cerrar
+                    </button>
+                `;
+            }
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Close on ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // 1. Recursos Digitales Modal
+        function openDigitalResourcesModal() {
+            const html = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <a href="/login" class="p-4 rounded-xl border border-red-200 bg-red-50/50 hover:bg-red-100/60 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 text-ineiRed font-extrabold text-sm mb-1">
+                                <i class="fas fa-lock"></i>
+                                <span>Intranet Escolar</span>
+                            </div>
+                            <p class="text-xs text-slate-600">Acceso seguro para Estudiantes, Docentes, Auxiliares y Padres de Familia con credenciales del colegio.</p>
+                        </div>
+                        <span class="inline-block mt-3 text-xs font-bold text-ineiRed group-hover:underline">Iniciar Sesión &rarr;</span>
+                    </a>
+
+                    <div class="p-4 rounded-xl border border-blue-200 bg-blue-50/50 hover:bg-blue-100/60 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 text-blue-700 font-extrabold text-sm mb-1">
+                                <i class="fas fa-file-pdf text-red-600"></i>
+                                <span>Descarga del FUT Oficial (PDF)</span>
+                            </div>
+                            <p class="text-xs text-slate-600">Formulario Único de Trámite oficial en formato PDF para solicitudes de matrícula, certificados de notas y traslados.</p>
+                        </div>
+                        <a href="/docs/FUT_OFICIAL_INEI34_CHANCAY_2026.pdf" download="FUT_OFICIAL_INEI34_CHANCAY_2026.pdf" target="_blank" class="mt-3 text-xs font-bold text-blue-700 hover:text-red-700 hover:underline text-left inline-flex items-center gap-1.5">
+                            <i class="fas fa-download"></i> Descargar Plantilla Oficial (PDF) &rarr;
+                        </a>
+                    </div>
+
+                    <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100/60 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 text-emerald-700 font-extrabold text-sm mb-1">
+                                <i class="fas fa-book-reader"></i>
+                                <span>Módulos de Taller CNEB</span>
+                            </div>
+                            <p class="text-xs text-slate-600">Guías didácticas, hojas de operaciones técnicas y manuales de normas de seguridad industrial.</p>
+                        </div>
+                        <span class="inline-block mt-3 text-xs font-bold text-emerald-700">Disponible vía Intranet</span>
+                    </div>
+
+                    <div class="p-4 rounded-xl border border-amber-200 bg-amber-50/50 hover:bg-amber-100/60 transition group flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 text-amber-700 font-extrabold text-sm mb-1">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Reglamento Interno</span>
+                            </div>
+                            <p class="text-xs text-slate-600">Normas de convivencia escolar, derechos, deberes del estudiante y protocolos de protección al menor.</p>
+                        </div>
+                        <button onclick="alert('El Reglamento Interno 2026 está disponible en formato físico en Dirección y digital en la Intranet.')" class="mt-3 text-xs font-bold text-amber-700 hover:underline text-left">
+                            Consultar Información &rarr;
+                        </button>
+                    </div>
+                </div>
+            `;
+            showModal('Recursos Digitales y Materiales', 'Accesos rápidos a herramientas y documentación oficial', 'fa-laptop-code', html);
+        }
+
+        // 2. Calendario Académico Modal
+        function openAcademicCalendarModal() {
+            const html = `
+                <div class="space-y-4">
+                    <div class="p-3 bg-red-50 border-l-4 border-ineiRed rounded text-xs text-slate-700">
+                        <strong class="text-ineiRed font-bold">Calendario Oficial Escolar 2026:</strong> Aprobado conforme a las disposiciones y lineamientos del Ministerio de Educación (MINEDU) y la UGEL 10 Huaral.
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="p-3.5 rounded-xl border border-slate-200 bg-white hover:border-red-500 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-slate-900 text-sm"><i class="fas fa-calendar-day text-ineiRed mr-2"></i> I Bimestre</span>
+                                <span class="text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">En Curso</span>
+                            </div>
+                            <p class="text-xs text-slate-500">17 de Marzo al 16 de Mayo de 2026 (9 Semanas lectivas)</p>
+                            <p class="text-[11px] text-slate-600 mt-1 font-semibold">Inicio de talleres técnicos de ambientación y diagnóstico.</p>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl border border-slate-200 bg-white hover:border-red-500 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-slate-900 text-sm"><i class="fas fa-calendar-day text-blue-600 mr-2"></i> II Bimestre & Semana Técnica</span>
+                                <span class="text-[10px] font-bold uppercase bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Programado</span>
+                            </div>
+                            <p class="text-xs text-slate-500">26 de Mayo al 25 de Julio de 2026 (9 Semanas lectivas)</p>
+                            <p class="text-[11px] text-slate-600 mt-1 font-semibold">Exposición y Feria de Proyectos Técnicos de las 8 especialidades.</p>
+                        </div>
+
+                        <div class="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900">
+                            <strong><i class="fas fa-umbrella-beach mr-1 text-amber-600"></i> Vacaciones de Medio Año:</strong> 28 de Julio al 08 de Agosto de 2026.
+                        </div>
+
+                        <div class="p-3.5 rounded-xl border border-slate-200 bg-white hover:border-red-500 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-slate-900 text-sm"><i class="fas fa-calendar-day text-purple-600 mr-2"></i> III Bimestre</span>
+                                <span class="text-[10px] font-bold uppercase bg-slate-100 text-slate-600 px-2 py-0.5 rounded">Próximo</span>
+                            </div>
+                            <p class="text-xs text-slate-500">11 de Agosto al 17 de Octubre de 2026 (10 Semanas lectivas)</p>
+                            <p class="text-[11px] text-slate-600 mt-1 font-semibold">Desarrollo de proyectos de innovación y prácticas pre-profesionales de 5to año.</p>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl border border-slate-200 bg-white hover:border-red-500 transition">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-slate-900 text-sm"><i class="fas fa-calendar-day text-rose-600 mr-2"></i> IV Bimestre & Clausura</span>
+                                <span class="text-[10px] font-bold uppercase bg-slate-100 text-slate-600 px-2 py-0.5 rounded">Próximo</span>
+                            </div>
+                            <p class="text-xs text-slate-500">27 de Octubre al 19 de Diciembre de 2026 (8 Semanas lectivas)</p>
+                            <p class="text-[11px] text-slate-600 mt-1 font-semibold">Evaluaciones finales de módulo, certificación técnica y clausura.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showModal('Calendario Académico 2026', 'Cronograma oficial de períodos lectivos y actividades técnicas', 'fa-calendar-alt', html);
+        }
+
+        // 3. Certificaciones Modal
+        function openCertificationsModal() {
+            const html = `
+                <div class="space-y-4">
+                    <div class="p-3.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-start gap-3">
+                        <i class="fas fa-award text-2xl text-amber-600 mt-0.5"></i>
+                        <div>
+                            <strong class="font-extrabold text-sm block mb-1">Certificación Técnica con Valor Oficial CNOF</strong>
+                            Al concluir los estudios secundarios en la I.E. INEI Nº 34 Chancay, los egresados obtienen su <strong>Certificado de Estudios de Educación Secundaria</strong> y el <strong>Título de Auxiliar Técnico</strong> avalado por el Ministerio de Educación en la especialidad elegida.
+                        </div>
+                    </div>
+
+                    <h4 class="font-extrabold text-xs uppercase tracking-wider text-slate-800 border-b pb-2">Módulos Ofertados por Especialidad:</h4>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-lg border border-slate-200 bg-white">
+                            <strong class="text-ineiRed block font-bold mb-1"><i class="fas fa-car-side mr-1"></i> Mecánica Automotriz</strong>
+                            <p class="text-slate-500">Auxiliar Técnico en Mantenimiento de Motores y Sistemas Auxiliares de Vehículos Automotores.</p>
+                        </div>
+                        <div class="p-3 rounded-lg border border-slate-200 bg-white">
+                            <strong class="text-ineiRed block font-bold mb-1"><i class="fas fa-laptop mr-1"></i> Computación</strong>
+                            <p class="text-slate-500">Auxiliar Técnico en Soporte de Infraestructura TI, Conectividad y Ofimática Aplicada.</p>
+                        </div>
+                        <div class="p-3 rounded-lg border border-slate-200 bg-white">
+                            <strong class="text-ineiRed block font-bold mb-1"><i class="fas fa-cogs mr-1"></i> Mecánica de Producción</strong>
+                            <p class="text-slate-500">Auxiliar Técnico en Operaciones de Mecanizado, Tornería y Soldadura Industrial.</p>
+                        </div>
+                        <div class="p-3 rounded-lg border border-slate-200 bg-white">
+                            <strong class="text-ineiRed block font-bold mb-1"><i class="fas fa-bolt mr-1"></i> Electricidad</strong>
+                            <p class="text-slate-500">Auxiliar Técnico en Instalaciones Eléctricas Domiciliarias e Industriales.</p>
+                        </div>
+                        <div class="p-3 rounded-lg border border-slate-200 bg-white">
+                            <strong class="text-ineiRed block font-bold mb-1"><i class="fas fa-calculator mr-1"></i> Contabilidad</strong>
+                            <p class="text-slate-500">Auxiliar Técnico en Operaciones Contables, Registros Tributarios y Gestión Comercial.</p>
+                        </div>
+                        <div class="p-3 rounded-lg border border-slate-200 bg-white">
+                            <strong class="text-ineiRed block font-bold mb-1"><i class="fas fa-scissors mr-1"></i> Estética Personal</strong>
+                            <p class="text-slate-500">Auxiliar Técnico en Peluquería, Colorimetría y Cuidados Cosméticos.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showModal('Catálogo de Certificaciones Técnicas', 'Marco Nacional de Cualificaciones (CNOF) del Ministerio de Educación', 'fa-certificate', html);
+        }
+
+
+        // 5. Mesa de Partes Virtual Modal (Reemplaza el antiguo alert)
+        function openMesaDePartes() {
+            const html = `
+                <div class="space-y-4">
+                    <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-xs text-red-950 flex items-start gap-3">
+                        <i class="fas fa-building-columns text-2xl text-ineiRed mt-1"></i>
+                        <div>
+                            <strong class="font-extrabold text-sm block mb-1">Mesa de Partes Virtual - I.E. INEI Nº 34</strong>
+                            Canal institucional para la recepción de solicitudes, oficios, traslados, constancias y trámites administrativos de la comunidad educativa.
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-lg border border-slate-200 bg-white">
+                            <span class="text-slate-400 font-bold uppercase text-[10px] block">Horario de Atención</span>
+                            <span class="font-bold text-slate-800 text-sm">Lunes a Viernes</span>
+                            <p class="text-slate-500 mt-0.5">8:00 AM a 1:00 PM</p>
+                        </div>
+                        <div class="p-3 rounded-lg border border-slate-200 bg-white">
+                            <span class="text-slate-400 font-bold uppercase text-[10px] block">Correo Oficial</span>
+                            <span class="font-bold text-slate-800 text-xs break-all">informes@inei34chancay.edu.pe</span>
+                            <p class="text-slate-500 mt-0.5">Recepción de expedientes digitales</p>
+                        </div>
+                    </div>
+
+                    <h4 class="font-extrabold text-xs uppercase tracking-wider text-slate-800">Trámites Frecuentes:</h4>
+                    <ul class="space-y-2 text-xs text-slate-600">
+                        <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-600"></i> Expedición de Certificados de Estudios y Constancias de Matrícula</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-600"></i> Solicitud de Traslado de Matrícula (Ingreso o Salida)</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-600"></i> Rectificación de Nombres y Apellidos según DNI</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-600"></i> Trámites de Certificación Técnica Modular CNOF</li>
+                    </ul>
+
+                    <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                        <div>
+                            <span class="font-bold text-slate-900 block">¿Tienes listo tu Formato Único de Trámite (FUT)?</span>
+                            <span class="text-slate-500">Descarga la plantilla oficial en PDF o redacta tu solicitud.</span>
+                        </div>
+                        <a href="/docs/FUT_OFICIAL_INEI34_CHANCAY_2026.pdf" download="FUT_OFICIAL_INEI34_CHANCAY_2026.pdf" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3.5 rounded-lg text-xs whitespace-nowrap inline-flex items-center gap-1.5 shadow">
+                            <i class="fas fa-file-pdf"></i> Descargar FUT (PDF)
+                        </a>
+                    </div>
+                </div>
+            `;
+            const footer = `
+                <div class="flex flex-wrap justify-between w-full gap-2 items-center">
+                    <a href="mailto:informes@inei34chancay.edu.pe?subject=Tramite%20Mesa%20de%20Partes%20-%20INEI%2034"
+                        class="bg-ineiRed hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition flex items-center gap-2">
+                        <i class="fas fa-envelope"></i> Redactar Correo
+                    </a>
+                    <button onclick="closeModal()" class="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs uppercase tracking-wider transition">
+                        Cerrar
+                    </button>
+                </div>
+            `;
+            showModal('Mesa de Partes Virtual', 'Atención documentaria oficial - Chancay, Huaral', 'fa-file-signature', html, footer);
+        }
+
+        // 6. Admisión 2026 Modal
+        function openAdmissionModal() {
+            const html = `
+                <div class="space-y-4">
+                    <div class="p-3.5 bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-xl text-xs text-red-950 flex items-start gap-3">
+                        <i class="fas fa-graduation-cap text-2xl text-ineiRed mt-0.5"></i>
+                        <div>
+                            <strong class="font-extrabold text-sm block mb-1">Proceso de Admisión y Matrícula 2026</strong>
+                            Forma parte de la comunidad de la <strong>I.E. Pública INEI Nº 34 Chancay</strong>. Ofrecemos educación secundaria con formación técnica especializada en 8 áreas productivas.
+                        </div>
+                    </div>
+
+                    <h4 class="font-extrabold text-xs uppercase tracking-wider text-slate-800">Requisitos para Matrícula:</h4>
+                    <div class="space-y-2 text-xs text-slate-600">
+                        <div class="p-2.5 rounded border border-slate-200 bg-white flex items-center gap-2">
+                            <i class="fas fa-id-card text-ineiRed"></i>
+                            <span>Copia simple del DNI del estudiante y del padre/madre o apoderado legal.</span>
+                        </div>
+                        <div class="p-2.5 rounded border border-slate-200 bg-white flex items-center gap-2">
+                            <i class="fas fa-certificate text-ineiRed"></i>
+                            <span>Ficha Única de Matrícula (FUM) emitida por el SIAGIE de la I.E. de procedencia.</span>
+                        </div>
+                        <div class="p-2.5 rounded border border-slate-200 bg-white flex items-center gap-2">
+                            <i class="fas fa-file-invoice text-ineiRed"></i>
+                            <span>Certificado oficial de estudios concluidos o libreta de notas del grado anterior.</span>
+                        </div>
+                        <div class="p-2.5 rounded border border-slate-200 bg-white flex items-center gap-2">
+                            <i class="fas fa-syringe text-ineiRed"></i>
+                            <span>Constancia o carnet de vacunación vigente (según directiva MINSA/MINEDU).</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900">
+                        <strong>Horario de Atención de Secretaría:</strong> Lunes a Viernes de 8:00 AM a 1:00 PM de manera presencial en Av. Mariscal Cáceres 162, Chancay.
+                    </div>
+                </div>
+            `;
+            const footer = `
+                <div class="flex justify-between w-full gap-2 items-center">
+                    <a href="https://wa.me/51999999999?text=Hola,%20solicito%20información%20sobre%20vacantes%20para%20la%20Admisión%202026%20en%20INEI%2034"
+                        target="_blank" rel="noopener noreferrer"
+                        class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5">
+                        <i class="fab fa-whatsapp"></i> Consultar Vacantes
+                    </a>
+                    <button onclick="closeModal()" class="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs uppercase tracking-wider transition">
+                        Entendido
+                    </button>
+                </div>
+            `;
+            showModal('Admisión & Matrícula 2026', 'Información oficial de requisitos y vacantes escolares', 'fa-graduation-cap', html, footer);
+        }
+
+        // 7. Modal de Ficha Técnica de Especialidad
+        function openSpecialtyModal(id) {
+            const data = SPECIALTIES_DATA[id];
+            if (!data) return;
+
+            const equipamientoItems = data.equipamiento.map(item => `
+                <li class="flex items-start gap-2 text-xs text-slate-700">
+                    <i class="fas fa-check text-emerald-600 mt-0.5"></i>
+                    <span>${item}</span>
+                </li>
+            `).join('');
+
+            const html = `
+                <div class="space-y-4">
+                    <div class="p-3.5 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase bg-red-600 text-white px-2 py-0.5 rounded">${data.tag}</span>
+                            <h4 class="font-black text-lg text-slate-900 mt-1">${data.name}</h4>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-white shadow-sm border border-red-100 flex items-center justify-center text-ineiRed text-2xl">
+                            <i class="fas ${data.icon}"></i>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-600 leading-relaxed">${data.desc}</p>
+
+                    <div>
+                        <h5 class="font-extrabold text-xs uppercase tracking-wider text-slate-800 mb-2 border-b pb-1">
+                            <i class="fas fa-tools text-ineiRed mr-1.5"></i> Equipamiento del Taller:
+                        </h5>
+                        <ul class="space-y-1.5">
+                            ${equipamientoItems}
+                        </ul>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
+                        <div class="p-3 rounded-lg border border-slate-200 bg-slate-50">
+                            <span class="text-slate-400 font-bold text-[10px] uppercase block">Carga de Taller</span>
+                            <span class="font-bold text-slate-800">${data.horas}</span>
+                        </div>
+                        <div class="p-3 rounded-lg border border-slate-200 bg-slate-50">
+                            <span class="text-slate-400 font-bold text-[10px] uppercase block">Certificación Modular</span>
+                            <span class="font-bold text-slate-800">${data.certificacion}</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900">
+                        <strong class="block mb-1"><i class="fas fa-briefcase text-blue-600 mr-1"></i> Campo Laboral en Chancay:</strong>
+                        <p class="text-slate-600">${data.campo}</p>
+                    </div>
+                </div>
+            `;
+
+            const footer = `
+                <div class="flex justify-between w-full gap-2 items-center">
+                    <a href="https://wa.me/51999999999?text=Hola,%20deseo%20más%20información%20sobre%20la%20especialidad%20de%20${encodeURIComponent(data.name)}%20en%20el%20INEI%2034"
+                        target="_blank" rel="noopener noreferrer"
+                        class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5">
+                        <i class="fab fa-whatsapp"></i> Consultar por WhatsApp
+                    </a>
+                    <button onclick="closeModal()" class="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs uppercase tracking-wider transition">
+                        Cerrar Ficha
+                    </button>
+                </div>
+            `;
+
+            showModal(`Ficha Técnica: ${data.name}`, 'Detalles curriculares y equipamiento didáctico', data.icon, html, footer);
+        }
+
+        // 8. Publicaciones Detail Modal
+        function openPublicationDetail(num) {
+            const articles = {
+                1: {
+                    title: 'Taller Práctico de Estética Personal y Cosmetología',
+                    specialty: 'Estética Personal',
+                    img: '/uploads/img_6a24e02c7ea684.72789469.jpg',
+                    content: 'Estudiantes del taller técnico de Estética Personal realizaron una sesión demostrativa integral aplicando técnicas de visagismo, corte estructurado, tratamientos capilares nutritivos y bioseguridad en el salón. La actividad contó con la participación de la comunidad educativa y permitió evaluar las competencias del módulo modular CNOF.'
+                },
+                2: {
+                    title: 'Mecanizado de Precisión en Tornos CNC y Fresadoras',
+                    specialty: 'Mecánica de Producción',
+                    img: '/uploads/img_6a24dfed05f183.04307795.jpg',
+                    content: 'Alumnos de 4to y 5to año completaron con éxito la fabricación de ejes estriados y engranajes helicoidales en el taller de Mecánica de Producción, empleando instrumentos de medición de precisión (micrómetros y comparadores de carátula) con tolerancias centesimales requeridas para el sector portuario y pesquero.'
+                },
+                3: {
+                    title: 'Implementación del Servidor Local Smart-Core y Red AIP',
+                    specialty: 'Computación e Informática',
+                    img: '/uploads/img_6a24d671b1c024.76190448.png',
+                    content: 'El laboratorio de Aula de Innovación Pedagógica (AIP) integró el nuevo servidor local de alta velocidad para la intranet educativa Smart-Core, permitiendo a docentes y estudiantes acceder a rúbricas de evaluación, asistencias en tiempo real y asistencia inteligente en línea.'
+                }
+            };
+
+            const item = articles[num];
+            if (!item) return;
+
+            const html = `
+                <div class="space-y-4">
+                    <div class="rounded-xl overflow-hidden border border-slate-200 max-h-64">
+                        <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-extrabold uppercase bg-red-600 text-white px-2.5 py-0.5 rounded">${item.specialty}</span>
+                        <span class="text-xs text-slate-500 font-semibold"><i class="fas fa-calendar-alt text-amber-500 mr-1"></i> Período Lectivo 2026</span>
+                    </div>
+                    <h4 class="text-lg font-black text-slate-900">${item.title}</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">${item.content}</p>
+                </div>
+            `;
+            showModal('Actualidad Académica', 'Proyectos destacados de los talleres técnicos', 'fa-newspaper', html);
+        }
+
+        // Descarga directa del FUT Oficial 2026 en formato PDF
+        function downloadFutDirect() {
+            const pdfUrl = '/docs/FUT_OFICIAL_INEI34_CHANCAY_2026.pdf';
+            const a = document.createElement('a');
+            a.href = pdfUrl;
+            a.download = 'FUT_OFICIAL_INEI34_CHANCAY_2026.pdf';
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Filtro de Especialidades
+        function filterSpecialties(category) {
+            const cards = document.querySelectorAll('.specialty-card');
+            const buttons = document.querySelectorAll('.specialty-filter-btn');
+
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-ineiRed', 'text-white', 'shadow-lg');
+                btn.classList.add('bg-zinc-800', 'text-zinc-300');
+            });
+
+            const activeBtn = document.getElementById(`filter-${category}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-zinc-800', 'text-zinc-300');
+                activeBtn.classList.add('bg-ineiRed', 'text-white', 'shadow-lg');
+            }
+
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Menú Móvil
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            const isClosed = menu.classList.toggle('hidden');
+            if (btn) {
+                const isExpanded = !isClosed;
+                btn.setAttribute('aria-expanded', isExpanded.toString());
+                btn.setAttribute('title', isExpanded ? 'Cerrar menú' : 'Abrir menú de navegación');
+                btn.setAttribute('aria-label', isExpanded ? 'Cerrar menú' : 'Abrir menú de navegación');
+            }
+        }
+
+        // Toggle FAB Menu
+        function toggleFabMenu() {
+            const menu = document.getElementById('fab-menu');
+            const icon = document.getElementById('fab-icon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.className = 'fas fa-times';
+            } else {
+                menu.classList.add('hidden');
+                icon.className = 'fas fa-headset';
+            }
+        }
+    </script>
+</body>
+
+</html>

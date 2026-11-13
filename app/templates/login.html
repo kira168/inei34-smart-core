@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Intranet | INEI SMART-CORE</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Rajdhani -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@600;700;800&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        tech: ['Rajdhani', 'sans-serif'],
+                        mono: ['Share Tech Mono', 'monospace']
+                    },
+                    colors: {
+                        brand: {
+                            red: '#cd0000',
+                            glowred: '#ef4444',
+                            darkred: '#880000',
+                            slate: '#0F172A',
+                            navy: '#1E293B',
+                            gold: '#fbbf24',
+                            cyan: '#38bdf8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #030712;
+            font-family: 'Inter', sans-serif;
+            color: #f8fafc;
+        }
+
+        /* Fondo estático de alto rendimiento (sin animaciones pesadas de CPU/GPU) */
+        .login-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: 
+                radial-gradient(circle at 50% 25%, rgba(205, 0, 0, 0.15) 0%, rgba(15, 23, 42, 0.75) 50%, rgba(3, 7, 18, 0.96) 100%),
+                url('/imagen/colegio_fondo.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            filter: brightness(0.65) contrast(1.05);
+        }
+
+        /* Capa de sutil gradiente y malla institucional */
+        .login-mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(180deg, rgba(3, 7, 18, 0.6) 0%, rgba(15, 23, 42, 0.8) 50%, rgba(3, 7, 18, 0.95) 100%);
+            pointer-events: none;
+        }
+
+        /* Tarjeta de Login Estilizada Ultra Fluida */
+        .login-card {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(205, 0, 0, 0.12);
+        }
+
+        /* Inputs limpios */
+        .hud-input {
+            background: rgba(3, 7, 18, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #f8fafc;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+
+        .hud-input:focus {
+            outline: none;
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        /* Botón Primario Rojo Institucional */
+        .btn-red-action {
+            background: linear-gradient(180deg, #e51a1a 0%, #b80000 100%);
+            border: 1px solid rgba(255, 100, 100, 0.4);
+            box-shadow: 0 4px 14px rgba(205, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transition: filter 0.15s ease, transform 0.12s ease;
+        }
+
+        .btn-red-action:hover {
+            filter: brightness(1.12);
+            transform: translateY(-1px);
+        }
+
+        .btn-red-action:active {
+            transform: translateY(1px);
+            filter: brightness(0.95);
+        }
+
+        /* Chips de Demo */
+        .demo-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.15s ease;
+        }
+
+        .demo-chip:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(239, 68, 68, 0.5);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen p-4 sm:p-6 select-none relative overflow-y-auto">
+
+    <!-- Fondo Optimizado sin saturar memoria ni GPU -->
+    <div class="login-bg"></div>
+    <div class="login-mesh"></div>
+
+    <!-- Contenedor Principal Centrado -->
+    <main class="w-full max-w-4xl relative z-10 my-auto">
+        <div class="login-card rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-12 transition-all">
+
+            <!-- Columna Izquierda: Identidad Institucional & Insignia -->
+            <div class="md:col-span-5 p-8 sm:p-10 flex flex-col justify-between items-center text-center relative border-b md:border-b-0 md:border-r border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent">
+                
+                <!-- Enlace de regreso al portal -->
+                <div class="w-full flex justify-start">
+                    <a href="/" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition group">
+                        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform text-red-400"></i>
+                        <span>Volver al Portal</span>
+                    </a>
+                </div>
+
+                <!-- Insignia Oficial -->
+                <div class="my-6 flex flex-col items-center">
+                    <div class="relative inline-flex items-center justify-center p-3 rounded-full bg-white/5 border border-white/10 shadow-xl">
+                        <img src="/imagen/insignia.png" 
+                             alt="Insignia INEI N° 34 Chancay" 
+                             class="w-32 h-32 sm:w-36 sm:h-36 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]"
+                             onerror="this.onerror=null;this.src='/static/imagen/insignia.png'">
+                    </div>
+
+                    <div class="mt-4">
+                        <span class="inline-block px-3 py-1 text-[10px] font-mono tracking-widest uppercase font-bold text-red-400 bg-red-950/70 border border-red-700/60 rounded-full">
+                            INEI SMART-CORE 2.0
+                        </span>
+                        <h1 class="text-xl sm:text-2xl font-black text-white tracking-wide mt-2 font-tech uppercase drop-shadow-md">
+                            I.E. INEI N° 34
+                        </h1>
+                        <p class="text-xs text-slate-300 font-medium">Chancay • Perú</p>
+                    </div>
+                </div>
+
+                <!-- Badge de Seguridad RBAC 2026 -->
+                <div class="w-full pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span class="font-medium text-slate-300">Autenticación Segura RBAC</span>
+                    </div>
+                    <span class="font-mono text-[10px] bg-white/10 px-2 py-0.5 rounded text-slate-300 border border-white/10">2026</span>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Formulario & Accesos Rápidos -->
+            <div class="md:col-span-7 p-8 sm:p-10 flex flex-col justify-between relative bg-slate-950/40">
+                <div>
+                    <!-- Encabezado del Formulario -->
+                    <div class="flex justify-between items-center mb-6 pb-3 border-b border-white/10">
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white font-tech uppercase">
+                                INEI N° 34
+                            </h2>
+                            <p class="text-xs text-slate-400 font-medium">Intranet Educativa Inteligente</p>
+                        </div>
+                        <span class="text-[11px] font-extrabold text-amber-400 bg-amber-950/60 border border-amber-800/80 px-3 py-1 rounded-full shadow-inner flex items-center gap-1.5 font-mono">
+                            <i class="fa-solid fa-shield-halved text-[10px]"></i>
+                            <span>PROD 2026</span>
+                        </span>
+                    </div>
+
+                    <!-- Formulario de Acceso -->
+                    <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                        <!-- Campo: Usuario / DNI / Correo -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1.5 font-mono">
+                                DNI O CORREO INSTITUCIONAL
+                            </label>
+                            <div class="relative">
+                                <i class="fa-solid fa-user absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+                                <input type="text" 
+                                       id="username" 
+                                       required 
+                                       autocomplete="username"
+                                       placeholder="admin@inei34.edu.pe o DNI"
+                                       class="hud-input w-full pl-9 pr-4 py-2.5 rounded-xl text-xs font-medium placeholder-slate-500">
+                            </div>
+                        </div>
+
+                        <!-- Campo: Contraseña con Toggle de Visibilidad -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider font-mono">
+                                    CONTRASEÑA
+                                </label>
+                                <a href="javascript:void(0)" onclick="openForgotPasswordInfo()" class="text-[10px] text-cyan-400 hover:text-cyan-300 transition font-semibold">
+                                    ¿Olvidaste tu clave?
+                                </a>
+                            </div>
+                            <div class="relative">
+                                <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+                                <input type="password" 
+                                       id="password" 
+                                       required 
+                                       autocomplete="current-password"
+                                       placeholder="••••••••"
+                                       class="hud-input w-full pl-9 pr-10 py-2.5 rounded-xl text-xs font-medium placeholder-slate-500 font-mono">
+                                <button type="button" 
+                                        onclick="togglePasswordVisibility()" 
+                                        title="Mostrar/Ocultar contraseña"
+                                        class="absolute right-3 top-2.5 text-slate-500 hover:text-slate-200 transition p-1 text-xs">
+                                    <i id="passwordToggleIcon" class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Caja de Alerta Dinámica -->
+                        <div id="loginAlert" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+
+                        <!-- Botón Rojo: INGRESAR AL SISTEMA -->
+                        <div class="pt-2">
+                            <button type="submit" 
+                                    id="btnLogin" 
+                                    class="btn-red-action w-full text-white font-black py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wider cursor-pointer font-tech">
+                                <i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>
+                                <span>INGRESAR AL SISTEMA</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts de Autenticación & Control de Sesión (Ultra Ligeros) -->
+    <script>
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('password');
+            const icon = document.getElementById('passwordToggleIcon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash text-red-400';
+            } else {
+                passInput.type = 'password';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        function openForgotPasswordInfo() {
+            const alertBox = document.getElementById('loginAlert');
+            alertBox.className = 'p-3 rounded-xl text-xs font-medium bg-blue-950/90 text-blue-200 border border-blue-700/80 block shadow-lg';
+            alertBox.innerHTML = `
+                <div class="flex items-start gap-2">
+                    <i class="fa-solid fa-circle-info text-cyan-400 mt-0.5 text-xs"></i>
+                    <div>
+                        <div class="font-bold text-white mb-0.5">Recuperación de Contraseña</div>
+                        <span>Comunícate con la Secretaría o Administración de la I.E. INEI N° 34 Chancay para restablecer tu clave institucional.</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            const alertBox = document.getElementById('loginAlert');
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando Acceso...';
+            alertBox.classList.add('hidden');
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    const userRole = (data.user && data.user.role ? data.user.role : '').toUpperCase();
+                    localStorage.setItem('inei_demo_role', userRole);
+                    if (data.token) {
+                        localStorage.setItem('inei_token', data.token);
+                        document.cookie = `inei_session_token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+                    }
+
+                    if (userRole === 'ESTUDIANTE') {
+                        sessionStorage.setItem('pending_student_splash', '1');
+                        window.location.href = '/intranet?splash=1';
+                        return;
+                    } else {
+                        sessionStorage.removeItem('pending_student_splash');
+                    }
+                    alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-950/90 text-emerald-200 border border-emerald-700/80 block shadow-lg';
+                    alertBox.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 mr-1.5"></i> ¡Bienvenido(a), <strong>${data.user.first_name || 'Usuario'}</strong>! Ingresando al sistema...`;
+                    setTimeout(() => window.location.href = '/intranet', 250);
+                } else {
+                    alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-red-950/90 text-red-200 border border-red-700/80 block shadow-lg';
+                    alertBox.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400 mr-1.5"></i> ${data.detail || 'Credenciales no válidas. Verifica tu usuario o contraseña.'}`;
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket text-sm"></i><span>INGRESAR AL SISTEMA</span>';
+                }
+            } catch (err) {
+                alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-red-950/90 text-red-200 border border-red-700/80 block shadow-lg';
+                alertBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5"></i> Error de conexión con el servidor.';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket text-sm"></i><span>INGRESAR AL SISTEMA</span>';
+            }
+        }
+
+        async function fillAndLoginDemo(roleName) {
+            const isStudent = (roleName || '').toUpperCase() === 'ESTUDIANTE';
+            localStorage.setItem('inei_demo_role', roleName);
+            if (isStudent) {
+                sessionStorage.setItem('pending_student_splash', '1');
+            } else {
+                sessionStorage.removeItem('pending_student_splash');
+            }
+
+            const alertBox = document.getElementById('loginAlert');
+            alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-blue-950/90 text-blue-200 border border-blue-700/80 block shadow-lg';
+            alertBox.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-cyan-400 mr-1.5"></i> Iniciando sesión como <strong>${roleName}</strong>...`;
+
+            try {
+                const res = await fetch('/api/auth/demo-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ role: roleName })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    if (data.token) {
+                        localStorage.setItem('inei_token', data.token);
+                        document.cookie = `inei_session_token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+                    }
+                    if (isStudent) {
+                        window.location.href = '/intranet?splash=1';
+                        return;
+                    }
+                    alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-950/90 text-emerald-200 border border-emerald-700/80 block shadow-lg';
+                    alertBox.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 mr-1.5"></i> Sesión iniciada: ${data.user.first_name} (${data.user.role}). Accediendo...`;
+                    setTimeout(() => window.location.href = '/intranet', 250);
+                } else {
+                    alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-red-950/90 text-red-200 border border-red-700/80 block shadow-lg';
+                    alertBox.innerHTML = `<i class="fa-solid fa-circle-exclamation text-red-400 mr-1.5"></i> No se pudo iniciar acceso demo: ${data.detail || 'Error'}`;
+                }
+            } catch (err) {
+                alertBox.className = 'p-3 rounded-xl text-xs font-semibold bg-red-950/90 text-red-200 border border-red-700/80 block shadow-lg';
+                alertBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5"></i> Error de conexión con el servidor.';
+            }
+        }
+    </script>
+</body>
+
+</html>

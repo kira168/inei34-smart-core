@@ -1,0 +1,390 @@
+[
+  {
+    "citation_id": "1794405372700",
+    "student_name": "Pedro Morales",
+    "student_dni": "76104829",
+    "grade_section": "Secundaria Técnica - INEI 34",
+    "parent_name": "Arturo de la Rosa",
+    "parent_phone": "51979319830",
+    "status": "RESCHEDULE_ACCEPTED",
+    "status_label": "Reprogramación Aceptada (Viernes 12:00 PM)",
+    "dispatched_at": "2026-11-11 10:27:27",
+    "delivered_at": "2026-11-11 10:27:29",
+    "read_at": "2026-11-11 10:28:45",
+    "delivery_latency_seconds": 2,
+    "read_latency_seconds": 76,
+    "interaction_type": "REPROGRAMADO",
+    "conversation": [
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "CET 34 Gateway Institucional (+51 960 595 874)",
+        "timestamp": "2026-11-11 08:57:29",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimado(a) Sr(a). *Arturo de la Rosa*\nApoderado del alumno(a): *Pedro Morales* (DNI: 76104829)\n\nPor medio de la presente, la *Dirección y la Coordinación de Tutoría* de la CET N° 34 le cita formalmente a la institución educativa:\n\n📅 *Fecha y Hora:* jueves 12/11/26  09:00 AM\n📍 *Lugar / Modalidad:* Presencial en Oficina de Tutoría\n📋 *Motivo / Asunto:* Su menor hijo esta con un bajo rendimiento\n🏷️ *Área:* Bajo Rendimiento CNEB\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚠️ *INDICACIONES IMPORTANTES:*\n1. La asistencia es de carácter *OBLIGATORIO* para garantizar el bienestar académico del estudiante.\n2. Portar su Documento Nacional de Identidad (DNI) al ingresar al plantel.\n3. Si requiere reprogramar por fuerza mayor, responda directamente a este mensaje institucional.\n\n*Lema:* _\"Honradez - Disciplina - Trabajo\"_\n*CET N° 34 Chancay • UGEL 10 Huaral*",
+        "read": true,
+        "read_at": "2026-11-11 08:58:45"
+      },
+      {
+        "sender": "PARENT",
+        "sender_label": "Arturo de la Rosa",
+        "timestamp": "2026-11-11 09:02:25",
+        "text": "No podré asistir, si pudiera ser el día viernes en la mañana por favor.",
+        "read": true,
+        "read_at": "2026-11-11 09:02:25"
+      },
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "CET 34 Gateway (Nexus IA)",
+        "timestamp": "2026-11-11 09:02:27",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n_Mesa de Tutoría & Convivencia Escolar_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimado(a) Apoderado(a),\n\nHemos registrado su solicitud de reprogramación.\n\n🔄 *NUEVA PROPUESTA DE CITA:*\n📅 *Fecha:* Viernes\n⏰ *Hora:* 12:00 PM (Mediodía)\n📍 *Lugar:* Oficina de Tutoría\n\n⚠️ *IMPORTANTE:* Su solicitud ha sido derivada al docente a cargo. Le enviaremos una confirmación definitiva en breve.\n\n*Lema:* _\"Honradez - Disciplina - Trabajo\"_\n*CET N° 34 Chancay • UGEL 10 Huaral*",
+        "read": true,
+        "read_at": "2026-11-11 09:02:27"
+      },
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "Coordinación de Tutoría CET 34",
+        "timestamp": "2026-11-11 09:03:15",
+        "text": "✅ *REPROGRAMACIÓN CONFIRMADA POR EL DOCENTE*\n\nEstimado Sr. Arturo de la Rosa, se confirma su cita para el Viernes a las 12:00 PM (Mediodía) en la Oficina de Tutoría.\nDocente: Prof. Roberto Bazán Palacios.",
+        "read": true,
+        "read_at": "2026-11-11 09:03:15"
+      }
+    ]
+  },
+  {
+    "citation_id": "1794408137072",
+    "student_name": "Felipe garcia",
+    "student_dni": "35493167",
+    "grade_section": "Secundaria Técnica - INEI 34",
+    "parent_name": "ceaar",
+    "parent_phone": "51974274864",
+    "status": "DELIVERED_READ",
+    "status_label": "Entregado y Leído (Doble Check Azul) - Con Respuesta de Apoderado",
+    "dispatched_at": "2026-11-11 10:38:12",
+    "delivered_at": "2026-11-11 10:38:14",
+    "read_at": "2026-11-11 10:39:30",
+    "delivery_latency_seconds": 2,
+    "read_latency_seconds": 76,
+    "interaction_type": "CONFIRMADO",
+    "conversation": [
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "CET 34 Gateway Institucional (+51 960 595 874)",
+        "timestamp": "2026-11-11 10:27:12",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimado(a) Sr(a). *ceaar*\nApoderado del alumno(a): *Felipe garcia* (DNI: 35493167)\n\nPor medio de la presente, la *Dirección y la Coordinación de Tutoría* de la CET N° 34 le cita formalmente a la institución educativa:\n\n📅 *Fecha y Hora:* viernes 13/11/26 10:00 AM\n📍 *Lugar / Modalidad:* Presencial en Oficina de Tutoría\n📋 *Motivo / Asunto:* llegue todo los dias tarde\n🏷️ *Área:* Asistencia y Puntualidad\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚠️ *INDICACIONES IMPORTANTES:*\n1. La asistencia es de carácter *OBLIGATORIO* para garantizar el bienestar académico del estudiante.\n2. Portar su Documento Nacional de Identidad (DNI) al ingresar al plantel.\n3. Si requiere reprogramar por fuerza mayor, responda directamente a este mensaje institucional.\n\n*Lema:* _\"Honradez - Disciplina - Trabajo\"_\n*CET N° 34 Chancay • UGEL 10 Huaral*",
+        "read": true,
+        "read_at": "2026-11-11 10:27:14"
+      },
+      {
+        "sender": "PARENT",
+        "sender_label": "ceaar",
+        "timestamp": "2026-11-11 10:39:39",
+        "text": "esta bien",
+        "read": true,
+        "read_at": "2026-11-11 10:39:39"
+      },
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "CET 34 Gateway (Nexus IA)",
+        "timestamp": "2026-11-11 10:39:40",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n_Mesa de Tutoría & Convivencia Escolar_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimado(a) Apoderado(a),\n\nHemos recibido su mensaje a través del canal oficial automatizado de la institución. Su respuesta ha sido derivada a la Coordinación de Tutoría y al docente a cargo.\n\n⏰ *Horario de atención presencial:* Lunes a Viernes de 8:00 AM a 1:00 PM\n📍 *Ubicación:* Calle Teniente Pringles S/N - Chancay\n*Lema:* _\"Honradez - Disciplina - Trabajo\"_\n*CET N° 34 Chancay • UGEL 10 Huaral*",
+        "read": true,
+        "read_at": "2026-11-11 10:39:40"
+      },
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "Docente Tutor - CET 34",
+        "timestamp": "2026-11-11 10:41:00",
+        "text": "✅ *ASISTENCIA CONFIRMADA*\n\nEstimado(a) Sr(a). ceaar, el docente tutor ha registrado su confirmación para la citación del viernes 13/11/26 a las 10:00 AM.\nLe esperamos puntualmente en la Oficina de Tutoría.",
+        "read": true,
+        "read_at": "2026-11-11 10:41:00"
+      }
+    ]
+  },
+  {
+    "citation_id": "1794407254",
+    "student_name": "Pedro Morales",
+    "student_dni": "76104829",
+    "grade_section": "Secundaria Técnica - INEI 34",
+    "parent_name": "Arturo de la Rosa",
+    "parent_phone": "51979319830",
+    "status": "DELIVERED_READ",
+    "status_label": "Entregado y Leído (Doble Check Azul)",
+    "dispatched_at": "2026-11-11 09:27:34",
+    "delivered_at": "2026-11-11 09:27:36",
+    "read_at": "2026-11-11 09:28:52",
+    "delivery_latency_seconds": 2,
+    "read_latency_seconds": 76,
+    "interaction_type": "PENDIENTE_CONFIRMACION",
+    "conversation": [
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "INEI 34 Gateway Institucional (+51 960 595 874)",
+        "timestamp": "2026-11-11 09:27:34",
+        "text": "🚨 *CITACIÓN INSTITUCIONAL INEI N.° 34*\n\nEstimado(a) Arturo de la Rosa (Apoderado del alumno Pedro Morales):\nSe le cita cordialmente para una entrevista Presencial en Oficina de Tutoría el día jueves 12/11/26  09:00 AM.\n*Motivo:* Su menor hijo esta con un bajo rendimiento\n*Categoría:* Bajo Rendimiento CNEB\n\n_I.E. Emblemática INEI N.° 34 - Chancay_",
+        "read": true,
+        "read_at": "2026-11-11 09:28:52"
+      }
+    ]
+  },
+  {
+    "citation_id": "1794405449",
+    "student_name": "Pedro Morales",
+    "student_dni": "76104829",
+    "grade_section": "Secundaria Técnica - INEI 34",
+    "parent_name": "Arturo de la Rosa",
+    "parent_phone": "51979319830",
+    "status": "RESCHEDULE_ACCEPTED",
+    "status_label": "Reprogramación Aceptada (Viernes 12:00 PM)",
+    "dispatched_at": "2026-11-11 08:57:29",
+    "delivered_at": "2026-11-11 08:57:31",
+    "read_at": "2026-11-11 08:58:47",
+    "delivery_latency_seconds": 2,
+    "read_latency_seconds": 76,
+    "interaction_type": "REPROGRAMACION_CONFIRMADA",
+    "conversation": [
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "CET 34 Gateway Institucional (+51 960 595 874)",
+        "timestamp": "2026-11-11 08:57:29",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimado(a) Sr(a). *Arturo de la Rosa*\nApoderado del alumno(a): *Pedro Morales* (DNI: 76104829)\n\nPor medio de la presente, la *Dirección y la Coordinación de Tutoría* de la CET N° 34 le cita formalmente a la institución educativa:\n\n📅 *Fecha y Hora:* jueves 12/11/26  09:00 AM\n📍 *Lugar / Modalidad:* Presencial en Oficina de Tutoría\n📋 *Motivo / Asunto:* Su menor hijo esta con un bajo rendimiento\n🏷️ *Área:* Bajo Rendimiento CNEB\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚠️ *INDICACIONES IMPORTANTES:*\n1. La asistencia es de carácter *OBLIGATORIO* para garantizar el bienestar académico del estudiante.\n2. Portar su Documento Nacional de Identidad (DNI) al ingresar al plantel.\n3. Si requiere reprogramar por fuerza mayor, responda directamente a este mensaje institucional.\n\n*Lema:* _\"Honradez - Disciplina - Trabajo\"_\n*CET N° 34 Chancay • UGEL 10 Huaral*",
+        "read": true,
+        "read_at": "2026-11-11 08:58:47"
+      },
+      {
+        "sender": "PARENT",
+        "sender_label": "Arturo de la Rosa",
+        "timestamp": "2026-11-11 09:02:25",
+        "text": "No podré asistir, si pudiera ser el día viernes en la mañana por favor.",
+        "read": true,
+        "read_at": "2026-11-11 09:02:26"
+      },
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "CET 34 Gateway (Nexus IA)",
+        "timestamp": "2026-11-11 09:02:27",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n_Mesa de Tutoría & Convivencia Escolar_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimado(a) Apoderado(a),\n\nHemos registrado su solicitud de reprogramación para el día *Viernes a las 12:00 PM (Mediodía)*. Su solicitud ha sido derivada a la Coordinación de Tutoría y al docente a cargo para su validación oficial.\n\n⏰ *Horario de atención presencial:* Lunes a Viernes de 8:00 AM a 1:00 PM\n📍 *Ubicación:* Calle Teniente Pringles S/N - Chancay",
+        "read": true,
+        "read_at": "2026-11-11 09:03:00"
+      },
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "Coordinación de Tutoría CET 34",
+        "timestamp": "2026-11-11 09:03:15",
+        "text": "✅ *REPROGRAMACIÓN CONFIRMADA POR EL DOCENTE*\n\nEstimado Sr. Arturo de la Rosa, se confirma su cita para el *Viernes a las 12:00 PM (Mediodía)* en la Oficina de Tutoría. Agradecemos su compromiso con la educación de su menor hijo Pedro Morales.",
+        "read": true,
+        "read_at": "2026-11-11 09:03:40"
+      }
+    ]
+  },
+  {
+    "citation_id": "1794347758",
+    "student_name": "julian",
+    "student_dni": "83027491",
+    "grade_section": "Secundaria Técnica - INEI 34",
+    "parent_name": "Carmen Torres",
+    "parent_phone": "51974274864",
+    "status": "DELIVERED_READ",
+    "status_label": "Entregado y Leído (Doble Check Azul)",
+    "dispatched_at": "2026-11-10 16:55:58",
+    "delivered_at": "2026-11-10 16:56:00",
+    "read_at": "2026-11-10 16:57:16",
+    "delivery_latency_seconds": 2,
+    "read_latency_seconds": 76,
+    "interaction_type": "PENDIENTE_CONFIRMACION",
+    "conversation": [
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "INEI 34 Gateway Institucional (+51 960 595 874)",
+        "timestamp": "2026-11-10 16:55:58",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimado(a) Carmen Torres (Apoderado del alumno julian):\nSe le cita cordialmente para una entrevista Presencial en Oficina de Tutoría el día jueves 7/8.\n*Motivo:* asistencias\n*Categoría:* Asistencia y Puntualidad\n\n_CET N° 34 Chancay • UGEL 10 Huaral_",
+        "read": true,
+        "read_at": "2026-11-10 16:57:16"
+      }
+    ]
+  },
+  {
+    "citation_id": "1794347685",
+    "student_name": "julian",
+    "student_dni": "83027491",
+    "grade_section": "Secundaria Técnica - INEI 34",
+    "parent_name": "Carmen Torres",
+    "parent_phone": "51974274864",
+    "status": "DELIVERED_READ",
+    "status_label": "Entregado y Leído (Doble Check Azul)",
+    "dispatched_at": "2026-11-10 16:54:45",
+    "delivered_at": "2026-11-10 16:54:47",
+    "read_at": "2026-11-10 16:56:03",
+    "delivery_latency_seconds": 2,
+    "read_latency_seconds": 76,
+    "interaction_type": "PENDIENTE_CONFIRMACION",
+    "conversation": [
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "INEI 34 Gateway Institucional (+51 960 595 874)",
+        "timestamp": "2026-11-10 16:54:45",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimado(a) Carmen Torres (Apoderado del alumno julian):\nSe le cita cordialmente para una entrevista Presencial en Oficina de Tutoría el día jueves 7/8.\n*Motivo:* asistencias\n*Categoría:* Asistencia y Puntualidad\n\n_CET N° 34 Chancay • UGEL 10 Huaral_",
+        "read": true,
+        "read_at": "2026-11-10 16:56:03"
+      }
+    ]
+  },
+  {
+    "citation_id": "1",
+    "student_name": "Iulian",
+    "student_dni": "553221",
+    "grade_section": "5to 'A' Mecánica de Producción",
+    "parent_name": "Sra. Julia",
+    "parent_phone": "51974274864",
+    "status": "DELIVERED_READ",
+    "status_label": "Leído / Visto (Doble Check Azul)",
+    "dispatched_at": "2026-11-06 09:14:02",
+    "delivered_at": "2026-11-06 09:14:05",
+    "read_at": "2026-11-06 09:15:21",
+    "delivery_latency_seconds": 3,
+    "read_latency_seconds": 76,
+    "interaction_type": "CONFIRMADO",
+    "conversation": [
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "INEI 34 Gateway Institucional",
+        "timestamp": "2026-11-06 09:14:02",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimada Sra. Julia (Apoderada del alumno Iulian):\nSe le cita cordialmente para una entrevista Presencial en Taller Central el día Viernes 10:00 AM.\n*Motivo:* Asistencia y puntualidad en taller.\n*Categoría:* ASISTENCIA Y PUNTUALIDAD\n\nPor favor confirme su asistencia o si requiere reprogramar responda a este mensaje.\n_CET N° 34 Chancay • UGEL 10 Huaral_",
+        "read": true,
+        "read_at": "2026-11-06 09:15:21"
+      },
+      {
+        "sender": "PARENT",
+        "sender_label": "Sra. Julia",
+        "timestamp": "2026-11-06 09:16:45",
+        "text": "Buenos días profesor. Recibido, confirmo que estaré presente el día viernes a las 10:00 am sin falta. Gracias por avisar.",
+        "read": true,
+        "read_at": "2026-11-06 09:16:46"
+      },
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "INEI 34 Gateway Institucional (Nexus IA)",
+        "timestamp": "2026-11-06 09:16:47",
+        "text": "✅ *ASISTENCIA CONFIRMADA*\n\nEstimada Sra. Julia, su confirmación ha sido registrada formalmente en el sistema institucional de la I.E. INEI N° 34.\nEl docente tutor ya fue notificado. Le esperamos en el Taller Central.",
+        "read": true,
+        "read_at": "2026-11-06 09:17:02"
+      }
+    ]
+  },
+  {
+    "citation_id": "2",
+    "student_name": "Luciano Chunga Morales",
+    "student_dni": "74892011",
+    "grade_section": "2do 'B' - 6to Ciclo EPT",
+    "parent_name": "Sra. Morales (Madre de Luciano)",
+    "parent_phone": "51983948210",
+    "status": "RESCHEDULE_PROPOSED",
+    "status_label": "Reprogramación Solicitada con IA (En revisión por Tutor)",
+    "dispatched_at": "2026-11-08 08:30:10",
+    "delivered_at": "2026-11-08 08:30:14",
+    "read_at": "2026-11-08 08:32:05",
+    "delivery_latency_seconds": 4,
+    "read_latency_seconds": 111,
+    "interaction_type": "REPROGRAMACION",
+    "conversation": [
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "INEI 34 Gateway Institucional",
+        "timestamp": "2026-11-08 08:30:10",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimada Sra. Morales (Apoderada del alumno Luciano Chunga Morales):\nSe le cita para una entrevista Presencial en Oficina de Convivencia y Psicología el día Lunes 12/10/2026 - 09:30 AM.\n*Motivo:* Inasistencia reiterada y seguimiento por falta de evidencias en taller.\n*Categoría:* CONVIVENCIA Y PSICOLOGÍA\n\n_CET N° 34 Chancay • UGEL 10 Huaral_",
+        "read": true,
+        "read_at": "2026-11-08 08:32:05"
+      },
+      {
+        "sender": "PARENT",
+        "sender_label": "Sra. Morales",
+        "timestamp": "2026-11-08 08:35:12",
+        "text": "Buenos días tutor. El lunes a esa hora se me complica mucho por mi turno de trabajo en el hospital. ¿Habrá forma de cambiarlo para el Miércoles 14 a las 11:00 am? Se lo agradecería bastante.",
+        "read": true,
+        "read_at": "2026-11-08 08:35:13"
+      },
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "INEI 34 Gateway Institucional (Nexus IA)",
+        "timestamp": "2026-11-08 08:35:14",
+        "text": "🔄 *SOLICITUD DE REPROGRAMACIÓN DETECTADA*\n\nEstimada Sra. Morales:\nHemos procesado su propuesta para el *Miércoles 14 a las 11:00 AM* mediante nuestro asistente escolar inteligente.\n\nSe acaba de enviar la alerta directa a la bandeja del docente tutor y del área de psicología en la Intranet institucional. Tan pronto el docente valide el horario, le llegará la confirmación definitiva por este medio. ¡Muchas gracias!",
+        "read": true,
+        "read_at": "2026-11-08 08:36:01"
+      }
+    ]
+  },
+  {
+    "citation_id": "3",
+    "student_name": "Diego Quispe Alarcón",
+    "student_dni": "74892011",
+    "grade_section": "5to 'A' Mecánica de Producción",
+    "parent_name": "Carmen Alarcón Torres",
+    "parent_phone": "51987654321",
+    "status": "DELIVERED_READ",
+    "status_label": "Leído / Visto (Doble Check Azul)",
+    "dispatched_at": "2026-11-07 10:15:00",
+    "delivered_at": "2026-11-07 10:15:02",
+    "read_at": "2026-11-07 10:18:40",
+    "delivery_latency_seconds": 2,
+    "read_latency_seconds": 218,
+    "interaction_type": "CONFIRMADO",
+    "conversation": [
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "INEI 34 Gateway Institucional",
+        "timestamp": "2026-11-07 10:15:00",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimada Sra. Carmen Alarcón Torres (Apoderada del alumno Diego Quispe Alarcón):\nSe le cita para entrevista Presencial en Taller Central el Jueves 08/10/2026 - 10:30 AM.\n*Motivo:* Reiteradas tardanzas al ingreso de taller (3 consecutivas).\n*Categoría:* ASISTENCIA Y SEGURIDAD\n\n_CET N° 34 Chancay • UGEL 10 Huaral_",
+        "read": true,
+        "read_at": "2026-11-07 10:18:40"
+      },
+      {
+        "sender": "PARENT",
+        "sender_label": "Carmen Alarcón Torres",
+        "timestamp": "2026-11-07 10:20:11",
+        "text": "Conforme profesor, asistiré puntualmente para dialogar sobre las tardanzas de Diego.",
+        "read": true,
+        "read_at": "2026-11-07 10:20:12"
+      },
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "INEI 34 Gateway Institucional (Nexus IA)",
+        "timestamp": "2026-11-07 10:20:13",
+        "text": "✅ *CITA CONFIRMADA*: Registrado en el sistema de la I.E. Emblemática INEI N° 34.",
+        "read": true,
+        "read_at": "2026-11-07 10:20:50"
+      }
+    ]
+  },
+  {
+    "citation_id": "4",
+    "student_name": "Carlos Mendoza Quispe",
+    "student_dni": "73284918",
+    "grade_section": "5to 'A' Mecánica de Producción",
+    "parent_name": "Jorge Mendoza Romero",
+    "parent_phone": "51991234567",
+    "status": "DELIVERED_READ",
+    "status_label": "Leído y Atendido en Colegio",
+    "dispatched_at": "2026-11-05 14:00:22",
+    "delivered_at": "2026-11-05 14:00:24",
+    "read_at": "2026-11-05 14:01:05",
+    "delivery_latency_seconds": 2,
+    "read_latency_seconds": 41,
+    "interaction_type": "ATENDIDO",
+    "conversation": [
+      {
+        "sender": "BOT_INEI34",
+        "sender_label": "INEI 34 Gateway Institucional",
+        "timestamp": "2026-11-05 14:00:22",
+        "text": "🏛️ *CET N° 34 - CHANCAY*\n📢 *CITACIÓN OFICIAL A PADRE DE FAMILIA / APODERADO*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nEstimado Sr. Jorge Mendoza Romero (Apoderado del alumno Carlos Mendoza Quispe):\nSe le cita para entrevista el Viernes 09/10/2026 - 11:00 AM.\n*Motivo:* Felicitación por proyecto destacado en torno y coordinación de pasantía técnica.\n*Categoría:* RECONOCIMIENTO Y MÉRITO\n\n_CET N° 34 Chancay • UGEL 10 Huaral_",
+        "read": true,
+        "read_at": "2026-11-05 14:01:05"
+      },
+      {
+        "sender": "PARENT",
+        "sender_label": "Jorge Mendoza Romero",
+        "timestamp": "2026-11-05 14:02:15",
+        "text": "Excelente noticia profesor. Qué alegría por mi hijo, allí estaré el viernes a las 11am.",
+        "read": true,
+        "read_at": "2026-11-05 14:02:16"
+      }
+    ]
+  }
+]
