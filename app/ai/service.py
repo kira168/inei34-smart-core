@@ -4922,6 +4922,23 @@ class AIService:
                     if r_dict["is_institutional"] != 1 and r_dict.get("user_id") != user_id and user_role not in ["ADMINISTRADOR", "DIRECTOR"]:
                         return None
 
+                    # Resuelve archivo en disco multiplataforma (Windows <-> Linux)
+                    if r_dict.get("file_path"):
+                        fp = r_dict["file_path"]
+                        if not os.path.exists(fp):
+                            fname = os.path.basename(fp.replace("\\", "/"))
+                            alt_fp = os.path.join(TEMPLATES_STORAGE_DIR, fname)
+                            if os.path.exists(alt_fp):
+                                fp = alt_fp
+                            else:
+                                alt_fp2 = os.path.abspath(os.path.join("data", "templates", "smartteacher", fname))
+                                if os.path.exists(alt_fp2):
+                                    fp = alt_fp2
+                        if os.path.exists(fp):
+                            r_dict["file_path"] = fp
+                            with open(fp, "rb") as fpb:
+                                r_dict["file_bytes"] = fpb.read()
+
                     for j_field in ["blueprint_json", "fields_json", "styles_json"]:
                         if r_dict.get(j_field) and isinstance(r_dict[j_field], str):
                             try:
@@ -4936,28 +4953,33 @@ class AIService:
         for off_tpl in cls.OFFICIAL_CET34_TEMPLATES:
             if off_tpl["id"] in [template_id, tpl_alt_id]:
                 f_path = os.path.join(TEMPLATES_STORAGE_DIR, off_tpl["filename"])
+                if not os.path.exists(f_path):
+                    f_path_alt = os.path.abspath(os.path.join("data", "templates", "smartteacher", off_tpl["filename"]))
+                    if os.path.exists(f_path_alt):
+                        f_path = f_path_alt
+                f_bytes = None
                 if os.path.exists(f_path):
                     with open(f_path, "rb") as fp:
                         f_bytes = fp.read()
-                    analysis = template_engine.analyze_template(f_bytes, off_tpl["filename"])
-                    return {
-                        "id": off_tpl["id"],
-                        "user_id": None,
-                        "name": off_tpl["name"],
-                        "doc_type": off_tpl["doc_type"],
-                        "description": off_tpl["description"],
-                        "filename": off_tpl["filename"],
-                        "file_path": f_path,
-                        "file_bytes": f_bytes,
-                        "blueprint_json": analysis,
-                        "fields_json": analysis.get("editable_fields", []),
-                        "styles_json": {
-                            "margins": analysis.get("margins"),
-                            "font_family": analysis.get("font_family"),
-                            "orientation": analysis.get("orientation")
-                        },
-                        "is_institutional": 1
-                    }
+                analysis = template_engine.analyze_template(f_bytes, off_tpl["filename"]) if f_bytes else {}
+                return {
+                    "id": off_tpl["id"],
+                    "user_id": None,
+                    "name": off_tpl["name"],
+                    "doc_type": off_tpl["doc_type"],
+                    "description": off_tpl["description"],
+                    "filename": off_tpl["filename"],
+                    "file_path": f_path,
+                    "file_bytes": f_bytes,
+                    "blueprint_json": analysis,
+                    "fields_json": analysis.get("editable_fields", []),
+                    "styles_json": {
+                        "margins": analysis.get("margins"),
+                        "font_family": analysis.get("font_family"),
+                        "orientation": analysis.get("orientation")
+                    },
+                    "is_institutional": 1
+                }
 
         return None
     @classmethod
@@ -5079,15 +5101,69 @@ class AIService:
             tpl_record = cls.get_template_by_id(template_id, user)
             if tpl_record:
                 tpl_bytes = tpl_record.get("file_bytes")
-                if not tpl_bytes and tpl_record.get("file_path") and os.path.exists(tpl_record["file_path"]):
-                    with open(tpl_record["file_path"], "rb") as fp:
-                        tpl_bytes = fp.read()
+                if not tpl_bytes and tpl_record.get("file_path"):
+                    cand_fp = tpl_record["file_path"]
+                    if not os.path.exists(cand_fp):
+                        cand_name = os.path.basename(cand_fp.replace("\\", "/"))
+                        alt1 = os.path.join(TEMPLATES_STORAGE_DIR, cand_name)
+                        alt2 = os.path.abspath(os.path.join("data", "templates", "smartteacher", cand_name))
+                        if os.path.exists(alt1):
+                            cand_fp = alt1
+                        elif os.path.exists(alt2):
+                            cand_fp = alt2
+                    if os.path.exists(cand_fp):
+                        with open(cand_fp, "rb") as fp:
+                            tpl_bytes = fp.read()
                 tpl_name = tpl_record.get("filename") or tpl_record.get("name") or "Plantilla_Modelo.docx"
-                if not tpl_name.endswith(".docx") and not tpl_name.endswith(".pdf") and not tpl_name.endswith(".txt"):
+                if not any(tpl_name.endswith(ext) for ext in [".docx", ".pdf", ".txt", ".pptx"]):
                     tpl_name += ".docx"
 
         if not tpl_bytes:
-            raise ValueError("No se proporcionó un archivo de plantilla válido ni se encontró la plantilla en la biblioteca.")
+            # Fallback inteligente: si la plantilla física no está en disco, generamos el material dinámico
+            doc_type = (tpl_record.get("doc_type") if tpl_record else None) or "ficha_trabajo"
+            logger.warning(f"Plantilla física {template_id} no encontrada en disco. Ejecutando generación nativa para {doc_type}.")
+            active_topic = (topic or "").strip() or "Tema Técnico de Especialidad"
+            active_grade = grade or 5
+            active_spec = specialty or "Educación para el Trabajo"
+            active_dur = duration_minutes or 90
+            teacher_name = user.get("full_name") or user.get("username") or "Docente"
+            full_prompt = prompt or f"Genera un documento oficial de tipo {doc_type} sobre '{active_topic}' para {active_grade}° de secundaria en {active_spec}. I.E. INEI N.° 34 de Chancay."
+            if doc_type == "sesion_aprendizaje":
+                gen_res = cls.generate_cneb_session_structured(
+                    user=user,
+                    topic=active_topic,
+                    grade=active_grade,
+                    specialty=active_spec,
+                    duration_minutes=active_dur,
+                    session_type=session_type or "general",
+                    structure_mode="institucional"
+                )
+            else:
+                gen_res = cls.generate_material_from_instructions(
+                    user=user,
+                    prompt=full_prompt,
+                    preferred_type=doc_type,
+                    grade=active_grade,
+                    specialty=active_spec
+                )
+            return {
+                "success": True,
+                "template_id": template_id,
+                "template_name": tpl_name,
+                "doc_type": doc_type,
+                "title": gen_res.get("title") or active_topic,
+                "topic": active_topic,
+                "grade": active_grade,
+                "specialty": active_spec,
+                "duration_minutes": active_dur,
+                "teacher_name": teacher_name,
+                "content_markdown": gen_res.get("content_markdown") or gen_res.get("content") or f"# {active_topic}\n\nDocumento institucional generado exitosamente.",
+                "content_json": gen_res.get("content_json") or gen_res.get("structured_json") or {},
+                "docx_bytes": gen_res.get("docx_bytes"),
+                "pptx_bytes": gen_res.get("pptx_bytes"),
+                "metadata": gen_res.get("metadata", {}),
+                "status": "BORRADOR_PLANTILLA_GENERADO"
+            }
 
         analysis = template_engine.analyze_template(tpl_bytes, tpl_name)
         doc_type = analysis.get("doc_type", "sesion_aprendizaje")

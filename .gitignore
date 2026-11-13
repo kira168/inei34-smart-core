@@ -39,6 +39,10 @@ cloudflared.exe
 # Archivos personales e informes de tesis/prácticas
 *.docx
 *.doc
+!data/templates/**/*.docx
+!data/templates/**/*.pptx
+data/templates/**/test_*.docx
+data/templates/**/tpl_user*.docx
 INFORME_*
 Figura*.png
 
