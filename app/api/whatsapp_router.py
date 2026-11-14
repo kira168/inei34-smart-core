@@ -36,31 +36,61 @@ EVIDENCE_FILE = os.path.join(DATA_DIR, "whatsapp_chat_evidence.json")
 
 _bot_subprocess = None
 
-def ensure_whatsapp_bot_running():
+def ensure_whatsapp_bot_running() -> bool:
+    """
+    Verifica si el gateway Node.js Baileys en puerto 3001 está activo.
+    Si no está activo, intenta iniciarlo automáticamente en segundo plano.
+    """
+    global _bot_subprocess
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(0.3)
+        s.settimeout(0.4)
         res = s.connect_ex(('127.0.0.1', 3001))
         s.close()
-        return res == 0
+        if res == 0:
+            return True
     except Exception:
-        return False
+        pass
+
+    # Intentar auto-iniciar el proceso Node.js en segundo plano
+    bot_dir = os.path.abspath(os.path.join(DATA_DIR, "..", "whatsapp_bot"))
+    server_js = os.path.join(bot_dir, "server.js")
+    if os.path.exists(server_js):
+        try:
+            if _bot_subprocess is None or _bot_subprocess.poll() is not None:
+                import shutil
+                node_bin = shutil.which("node") or "node"
+                logger.info(f"[WhatsApp Gateway] Iniciando proceso Node.js Baileys: {node_bin} {server_js}")
+                _bot_subprocess = subprocess.Popen(
+                    [node_bin, "server.js"],
+                    cwd=bot_dir,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    shell=False
+                )
+                import time
+                for _ in range(12):
+                    time.sleep(0.25)
+                    try:
+                        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                        s.settimeout(0.3)
+                        res = s.connect_ex(('127.0.0.1', 3001))
+                        s.close()
+                        if res == 0:
+                            logger.info("[WhatsApp Gateway] Proceso Node.js iniciado y respondiendo en puerto 3001.")
+                            return True
+                    except Exception:
+                        pass
+        except Exception as e:
+            logger.warning(f"[WhatsApp Gateway] No se pudo auto-iniciar node server.js: {e}")
+
+    return False
 
 def get_official_qr_base64() -> Optional[str]:
-    import base64
-    candidates = [
-        os.path.join(DATA_DIR, "..", "public", "whatsapp_official_qr.png"),
-        os.path.join(DATA_DIR, "..", "public", "imagen", "whatsapp_official_qr.png"),
-        os.path.join(DATA_DIR, "..", "app", "static", "img", "whatsapp_official_qr.png")
-    ]
-    for c in candidates:
-        if os.path.exists(c):
-            try:
-                with open(c, "rb") as f:
-                    b64 = base64.b64encode(f.read()).decode("utf-8")
-                    return f"data:image/png;base64,{b64}"
-            except Exception:
-                pass
+    """
+    IMPORTANTE: Nunca retornar códigos QR estáticos falsos porque WhatsApp los rechaza.
+    Solo se retorna código QR dinámico si Baileys lo generó en vivo.
+    """
     return None
 
 def get_official_config() -> dict:
@@ -160,7 +190,7 @@ async def get_whatsapp_status(user: Optional[dict] = Depends(get_current_user_op
     official_cfg = get_official_config()
     if ensure_whatsapp_bot_running():
         try:
-            async with httpx.AsyncClient(timeout=1.0) as client:
+            async with httpx.AsyncClient(timeout=2.0) as client:
                 resp = await client.get(f"{NODE_GATEWAY_URL}/api/whatsapp/status")
                 if resp.status_code == 200:
                     data = resp.json()
@@ -171,18 +201,17 @@ async def get_whatsapp_status(user: Optional[dict] = Depends(get_current_user_op
         except Exception:
             pass
 
-    official_qr = get_official_qr_base64()
     return {
         "ok": True,
-        "status": "SCAN_QR" if official_qr else "CONNECTING",
+        "status": "CONNECTING",
         "connected": False,
         "mode": "LOCAL_BOT",
-        "qr": official_qr,
+        "qr": None,
         "phone": official_cfg.get("phone", "51984123456"),
         "official_phone": official_cfg.get("phone", "51984123456"),
         "official_display": official_cfg.get("display_phone", "+51 984 123 456"),
         "name": "INEI 34 Gateway Institucional",
-        "info": "Escanee el código QR oficial desde su aplicación de WhatsApp."
+        "info": "Iniciando servicio oficial de WhatsApp en el servidor... Espere unos segundos."
     }
 
 @router.get("/config")
@@ -207,25 +236,20 @@ async def request_whatsapp_pairing_code(req: PairingCodeRequest, user: Optional[
     """
     if ensure_whatsapp_bot_running():
         try:
-            async with httpx.AsyncClient(timeout=2.0) as client:
+            async with httpx.AsyncClient(timeout=10.0) as client:
                 resp = await client.post(f"{NODE_GATEWAY_URL}/api/whatsapp/pairing-code", json=req.dict())
                 if resp.status_code == 200:
                     return resp.json()
-        except Exception:
-            pass
+                else:
+                    err_json = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else {}
+                    err_msg = err_json.get("error") or "Error en el servicio de WhatsApp oficial."
+                    return {"ok": False, "error": err_msg}
+        except Exception as e:
+            logger.warning(f"Error querying pairing code: {e}")
 
-    import random
-    clean_digits = "".join(filter(str.isdigit, req.phone or ""))
-    suffix = clean_digits[-4:] if len(clean_digits) >= 4 else str(random.randint(1000, 9999))
-    simulated_code = f"34CH-{suffix}"
     return {
-        "ok": True,
-        "code": simulated_code,
-        "formattedCode": simulated_code,
-        "pairing_code": simulated_code,
-        "phone": req.phone,
-        "status": "PAIRING_CODE_READY",
-        "message": f"Código generado para {req.phone}. Ingréselo en WhatsApp > Dispositivos vinculados > Vincular con número de teléfono."
+        "ok": False,
+        "error": "El servicio de WhatsApp se está sincronizando con los servidores. Por favor espere 5 segundos y vuelva a presionar 'Generar Código'."
     }
 
 @router.get("/qr-code")
@@ -236,7 +260,7 @@ async def get_whatsapp_qr_code(phone: Optional[str] = None, user: Optional[dict]
     official_cfg = get_official_config()
     if ensure_whatsapp_bot_running():
         try:
-            async with httpx.AsyncClient(timeout=1.0) as client:
+            async with httpx.AsyncClient(timeout=2.0) as client:
                 resp = await client.get(f"{NODE_GATEWAY_URL}/api/whatsapp/status")
                 if resp.status_code == 200:
                     data = resp.json()
@@ -244,22 +268,21 @@ async def get_whatsapp_qr_code(phone: Optional[str] = None, user: Optional[dict]
                         "ok": True,
                         "qr": data.get("qr"),
                         "connected": data.get("connected", False),
-                        "status": data.get("status", "SCAN_QR"),
+                        "status": data.get("status", "SCAN_QR" if data.get("qr") else "CONNECTING"),
                         "phone": data.get("phone") or official_cfg.get("phone"),
                         "official_display": official_cfg.get("display_phone")
                     }
         except Exception:
             pass
 
-    official_qr = get_official_qr_base64()
     return {
         "ok": True,
-        "qr": official_qr,
+        "qr": None,
         "connected": False,
-        "status": "SCAN_QR" if official_qr else "CONNECTING",
+        "status": "CONNECTING",
         "phone": official_cfg.get("phone"),
         "official_display": official_cfg.get("display_phone"),
-        "message": "Escanee el código QR oficial de la I.E. INEI N.° 34 de Chancay desde su aplicación de WhatsApp."
+        "info": "Iniciando servicio de WhatsApp en el servidor... Por favor espere unos segundos."
     }
 
 @router.post("/logout")

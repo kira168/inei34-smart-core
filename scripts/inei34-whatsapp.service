@@ -1,0 +1,16 @@
+[Unit]
+Description=INEI 34 Chancay - WhatsApp Institutional Gateway (Baileys)
+After=network.target
+
+[Service]
+Type=simple
+User=nuvk168
+WorkingDirectory=/home/nuvk168/inei_smart_core/whatsapp_bot
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=5
+Environment=PORT=3001
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

@@ -294,7 +294,7 @@ app.include_router(support_router)
 app.include_router(firewall_router)
 app.include_router(whatsapp_router)
 
-# Eventos de Ciclo de Vida: Monitor de Inteligencia Artificial
+# Eventos de Ciclo de Vida: Monitor de Inteligencia Artificial y WhatsApp Gateway
 @app.on_event("startup")
 def startup_event():
     try:
@@ -303,6 +303,10 @@ def startup_event():
             return
         from app.ai.ollama_monitor import ollama_monitor
         ollama_monitor.start_background_monitor(interval_seconds=15.0)
+
+        # Iniciar WhatsApp Gateway (Baileys) en segundo plano
+        from app.api.whatsapp_router import ensure_whatsapp_bot_running
+        ensure_whatsapp_bot_running()
     except Exception as e:
         pass
 
@@ -311,6 +315,10 @@ def shutdown_event():
     try:
         from app.ai.ollama_monitor import ollama_monitor
         ollama_monitor.stop_background_monitor()
+
+        from app.api.whatsapp_router import _bot_subprocess
+        if _bot_subprocess and _bot_subprocess.poll() is None:
+            _bot_subprocess.terminate()
     except Exception as e:
         pass
 
