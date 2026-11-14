@@ -76,7 +76,7 @@ UPLOAD_RATE_WINDOW_SECONDS = int(os.getenv("UPLOAD_RATE_WINDOW_SECONDS", "60")) 
 
 
 
-# Configuración de Inteligencia Artificial (Ollama Local)
+# Configuración de Inteligencia Artificial (Ollama Local & Cloud APIs)
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
 DEFAULT_AI_MODEL = os.getenv("DEFAULT_AI_MODEL", "llama3.2:latest")
 AI_FALLBACK_MODEL = os.getenv("AI_FALLBACK_MODEL", "llama3.2:latest")
@@ -86,6 +86,12 @@ AI_TEMPERATURE = float(os.getenv("AI_TEMPERATURE", "0.3"))
 AI_TIMEOUT_SECONDS = int(os.getenv("AI_TIMEOUT_SECONDS", "30"))
 AI_KEEP_ALIVE = os.getenv("AI_KEEP_ALIVE", "60m")
 AI_FALLBACK_ACTIVE = True
+
+# Proveedores de IA en la Nube (Opcionales - Ultra Rápidos para servidores en producción)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "").strip()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 
 # Institución
 INSTITUTION_NAME = "I.E. INEI N° 34"

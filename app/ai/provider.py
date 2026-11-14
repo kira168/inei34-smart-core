@@ -5,6 +5,7 @@ Dynamically selects the best local model for coding, math, communication, or gen
 Provides a comprehensive educational fallback if Ollama is temporarily busy or unreachable.
 """
 
+import os
 import requests
 import json
 import base64
@@ -22,7 +23,11 @@ from app.config import (
     AI_TEMPERATURE,
     AI_TIMEOUT_SECONDS,
     AI_KEEP_ALIVE,
-    AI_FALLBACK_ACTIVE
+    AI_FALLBACK_ACTIVE,
+    GROQ_API_KEY,
+    DEEPSEEK_API_KEY,
+    GEMINI_API_KEY,
+    OPENAI_API_KEY
 )
 
 logger = logging.getLogger("inei_smart_core.ai_provider")
@@ -366,6 +371,85 @@ class AIProvider:
                 "num_ctx": num_ctx
             }
         }
+
+        # 0. Proveedores de IA en la Nube (Groq Cloud / DeepSeek) - Prioritarios si están configurados
+        groq_key = os.getenv("GROQ_API_KEY", "").strip() or GROQ_API_KEY
+        if groq_key:
+            try:
+                t0 = time.time()
+                groq_payload = {
+                    "model": "llama-3.3-70b-versatile",
+                    "messages": messages_payload,
+                    "temperature": gen_temp,
+                    "max_tokens": max_predict
+                }
+                resp = requests.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"},
+                    json=groq_payload,
+                    timeout=timeout_req
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    content = data["choices"][0]["message"]["content"].strip()
+                    total_dur_ms = int((time.time() - t0) * 1000)
+                    eval_count = len(content.split())
+                    return {
+                        "success": True,
+                        "content": content,
+                        "model": "llama-3.3-70b (GroqCloud)",
+                        "provider": "groq_cloud",
+                        "is_fallback": False,
+                        "is_complete": True,
+                        "is_truncated": False,
+                        "is_repaired": False,
+                        "done_reason": "natural_stop",
+                        "tokens_eval": eval_count,
+                        "duration_ms": total_dur_ms
+                    }
+                else:
+                    logger.warning(f"Groq Cloud status {resp.status_code}: {resp.text[:200]}")
+            except Exception as e:
+                logger.warning(f"Groq Cloud request failed: {e}")
+
+        deepseek_key = os.getenv("DEEPSEEK_API_KEY", "").strip() or DEEPSEEK_API_KEY
+        if deepseek_key:
+            try:
+                t0 = time.time()
+                ds_payload = {
+                    "model": "deepseek-chat",
+                    "messages": messages_payload,
+                    "temperature": gen_temp,
+                    "max_tokens": max_predict
+                }
+                resp = requests.post(
+                    "https://api.deepseek.com/chat/completions",
+                    headers={"Authorization": f"Bearer {deepseek_key}", "Content-Type": "application/json"},
+                    json=ds_payload,
+                    timeout=timeout_req
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    content = data["choices"][0]["message"]["content"].strip()
+                    total_dur_ms = int((time.time() - t0) * 1000)
+                    eval_count = len(content.split())
+                    return {
+                        "success": True,
+                        "content": content,
+                        "model": "deepseek-chat (DeepSeek API)",
+                        "provider": "deepseek",
+                        "is_fallback": False,
+                        "is_complete": True,
+                        "is_truncated": False,
+                        "is_repaired": False,
+                        "done_reason": "natural_stop",
+                        "tokens_eval": eval_count,
+                        "duration_ms": total_dur_ms
+                    }
+                else:
+                    logger.warning(f"DeepSeek API status {resp.status_code}: {resp.text[:200]}")
+            except Exception as e:
+                logger.warning(f"DeepSeek API request failed: {e}")
 
         if self.is_available():
             try:
@@ -804,6 +888,48 @@ class AIProvider:
         p_lower = user_prompt.lower().strip()
         doc_title = f"Prof. {user_name}" if "prof" not in (user_name or "").lower() else user_name
 
+        # 0. Células y Biología Celular (Explicación didáctica completa)
+        if any(w in p_lower for w in ["celula", "célula", "celulas", "células", "organelo", "organelos", "mitocondria", "procariota", "eucariota"]):
+            return (
+                f"¡Por supuesto, estimado(a) colega **{doc_title}**! Con mucho gusto conversamos sobre las **células**.\n\n"
+                f"Es uno de los temas más apasionantes y fundamentales de las Ciencias Naturales y la Biología escolar. Aquí te comparto los conceptos esenciales y cómo explicarlos de forma amena y didáctica a los estudiantes:\n\n"
+                f"#### 🧬 1. ¿Qué es la Célula en esencia?\n"
+                f"La célula es la **unidad anatómica, funcional y genética** de todos los seres vivos. Es la estructura más pequeña con vida propia capaz de realizar las tres funciones vitales: *nutrición, relación y reproducción*.\n\n"
+                f"#### 🔬 2. Los Dos Grandes Tipos Celulares:\n"
+                f"- **Células Procariotas (ej. bacterias):** Son las más primitivas. **No tienen núcleo definido**; su material genético (ADN) está libre y disperso en el citoplasma (nucleoide).\n"
+                f"- **Células Eucariotas (animales, plantas, hongos y humanos):** Son más evolucionadas y complejas. **Tienen un núcleo verdadero delimitado por membrana** que protege el ADN, además de organelos membranosos especializados.\n\n"
+                f"#### 🌿 Célula Vegetal vs. 🐾 Célula Animal (Diferencias Clave para el Aula):\n"
+                f"- **Célula Vegetal:** Posee **pared celular** rígida de celulosa, **cloroplastos con clorofila** para realizar fotosíntesis y una **gran vacuola central** de agua.\n"
+                f"- **Célula Animal:** No tiene pared celular ni cloroplastos; su membrana es flexible, tiene **centríolos** (para la división celular) y vacuolas pequeñas.\n\n"
+                f"#### 🏭 3. Analogía Didáctica: *'La Célula como una Ciudad o Fábrica'*:\n"
+                f"Para explicarla en secundaria de forma intuitiva:\n"
+                f"- **El Núcleo:** Es la *Alcaldía o Gerencia General* (alberga los planos maestros: el ADN).\n"
+                f"- **La Membrana Plasmática:** Es el *Control de Aduanas o Frontera* (regula qué sustancias entran y cuáles salen).\n"
+                f"- **Las Mitocondrias:** Son las *Centrales Eléctricas* (generan la energía celular en forma de ATP mediante respiración celular).\n"
+                f"- **Los Ribosomas:** Son los *Obreros de Ensamblaje* (fabrican las proteínas).\n"
+                f"- **El Aparato de Golgi:** Es la *Empresa de Envíos y Logística* (empaqueta y distribuye moléculas).\n"
+                f"- **Los Lisosomas:** Son el *Servicio de Limpieza y Reciclaje* (degradan desechos).\n\n"
+                f"---\n"
+                f"¿Qué te parece este enfoque, colega? ¿Te gustaría profundizar en algún organelo específico, en la mitosis/meiosis, o quizás preparar una práctica de laboratorio sencilla con catafilo de cebolla al microscopio?"
+            )
+
+        # 0.1 Fotosíntesis y Botánica Escolar
+        if any(w in p_lower for w in ["fotosintesis", "fotosíntesis", "cloroplasto", "clorofila"]):
+            return (
+                f"¡Excelente tema, colega **{doc_title}**! La **fotosíntesis** es el motor biológico que sostiene la vida en la Tierra.\n\n"
+                f"Aquí tienes los conceptos clave estructurados para trabajar en clase:\n\n"
+                f"#### ☀️ 1. La Ecuación General de la Fotosíntesis:\n"
+                f"$$\\text{{Dióxido de Carbono}} + \\text{{Agua}} + \\text{{Luz Solar}} \\xrightarrow{{\\text{{Clorofila}}}} \\text{{Glucosa}} + \\text{{Oxígeno}}$$\n"
+                f"$$6\\text{{CO}}_2 + 6\\text{{H}}_2\\text{{O}} + \\text{{Energía Lumínica}} \\rightarrow \\text{{C}}_6\\text{{H}}_{{12}}\\text{{O}}_6 + 6\\text{{O}}_2$$\n\n"
+                f"#### 🍃 2. Las Dos Fases Fundamentales:\n"
+                f"1. **Fase Luminosa (en los tilacoides del cloroplasto):** La clorofila capta la luz, rompe la molécula de agua (fotólisis), libera oxígeno a la atmósfera y produce energía química (ATP y NADPH).\n"
+                f"2. **Fase Oscura o Ciclo de Calvin (en el estroma):** Con la energía del ATP y el $CO_2$ del aire, la planta sintetiza glucosa y otros nutrientes orgánicos sin necesidad directa de luz.\n\n"
+                f"#### 💡 3. Importancia Ecológica:\n"
+                f"- Es la base de las cadenas tróficas (organismos autótrofos/productores).\n"
+                f"- Regula el clima capturando gases de efecto invernadero ($CO_2$) y produciendo el $O_2$ que respiramos.\n\n"
+                f"¿Deseas que preparemos un experimento demostrativo con hojas de elodea o una ficha de preguntas para los estudiantes?"
+            )
+
         # 1. Convivencia, Clima de Aula, Manejo de Estudiantes y Tutoría
         if any(w in p_lower for w in ["estudiante", "alumno", "disciplina", "motivar", "motivacion", "motivación", "atencion", "atención", "conducta", "desatento", "inquieto", "padres", "reunion de padres", "reunión de padres", "tutoria", "tutoría", "convivencia"]):
             return (
@@ -860,21 +986,20 @@ class AIProvider:
                 f"Docente Titular — I.E. INEI N.° 34 Chancay"
             )
 
-        # 3. Ciencia, Conceptos y Cultura General (Física, Química, Biología, Historia, Matemáticas)
-        if any(w in p_lower for w in ["que es", "qué es", "como funciona", "cómo funciona", "por que", "por qué", "diferencia", "cuantica", "cuántica", "fisica", "física", "quimica", "química", "celula", "célula", "atomo", "átomo", "fotosintesis", "fotosíntesis", "adn", "gravedad", "historia", "peru", "perú"]):
+        # 3. Ciencia, Conceptos y Cultura General (Física, Química, Historia, Matemáticas)
+        if any(w in p_lower for w in ["que es", "qué es", "como funciona", "cómo funciona", "por que", "por qué", "diferencia", "cuantica", "cuántica", "fisica", "física", "quimica", "química", "atomo", "átomo", "adn", "gravedad", "historia", "peru", "perú"]):
             return (
-                f"### 🔬 Explicación Didáctica: {user_prompt.capitalize()}\n\n"
-                f"Estimado(a) **{doc_title}**, le presento una explicación clara y estructurada, ideal para profundizar en el tema o compartirla con sus estudiantes mediante analogías didácticas:\n\n"
-                f"#### 1. Concepto Central y Definición\n"
-                f"En términos precisos, este fenómeno o concepto describe cómo interactúan los elementos del sistema bajo principios y leyes universales verificables. "
-                f"No ocurre de manera aislada, sino dentro de un ciclo o estructura de causas y consecuencias interconectadas.\n\n"
-                f"#### 2. Analogía Didáctica para el Aula\n"
-                f"Para explicarlo a los estudiantes de secundaria de forma intuitiva, podemos compararlo con un engranaje o un circuito de trabajo: "
-                f"cada componente cumple un rol indispensable, y si uno se modifica, todo el resultado final se transforma armónicamente.\n\n"
-                f"#### 3. Aplicación Práctica y Preguntas Clave\n"
-                f"- **¿Dónde se observa en la vida diaria?:** En la tecnología cotidiana, en los procesos de taller y en el entorno natural de Chancay.\n"
-                f"- **Pregunta de comprobación para la clase:** *¿Qué sucedería si eliminamos una de las variables principales?*\n\n"
-                f"¿Desea que elaboremos un ejemplo numérico, un diagrama explicativo o una actividad práctica para este tema?"
+                f"### 🔬 Explicación Didáctica y Conceptual\n\n"
+                f"Estimado(a) **{doc_title}**, con mucho gusto abordamos esta consulta:\n\n"
+                f"#### 1. Concepto Fundamental\n"
+                f"Para comprender **{user_prompt}**, partimos de sus principios clave: en la ciencia y la naturaleza, "
+                f"cada proceso responde a leyes verificables y causas bien definidas que producen efectos observables y medibles.\n\n"
+                f"#### 2. Orientación para la Enseñanza en el Aula\n"
+                f"Al explicar este tema a los estudiantes:\n"
+                f"- **Partir de saberes previos:** Preguntarles qué han observado o qué ideas tienen antes de dar la definición técnica.\n"
+                f"- **Uso de ejemplos cotidianos:** Relacionar el concepto con situaciones comunes de su entorno diario en Chancay.\n"
+                f"- **Verificación formativa:** Plantear un reto o pregunta reflexiva para que apliquen lo aprendido con sus propias palabras.\n\n"
+                f"¿Desea profundizar en algún punto en particular o preparamos una actividad práctica para sus alumnos?"
             )
 
         # 4. Código, Informática, Excel y Herramientas Tecnológicas
