@@ -795,6 +795,155 @@ class AIProvider:
             "¿Deseas profundizar en algún punto en particular, generar un ejemplo práctico o redactar un documento formal al respecto?"
         )
 
+    def _generate_universal_docente_response(self, user_prompt: str, user_name: str, specialty: Optional[str] = None) -> str:
+        """
+        Generador universal conversacional para SmartTeacher AI (Modo Chat abierto para docentes).
+        Permite al docente dialogar y consultar sobre CUALQUIER tema (ciencias, historia, redacción, consejos de aula, ideas, tecnología)
+        como un copiloto pedagógico cercano (tipo ChatGPT / Gemini).
+        """
+        p_lower = user_prompt.lower().strip()
+        doc_title = f"Prof. {user_name}" if "prof" not in (user_name or "").lower() else user_name
+
+        # 1. Convivencia, Clima de Aula, Manejo de Estudiantes y Tutoría
+        if any(w in p_lower for w in ["estudiante", "alumno", "disciplina", "motivar", "motivacion", "motivación", "atencion", "atención", "conducta", "desatento", "inquieto", "padres", "reunion de padres", "reunión de padres", "tutoria", "tutoría", "convivencia"]):
+            return (
+                f"### 💡 Orientación Pedagógica y de Convivencia Escolar\n"
+                f"**I.E. INEI N.° 34 de Chancay** | Estimado(a) **{doc_title}**\n\n"
+                f"Abordar esta situación requiere un enfoque preventivo, empático y formativo alineado a la Convivencia Escolar del MINEDU:\n\n"
+                f"#### 1. Diagnóstico y Vínculo Formativo\n"
+                f"- **Identificar la causa subyacente:** Detrás del desinterés o la inquietud suele haber desmotivación, dificultades de comprensión o factores familiares.\n"
+                f"- **Escucha activa:** Conversar en privado con el estudiante (o con el apoderado) para conocer su contexto antes de aplicar medidas correctivas.\n\n"
+                f"#### 2. Estrategias Prácticas en el Aula y Taller\n"
+                f"- **Roles y Responsabilidades Dinámicas:** Asignarle un rol activo en la cuadrilla de taller (ej. encargado de control de calidad o seguridad 5S) para canalizar positivamente su energía.\n"
+                f"- **Micro-retos y Refuerzo Positivo:** Dividir las tareas en metas de 15 a 20 minutos y reconocer públicamente sus logros concretos.\n"
+                f"- **Reglas Claras y Co-creadas:** Recordar los acuerdos de convivencia establecidos por el propio grupo al inicio del año lectivo.\n\n"
+                f"#### 3. Próximo Paso Recomendado\n"
+                f"Si el caso es reiterado, coordine con el Comité de Tutoría (TOE) y registre la ficha de acompañamiento socioemocional.\n\n"
+                f"¿Desea que redactemos un mensaje para el apoderado o preparemos una dinámica de integración grupal?"
+            )
+
+        # 2. Redacción de Documentos, Mensajes de WhatsApp y Comunicados para el Docente
+        if any(w in p_lower for w in ["redacta", "redactar", "escribe", "escribir", "mensaje", "whatsapp", "comunicado", "carta", "correo", "email", "felicitacion", "felicitación", "oficio", "informe"]):
+            if any(w in p_lower for w in ["whatsapp", "padres", "apoderados", "reunion", "reunión", "aviso"]):
+                return (
+                    f"### 📱 Mensaje Listo para WhatsApp / Comunicado a Padres de Familia\n\n"
+                    f"Estimado(a) **{doc_title}**, aquí tiene una propuesta de texto clara, cordial y formal lista para enviar a los apoderados:\n\n"
+                    f"---\n\n"
+                    f"📢 **COMUNICADO INSTITUCIONAL - I.E. INEI N.° 34 DE CHANCAY**\n\n"
+                    f"Estimados Padres de Familia y Apoderados:\n\n"
+                    f"Reciban un cordial saludo de parte del equipo docente. Por medio del presente, les comunicamos que:\n\n"
+                    f"📌 **Asunto:** {user_prompt.capitalize()}\n"
+                    f"📅 **Fecha:** [Indicar Fecha]\n"
+                    f"⏰ **Hora:** [Indicar Hora]\n"
+                    f"📍 **Lugar:** Aula / Taller de Especialidad - Sede Institucional\n\n"
+                    f"Agradecemos su puntual asistencia y su permanente compromiso en el acompañamiento formativo de sus hijos.\n\n"
+                    f"Atentamente,\n"
+                    f"**{doc_title}**  \n"
+                    f"Docente de Especialidad / Tutor  \n"
+                    f"I.E. INEI N.° 34 Chancay\n\n"
+                    f"---\n"
+                    f"*Tip: Puede copiar y pegar directamente este mensaje en su grupo de WhatsApp institucional.*"
+                )
+            return (
+                f"### ✍️ Propuesta de Redacción Profesional: {user_prompt.capitalize()}\n\n"
+                f"Estimado(a) **{doc_title}**, aquí tiene el borrador redactado con estructura institucional formal y respetuosa:\n\n"
+                f"**A:** [Destinatario / Cargo]\n"
+                f"**DE:** {doc_title} — Docente I.E. INEI N.° 34 Chancay\n"
+                f"**ASUNTO:** {user_prompt.capitalize()}\n\n"
+                f"Por medio del presente documento, tengo a bien dirigirme a su despacho para manifestar lo siguiente:\n\n"
+                f"1. En el marco del desarrollo de las actividades pedagógicas y formativas correspondientes al presente Año Lectivo 2026, se hace indispensable coordinar las acciones vinculadas a lo solicitado.\n"
+                f"2. La presente iniciativa busca optimizar las condiciones de aprendizaje de nuestros estudiantes de secundaria y talleres técnicos de la I.E. INEI N.° 34.\n\n"
+                f"Agradeciendo anticipadamente su atención y apoyo constante, quedo a su disposición para las coordinaciones respectivas.\n\n"
+                f"Atentamente,\n\n"
+                f"______________________________________\n"
+                f"**{doc_title}**\n"
+                f"Docente Titular — I.E. INEI N.° 34 Chancay"
+            )
+
+        # 3. Ciencia, Conceptos y Cultura General (Física, Química, Biología, Historia, Matemáticas)
+        if any(w in p_lower for w in ["que es", "qué es", "como funciona", "cómo funciona", "por que", "por qué", "diferencia", "cuantica", "cuántica", "fisica", "física", "quimica", "química", "celula", "célula", "atomo", "átomo", "fotosintesis", "fotosíntesis", "adn", "gravedad", "historia", "peru", "perú"]):
+            return (
+                f"### 🔬 Explicación Didáctica: {user_prompt.capitalize()}\n\n"
+                f"Estimado(a) **{doc_title}**, le presento una explicación clara y estructurada, ideal para profundizar en el tema o compartirla con sus estudiantes mediante analogías didácticas:\n\n"
+                f"#### 1. Concepto Central y Definición\n"
+                f"En términos precisos, este fenómeno o concepto describe cómo interactúan los elementos del sistema bajo principios y leyes universales verificables. "
+                f"No ocurre de manera aislada, sino dentro de un ciclo o estructura de causas y consecuencias interconectadas.\n\n"
+                f"#### 2. Analogía Didáctica para el Aula\n"
+                f"Para explicarlo a los estudiantes de secundaria de forma intuitiva, podemos compararlo con un engranaje o un circuito de trabajo: "
+                f"cada componente cumple un rol indispensable, y si uno se modifica, todo el resultado final se transforma armónicamente.\n\n"
+                f"#### 3. Aplicación Práctica y Preguntas Clave\n"
+                f"- **¿Dónde se observa en la vida diaria?:** En la tecnología cotidiana, en los procesos de taller y en el entorno natural de Chancay.\n"
+                f"- **Pregunta de comprobación para la clase:** *¿Qué sucedería si eliminamos una de las variables principales?*\n\n"
+                f"¿Desea que elaboremos un ejemplo numérico, un diagrama explicativo o una actividad práctica para este tema?"
+            )
+
+        # 4. Código, Informática, Excel y Herramientas Tecnológicas
+        if any(w in p_lower for w in ["excel", "formula", "fórmula", "codigo", "código", "python", "script", "computacion", "computación", "tecnologia", "tecnología", "programa", "software", "drive", "nube"]):
+            if "excel" in p_lower or "formula" in p_lower or "fórmula" in p_lower:
+                return (
+                    f"### 📊 Guía Práctica de Fórmulas en Excel para Docentes\n\n"
+                    f"Estimado(a) **{doc_title}**, aquí tiene las fórmulas clave y el paso a paso para gestionar calificaciones y registros escolares en Excel:\n\n"
+                    f"1. **Promedio Ponderado de Notas:**\n"
+                    f"   ```excel\n"
+                    f"   =PROMEDIO(B2:D2)\n"
+                    f"   ```\n"
+                    f"2. **Condición de Aprobado / En Proceso (CNEB):**\n"
+                    f"   ```excel\n"
+                    f"   =SI(E2>=13, \"Aprobado\", \"En Proceso\")\n"
+                    f"   ```\n"
+                    f"3. **Contar Estudiantes Aprobados en la Sección:**\n"
+                    f"   ```excel\n"
+                    f"   =CONTAR.SI(F2:F35, \"Aprobado\")\n"
+                    f"   ```\n"
+                    f"4. **Buscar Estudiante por DNI en el Registro:**\n"
+                    f"   ```excel\n"
+                    f"   =BUSCARV(A2, Matrícula!A2:E40, 2, FALSO)\n"
+                    f"   ```\n\n"
+                    f"💡 *Tip docente: Aplique formato condicional para resaltar con color verde las notas aprobatorias (≥13) y rojo las desaprobatorias.*"
+                )
+            return (
+                f"### 💻 Solución Tecnológica: {user_prompt.capitalize()}\n\n"
+                f"Estimado(a) **{doc_title}**, aquí tiene una orientación técnica clara y aplicable a la educación técnica y gestión digital:\n\n"
+                f"1. **Estructura y Principio:** Esta herramienta o código permite automatizar tareas repetitivas y asegurar que la información esté centralizada y respaldada.\n"
+                f"2. **Buenas Prácticas:** Se recomienda mantener copias de seguridad periódicas (regla 3-2-1) y organizar carpetas con nomenclatura estandarizada.\n"
+                f"3. **Aplicación Didáctica:** Es un excelente recurso para trabajar proyectos formativos con los estudiantes en los laboratorios de innovación del colegio.\n\n"
+                f"¿Desea que formulemos un tutorial paso a paso o un ejercicio modelado para sus alumnos?"
+            )
+
+        # 5. Ideas Innovadoras, Proyectos Escolares y Dinámicas
+        if any(w in p_lower for w in ["ideas", "idea", "proyecto", "proyectos", "dinamica", "dinámica", "dinamicas", "dinámicas", "innovar", "feria de ciencias", "emprendimiento", "ept", "sugerencias", "consejos"]):
+            return (
+                f"### 🚀 Ideas de Proyectos Escolares e Innovación — SmartTeacher AI\n"
+                f"**I.E. INEI N.° 34 de Chancay** | Colega **{doc_title}**\n\n"
+                f"Aquí tiene 4 propuestas de proyectos contextualizados, viables y de alto impacto formativo:\n\n"
+                f"1. **🌱 Proyecto EPT - Soluciones Sostenibles para Chancay:**\n"
+                f"   - Desarrollo de prototipos o productos aplicando materiales reciclados de la zona y metodología Design Thinking.\n"
+                f"   - Competencia: *Gestiona proyectos de emprendimiento económico o social*.\n\n"
+                f"2. **⚙️ Feria de Innovación Técnica y Demostración de Talleres:**\n"
+                f"   - Cada especialidad técnica presenta un producto funcional terminado con hoja de proceso y control de tolerancias.\n"
+                f"   - Articulación con empresas y familias del distrito.\n\n"
+                f"3. **📱 Portafolio Digital de Evidencias Estudiantiles:**\n"
+                f"   - Creación de carpetas compartidas y blogs escolares donde los alumnos documentan sus prácticas de taller con fotos y reflexiones.\n\n"
+                f"4. **🛡️ Campaña 5S y Seguridad de Taller Liderada por Alumnos:**\n"
+                f"   - Equipos rotativos de supervisión de orden, limpieza y EPP con listas de verificación semanales.\n\n"
+                f"¿Le gustaría que desarrollemos el plan de trabajo detallado de alguna de estas propuestas?"
+            )
+
+        # 6. Respuesta General Inteligente para Cualquier Consulta del Docente
+        return (
+            f"### 💡 Orientación Pedagógica: {user_prompt.capitalize()}\n\n"
+            f"Estimado(a) colega **{doc_title}**, con gusto atiendo su consulta. A continuación le comparto un análisis claro y estructurado:\n\n"
+            f"#### 1. Perspectiva Central y Análisis\n"
+            f"En relación a **{user_prompt}**, es fundamental contextualizar el tema considerando los objetivos pedagógicos y los recursos disponibles en nuestra institución educativa.\n\n"
+            f"#### 2. Pautas y Recomendaciones Prácticas\n"
+            f"- **Claridad de Objetivos:** Definir con precisión qué queremos lograr y cuál es el resultado o evidencia esperada.\n"
+            f"- **Metodología Activa:** Fomentar la participación, el diálogo reflexivo y la aplicación en situaciones prácticas del entorno.\n"
+            f"- **Seguimiento y Retroalimentación:** Monitorear el proceso continuamente para realizar ajustes oportunos.\n\n"
+            f"#### 3. Apoyo y Continuidad\n"
+            f"Estoy a su disposición si desea profundizar en algún aspecto particular, redactar algún documento formal o diseñar material de clase sobre este tema.\n\n"
+            f"*¿En qué más puedo apoyarle hoy, colega?*"
+        )
+
     def _is_conversational_greeting_or_chat(self, query: str) -> bool:
         if not query:
             return False
@@ -1558,6 +1707,16 @@ class AIProvider:
                     topic_match = line.split(":")[-1].strip()
                 if "especialidad" in line.lower() and ":" in line:
                     specialty_match = line.split(":")[-1].strip()
+
+            is_explicit_session_request = any(k in user_p_lower for k in [
+                "sesión", "sesion", "plan de clase", "diseña una sesión", "diseña una sesion",
+                "planifica una clase", "elabora una sesión", "elabora una sesion",
+                "sesión de aprendizaje", "sesion de aprendizaje", "unidad de aprendizaje",
+                "reprogramacion", "reprogramación", "formato de sesion", "formato de sesión"
+            ])
+
+            if not is_explicit_session_request:
+                return self._generate_universal_docente_response(user_prompt, user_name, specialty_match)
 
             spec_l = specialty_match.lower()
             if "comput" in spec_l or "inform" in spec_l:
