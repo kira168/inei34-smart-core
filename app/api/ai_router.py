@@ -1301,12 +1301,28 @@ def teacher_pedagogical_chat_endpoint(
             (conv_id, cleaned_message)
         )
 
+        # Retrieve recent history for conversational continuity
+        prev_rows = conn.execute(
+            """
+            SELECT sender, content FROM smarttutor_messages
+            WHERE conversation_id = ?
+            ORDER BY id ASC
+            LIMIT 12
+            """,
+            (conv_id,)
+        ).fetchall()
+        chat_history = [
+            {"role": "user" if r["sender"] == "user" else "assistant", "content": r["content"]}
+            for r in prev_rows[:-1]
+        ]
+
     result = ai_service.teacher_pedagogical_chat(
         user=user,
         message=cleaned_message,
         specialty=specialty,
         grade=req.grade,
-        subject_id=req.subject_id
+        subject_id=req.subject_id,
+        chat_history=chat_history
     )
 
     bot_content = result.get("content", "")

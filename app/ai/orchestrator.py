@@ -58,6 +58,66 @@ def is_ambiguous_short_query(query: str, chat_history: Optional[List[Dict[str, s
             return True
     return False
 
+def is_conversational_greeting_or_chat(query: str, chat_history: Optional[List[Dict[str, str]]] = None) -> bool:
+    """
+    Identifies pure greetings, pleasantries, courtesies or identity queries
+    (e.g. 'hola', 'hola amigo', 'buenos días', '¿cómo estás?', 'gracias', '¿qué puedes hacer?')
+    so that assistants respond conversationally without triggering monolithic document templates.
+    """
+    if not query:
+        return False
+    if chat_history and len(chat_history) > 4:
+        return False
+
+    q_norm = unicodedata.normalize('NFD', query.strip().lower())
+    q_norm = ''.join(c for c in q_norm if unicodedata.category(c) != 'Mn')
+    q_clean = re.sub(r'[^a-z0-9\s]', ' ', q_norm).strip()
+    tokens = q_clean.split()
+    if not tokens:
+        return False
+
+    # Never intercept explicit generation or technical requests
+    forbidden_keywords = [
+        "sesion", "sesiones", "examen", "examenes", "evaluacion", "evaluaciones",
+        "ficha", "fichas", "rubrica", "rubricas", "solucionario", "generar", "crear",
+        "elabora", "diseña", "disena", "redacta", "taller", "motor", "circuito",
+        "tolerancia", "mecanizado", "plano", "almacenamiento", "programar"
+    ]
+    if any(k in q_clean for k in forbidden_keywords):
+        return False
+
+    exact_matches = {
+        "hola", "hola amigo", "hola amiga", "hola colega", "hola profe", "hola profesor", "hola profesora",
+        "hola como estas", "hola buenos dias", "hola buenas tardes", "hola buenas noches",
+        "buenos dias", "buen dia", "buenas tardes", "buenas noches", "saludos", "saludos colega", "saludos cordiales",
+        "que tal", "que tal amigo", "que tal colega", "como estas", "como te va", "como andas",
+        "quien eres", "quien eres tu", "como te llamas", "que haces", "que puedes hacer",
+        "en que me puedes ayudar", "como funciona", "como funciona este chat", "ayudame", "ayuda",
+        "gracias", "muchas gracias", "mil gracias", "excelente", "perfecto", "genial",
+        "ok", "de acuerdo", "entendido", "comprendido", "bien", "muy bien", "listo"
+    }
+    if q_clean in exact_matches:
+        return True
+
+    patterns = [
+        r'^(?:hola|buenas|buenos dias|buenas tardes|buenas noches|saludos|que tal)(?:\s+(?:amigo|amiga|colega|profe|profesor|profesora|asistente|ia|bot|tutor))?$',
+        r'^(?:hola\s+)?(?:como\s+(?:estas|te\s+va|te\s+encuentras|anda\s+todo)|que\s+tal)$',
+        r'^(?:quien\s+eres(?:\s+tu)?|como\s+te\s+llamas|que\s+haces|que\s+puedes\s+hacer(?:\s+por\s+mi)?)$',
+        r'^(?:en\s+que\s+(?:me\s+)?puedes\s+ayudar|para\s+que\s+sirves|como\s+funciona(?:\s+este\s+chat)?)$',
+        r'^(?:gracias|muchas\s+gracias|mil\s+gracias|excelente|perfecto|genial|entendido|de\s+acuerdo)(?:\s+(?:amigo|amiga|colega|profe|profesor|profesora|asistente|ia|bot|por\s+la\s+ayuda|por\s+todo))?$',
+    ]
+    for pat in patterns:
+        if re.match(pat, q_clean):
+            return True
+
+    if any(k in q_clean for k in ["gracias", "muchas gracias", "mil gracias"]) and len(tokens) <= 6:
+        return True
+
+    if len(tokens) <= 4 and any(t in tokens for t in ["hola", "saludos", "buenas", "buenos", "hi", "hey"]):
+        return True
+
+    return False
+
 def is_prompt_extraction_request(query: str) -> bool:
     """
     Identifies attempts to extract, dump, or inspect the assistant's internal system prompt,
@@ -161,9 +221,16 @@ class AIOrchestrator:
         elif role == "DOCENTE":
             return (
                 "Contexto: Eres Smart Teacher, el Copiloto Pedagógico Inteligente y Diseñador Curricular CNEB de la I.E. INEI N° 34 Chancay.\n"
-                "Tu misión fundamental: Asistir al docente en la planificación curricular, diseño de clases, elaboración de exámenes y creación de fichas de trabajo para sus estudiantes (Educación Secundaria Regular y Especialidades Técnicas de Taller).\n"
+                "Tu misión fundamental: Acompañar y dialogar de forma profesional, cordial y cercana con el docente, asistiéndolo en la planificación curricular, diseño de clases, elaboración de exámenes y creación de fichas de trabajo para sus estudiantes (Educación Secundaria Regular y Especialidades Técnicas de Taller).\n"
+                "DIRECTIVAS FUNDAMENTALES DE DIÁLOGO Y CONVERSACIÓN:\n"
+                "0. DIÁLOGO NATURAL, CERCANO Y CONVERSACIONAL (PRIORIDAD MÁXIMA EN CHAT):\n"
+                "   - Si el docente te saluda ('hola', 'hola amigo', 'buenos días', 'saludos', etc.), te pregunta cómo estás, qué puedes hacer o inicia una conversación cotidiana, RESPONDE DE FORMA DIRECTA, AMABLE Y CONVERSACIONAL como un copiloto docente.\n"
+                "   - Salúdalo cordialmente por su nombre o como colega, dile brevemente en qué puedes colaborar (sesiones, fichas, rúbricas, exámenes, dinámicas) y pregúntale qué tema o material desea preparar hoy.\n"
+                "   - ESTÁ TERMINANTEMENTE PROHIBIDO generar una sesión de aprendizaje completa, ficha o plantilla documental ante un simple saludo o mensaje conversacional.\n"
+                "   - Si el docente hace una pregunta abierta o pedagógica (ej. dinámicas, estrategias de aula, seguridad 5S), responde con una explicación pedagógica clara, fundamentada y dialogada.\n"
                 "Capacidades y Directivas Especiales:\n"
                 "1. GENERACIÓN DE SESIONES DE APRENDIZAJE CNEB:\n"
+                "   - Únicamente cuando el docente pida explícitamente elaborar o generar una sesión/clase.\n"
                 "   - Toda sesión debe contener: Datos Informativos (Título, Grado/Sección, Área, Duración), Propósitos de Aprendizaje (Competencia CNEB, Capacidades, Criterios de Evaluación, Evidencia de Aprendizaje e Instrumento).\n"
                 "   - Secuencia Didáctica en 3 fases estructuradas: Inicio, Desarrollo y Cierre con Metacognición y 5S.\n"
                 "2. GENERACIÓN DE EXÁMENES Y EVALUACIONES ESCRITAS:\n"
@@ -315,6 +382,8 @@ class AIOrchestrator:
             clean_query = user_prompt.split("CONSULTA DEL ESTUDIANTE SOBRE EL DOCUMENTO:")[-1].strip()
         elif "CONSULTA DEL ESTUDIANTE:" in user_prompt:
             clean_query = user_prompt.split("CONSULTA DEL ESTUDIANTE:")[-1].strip()
+        elif "CONSULTA PEDAGÓGICA DEL DOCENTE" in user_prompt and "\n" in user_prompt:
+            clean_query = user_prompt.split("\n", 1)[-1].strip()
         elif user_prompt.startswith("[ROL:") and "\n" in user_prompt:
             lines = [l.strip() for l in user_prompt.splitlines() if not (l.strip().startswith("[") and l.strip().endswith("]"))]
             clean_query = "\n".join(lines).strip() or clean_query
@@ -740,6 +809,78 @@ class AIOrchestrator:
                 pass
 
             return result
+
+        # 2.4 Early Gatekeeper: Docente Conversational Greetings & Pleasantries
+        if (role_norm in ["DOCENTE", "ADMINISTRADOR", "DIRECTOR"] or tool_type == "teacher_pedagogical_chat") and is_conversational_greeting_or_chat(clean_query, chat_history):
+            doc_name = user.get("full_name") or f"{user.get('first_name', '')} {user.get('last_name', '')}".strip() or "Colega"
+            if any(k in clean_query.lower() for k in ["gracias", "muchas gracias", "excelente", "perfecto", "genial", "ok", "entendido"]):
+                orient_text = (
+                    f"¡Con mucho gusto, estimado(a) colega **{doc_name}**! Es un honor apoyar tu labor pedagógica en la **I.E. INEI N.° 34 de Chancay**.\n\n"
+                    f"Si deseas ajustar algún material, crear instrumentos complementarios o planificar una nueva actividad pedagógica, solo indíquemelo. ¡Éxitos en tu jornada! 🎓"
+                )
+            else:
+                orient_text = (
+                    f"¡Hola, estimado(a) colega **{doc_name}**! 👋 Soy **SmartTeacher AI**, tu copiloto pedagógico en la **I.E. INEI N.° 34 de Chancay**.\n\n"
+                    f"Estoy a tu disposición para apoyarte en la planificación y elaboración de tus materiales educativos de forma ágil y profesional. ¿En qué te gustaría que trabajemos hoy?\n\n"
+                    f"💡 **Puedo asistirte en:**\n"
+                    f"- 📋 **Planificación Curricular:** Diseñar o estructurar sesiones de aprendizaje CNEB por competencias con procesos didácticos completos.\n"
+                    f"- 📑 **Materiales Didácticos:** Elaborar fichas de trabajo para el alumno, guías prácticas de taller o actividades con lista de cotejo.\n"
+                    f"- 📝 **Evaluación Formativa:** Generar exámenes escritos con solucionario justificado, rúbricas analíticas y matrices de criterios.\n"
+                    f"- ⚙️ **Metodología y Taller:** Enfoques activos (GTZ, Design Thinking), protocolos de seguridad 5S y adaptaciones curriculares.\n\n"
+                    f"Escribe el tema, especialidad o grado que estás preparando y conversamos para estructurarlo paso a paso."
+                )
+
+            total_orient_ms = int((time.time() - t_start) * 1000)
+            try:
+                with get_db() as conn:
+                    conn.execute(
+                        """
+                        INSERT INTO ai_conversations (user_id, prompt, response, model_used, context_module)
+                        VALUES (?, ?, ?, ?, ?)
+                        """,
+                        (
+                            user.get("id") or user.get("user_id") or 1,
+                            clean_query,
+                            orient_text,
+                            "smartteacher_conversational_gatekeeper",
+                            tool_type
+                        )
+                    )
+            except Exception:
+                pass
+
+            return {
+                "success": True,
+                "content": orient_text,
+                "model": "smartteacher_conversational_gatekeeper",
+                "provider": "smartteacher_core",
+                "is_fallback": False,
+                "is_complete": True,
+                "is_truncated": False,
+                "is_repaired": False,
+                "done_reason": "early_conversational_greeting",
+                "tokens_eval": len(orient_text.split()),
+                "duration_ms": total_orient_ms,
+                "rag_used": False,
+                "rag_sources": [],
+                "math_verification": {
+                    "verified": False,
+                    "status": "saludo_conversacional",
+                    "reason": "Saludo y diálogo inicial del docente atendido cordialmente."
+                },
+                "pedagogical_audit": {
+                    "is_pedagogically_valid": True,
+                    "score": 100.0,
+                    "issues": []
+                },
+                "stage_timings": {
+                    "rag_retrieval_ms": round(rag_duration_ms, 2),
+                    "math_grounding_ms": round(math_duration_ms, 2),
+                    "prompt_build_ms": round(prompt_build_ms, 2),
+                    "inference_total_ms": 0.0,
+                    "total_orchestrator_ms": total_orient_ms
+                }
+            }
 
         # 2.5 Early Gatekeeper: Ambiguous, context-free opening requests (e.g. 'Ayúdame', 'Explícame matemáticas')
         if role_norm == "ESTUDIANTE" and not rag_meta["rag_used"] and not has_document and is_ambiguous_short_query(clean_query, chat_history):

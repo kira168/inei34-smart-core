@@ -11,6 +11,7 @@ import base64
 import logging
 import re
 import time
+import unicodedata
 from typing import Dict, Any, List, Optional
 from app.config import (
     OLLAMA_BASE_URL,
@@ -794,6 +795,57 @@ class AIProvider:
             "¿Deseas profundizar en algún punto en particular, generar un ejemplo práctico o redactar un documento formal al respecto?"
         )
 
+    def _is_conversational_greeting_or_chat(self, query: str) -> bool:
+        if not query:
+            return False
+        q_norm = unicodedata.normalize('NFD', query.strip().lower())
+        q_norm = ''.join(c for c in q_norm if unicodedata.category(c) != 'Mn')
+        q_clean = re.sub(r'[^a-z0-9\s]', ' ', q_norm).strip()
+        tokens = q_clean.split()
+        if not tokens:
+            return False
+
+        forbidden = [
+            "sesion", "sesiones", "examen", "examenes", "evaluacion", "evaluaciones",
+            "ficha", "fichas", "rubrica", "rubricas", "solucionario", "generar", "crear",
+            "elabora", "diseña", "disena", "redacta", "taller", "motor", "circuito",
+            "tolerancia", "mecanizado", "plano", "almacenamiento"
+        ]
+        if any(k in q_clean for k in forbidden):
+            return False
+
+        exact = {
+            "hola", "hola amigo", "hola amiga", "hola colega", "hola profe", "hola profesor", "hola profesora",
+            "hola como estas", "hola buenos dias", "hola buenas tardes", "hola buenas noches",
+            "buenos dias", "buen dia", "buenas tardes", "buenas noches", "saludos", "saludos colega", "saludos cordiales",
+            "que tal", "que tal amigo", "que tal colega", "como estas", "como te va", "como andas",
+            "quien eres", "quien eres tu", "como te llamas", "que haces", "que puedes hacer",
+            "en que me puedes ayudar", "como funciona", "como funciona este chat", "ayudame", "ayuda",
+            "gracias", "muchas gracias", "mil gracias", "excelente", "perfecto", "genial",
+            "ok", "de acuerdo", "entendido", "comprendido", "bien", "muy bien", "listo"
+        }
+        if q_clean in exact:
+            return True
+
+        patterns = [
+            r'^(?:hola|buenas|buenos dias|buenas tardes|buenas noches|saludos|que tal)(?:\s+(?:amigo|amiga|colega|profe|profesor|profesora|asistente|ia|bot|tutor))?$',
+            r'^(?:hola\s+)?(?:como\s+(?:estas|te\s+va|te\s+encuentras|anda\s+todo)|que\s+tal)$',
+            r'^(?:quien\s+eres(?:\s+tu)?|como\s+te\s+llamas|que\s+haces|que\s+puedes\s+hacer(?:\s+por\s+mi)?)$',
+            r'^(?:en\s+que\s+(?:me\s+)?puedes\s+ayudar|para\s+que\s+sirves|como\s+funciona(?:\s+este\s+chat)?)$',
+            r'^(?:gracias|muchas\s+gracias|mil\s+gracias|excelente|perfecto|genial|entendido|de\s+acuerdo)(?:\s+(?:amigo|amiga|colega|profe|profesor|profesora|asistente|ia|bot|por\s+la\s+ayuda|por\s+todo))?$',
+        ]
+        for pat in patterns:
+            if re.match(pat, q_clean):
+                return True
+
+        if any(k in q_clean for k in ["gracias", "muchas gracias", "mil gracias"]) and len(tokens) <= 6:
+            return True
+
+        if len(tokens) <= 4 and any(t in tokens for t in ["hola", "saludos", "buenas", "buenos", "hi", "hey"]):
+            return True
+
+        return False
+
     def _generate_fallback(self, system_prompt: str, user_prompt: str, context: Optional[Dict[str, Any]]) -> str:
         """Intelligent, fluid, natural answers for all subjects when LLM is warming up."""
         user_p_lower = user_prompt.lower()
@@ -851,6 +903,29 @@ class AIProvider:
 
         # 4. SMART TEACHER (DOCENTE / ADMINISTRADOR / DIRECTOR)
         if role in ["DOCENTE", "ADMINISTRADOR", "DIRECTOR"]:
+            # A0-CONV: Diálogo conversacional, saludos y consultas iniciales de chat
+            doc_chat_text = user_prompt
+            if "CONSULTA PEDAGÓGICA DEL DOCENTE" in user_prompt and "\n" in user_prompt:
+                doc_chat_text = user_prompt.split("\n", 1)[-1].strip()
+
+            if self._is_conversational_greeting_or_chat(doc_chat_text):
+                doc_name = user_name or "Docente"
+                if any(k in doc_chat_text.lower() for k in ["gracias", "muchas gracias", "excelente", "perfecto", "genial", "ok", "entendido"]):
+                    return (
+                        f"¡Con mucho gusto, colega **{doc_name}**! Es un placer colaborar con su labor pedagógica en la **I.E. INEI N.° 34 de Chancay**.\n\n"
+                        f"Si requiere ajustar algún material, crear instrumentos complementarios o planificar una nueva actividad pedagógica, solo indíquemelo. ¡Éxitos en su jornada! 🎓"
+                    )
+                return (
+                    f"¡Hola, estimado(a) colega **{doc_name}**! 👋 Soy **SmartTeacher AI**, tu copiloto pedagógico en la **I.E. INEI N.° 34 de Chancay**.\n\n"
+                    f"Estoy a tu entera disposición para apoyarte en la planificación y elaboración de tus materiales educativos de forma ágil y profesional. ¿En qué te gustaría que trabajemos hoy?\n\n"
+                    f"💡 **Puedo asistirte en:**\n"
+                    f"- 📋 **Planificación Curricular:** Diseñar o estructurar sesiones de aprendizaje CNEB por competencias con procesos didácticos completos.\n"
+                    f"- 📑 **Materiales Didácticos:** Elaborar fichas de trabajo para el alumno, guías prácticas de taller o actividades con lista de cotejo.\n"
+                    f"- 📝 **Evaluación Formativa:** Generar exámenes escritos con solucionario justificado, rúbricas analíticas y matrices de criterios.\n"
+                    f"- ⚙️ **Metodología y Taller:** Enfoques activos (GTZ, Design Thinking), protocolos de seguridad 5S y adaptaciones curriculares.\n\n"
+                    f"Escribe el tema, especialidad o grado que estás preparando y conversamos para estructurarlo paso a paso."
+                )
+
             # A0-PPTX. GENERACIÓN DE PRESENTACIÓN OFICIAL DE 7 DIAPOSITIVAS
             if "PRESENTACIÓN OFICIAL DE 7 DIAPOSITIVAS" in user_prompt or "presentacion_pptx" in user_prompt or "7 DIAPOSITIVAS" in user_prompt:
                 m_t = re.search(r'(?:-\s*Tema\s*(?:Oficial)?:\s*|sobre\s+)([^\n\r\.\,]+)', user_prompt, re.IGNORECASE)
@@ -1456,6 +1531,23 @@ class AIProvider:
                     f"- **Ítem 2:** Clave **b** (24.70 mm). *Justificación:* 24 mm en escala principal + (35 divisiones × 0.02 mm = 0.70 mm) = 24.70 mm.\n"
                     f"- **Ítems 3 y 4:** Calificar según la matriz analítica CNEB (AD: Justificación rigurosa con terminología y EPP; A: Procedimiento correcto con terminología básica; B: Pasos incompletos; C: Errores conceptuales graves).\n\n"
                     f"*(Borrador generado por SmartTeacher AI. Adaptar antes de imprimir)*"
+                )
+
+            # G. CONSULTAS PEDAGÓGICAS Y METODOLÓGICAS (Preguntas, dinámicas, consejos)
+            if any(k in user_p_lower for k in ["cómo", "como", "por qué", "por que", "qué opinas", "que opinas", "recomiendas", "recomienda", "consejos", "sugerencias", "dinámica", "dinamica", "estrategia"]):
+                return (
+                    f"### 💡 Orientación Pedagógica y Metodológica — SmartTeacher AI\n"
+                    f"**I.E. INEI N.° 34 de Chancay** | Estimado(a) colega **{user_name}**\n\n"
+                    f"Para orientar esta consulta con enfoque activo y formativo según los lineamientos del CNEB, te comparto estas recomendaciones clave:\n\n"
+                    f"1. **Enfoque Práctico y Situación Significativa:**\n"
+                    f"   - Conecte el aprendizaje con situaciones reales del entorno productivo o de la comunidad de Chancay.\n"
+                    f"   - Inicie con preguntas retadoras que activen saberes previos y generen conflicto cognitivo en los estudiantes.\n\n"
+                    f"2. **Metodología Activa de Taller (GTZ / Aprendizaje por Acción Completa):**\n"
+                    f"   - Fomente las 6 fases de acción: *Informarse ➔ Planificar ➔ Decidir ➔ Ejecutar ➔ Controlar ➔ Evaluar*.\n"
+                    f"   - Organice a los estudiantes en cuadrillas de trabajo con roles rotativos y control de seguridad 5S.\n\n"
+                    f"3. **Evaluación Formativa Continua:**\n"
+                    f"   - Comparta los criterios de logro desde el inicio de la clase mediante listas de cotejo breves o rúbricas compartidas.\n\n"
+                    f"¿Desea que elaboremos la sesión de aprendizaje completa, una ficha práctica o un instrumento de evaluación para este tema?"
                 )
 
             # C. SESIÓN DE APRENDIZAJE CNEB / EPT (Formato Oficial CET N° 34 / INEI N° 34)

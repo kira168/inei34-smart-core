@@ -3599,7 +3599,8 @@ class AIService:
         message: str,
         specialty: Optional[str] = "Educación para el Trabajo",
         grade: Optional[int] = None,
-        subject_id: Optional[str] = None
+        subject_id: Optional[str] = None,
+        chat_history: Optional[List[Dict[str, str]]] = None
     ) -> Dict[str, Any]:
         """
         Direct pedagogical dialogue assistant for teachers.
@@ -3615,7 +3616,8 @@ class AIService:
             user=user,
             user_prompt=context_prompt,
             tool_type="teacher_pedagogical_chat",
-            subject_id=cleaned_specialty
+            subject_id=cleaned_specialty,
+            chat_history=chat_history
         )
 
     @staticmethod
