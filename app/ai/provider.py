@@ -1124,9 +1124,10 @@ class AIProvider:
 
     def _generate_fallback(self, system_prompt: str, user_prompt: str, context: Optional[Dict[str, Any]]) -> str:
         """Intelligent, fluid, natural answers for all subjects when LLM is warming up."""
+        context = context or {}
         user_p_lower = user_prompt.lower()
-        role = (context or {}).get("role_name", "ESTUDIANTE").upper()
-        user_name = (context or {}).get("full_name", "Estudiante")
+        role = context.get("role_name", "ESTUDIANTE").upper()
+        user_name = context.get("full_name", "Estudiante")
 
         # 1. SMART ADMIN
         # 1. NEXUS IA - ADMINISTRADOR (MODO LIBRE UNIVERSAL TIPO CHATGPT / GEMINI)
@@ -1216,7 +1217,7 @@ class AIProvider:
                 if is_computing:
                     return (
                         f"# PRESENTACIÓN INSTITUCIONAL: {topic_val.upper()}\n\n"
-                        f"**I.E. EMBLEMÁTICA INEI N.º 34 DE CHANCAY**  \n"
+                        f"**I.E. INEI N.º 34 DE CHANCAY**  \n"
                         f"**Especialidad:** {spec_val} | **Grado:** {grade_val}  \n"
                         f"**Docente Titular:** {user_name} | **Año Lectivo:** 2026\n\n"
                         f"---\n\n"
@@ -1256,7 +1257,7 @@ class AIProvider:
                 else:
                     return (
                         f"# PRESENTACIÓN INSTITUCIONAL: {topic_val.upper()}\n\n"
-                        f"**I.E. EMBLEMÁTICA INEI N.º 34 DE CHANCAY**  \n"
+                        f"**I.E. INEI N.º 34 DE CHANCAY**  \n"
                         f"**Especialidad:** {spec_val} | **Grado:** {grade_val}  \n"
                         f"**Docente Titular:** {user_name} | **Año Lectivo:** 2026\n\n"
                         f"---\n\n"
@@ -1316,7 +1317,7 @@ class AIProvider:
                 out_lines = [
                     f"# FICHA DE APRENDIZAJE: {topic_val.upper()}",
                     "",
-                    f"**I.E. EMBLEMÁTICA INEI N.º 34 DE CHANCAY**  ",
+                    f"**I.E. INEI N.º 34 DE CHANCAY**  ",
                     f"**Área / Especialidad:** {spec_val}  ",
                     f"**Grado y Nivel:** {grade_val} | **Año Lectivo:** 2026  ",
                     f"**Docente Titular:** {user_name}  ",
@@ -1386,7 +1387,7 @@ class AIProvider:
                 grade_match = "1.° de Secundaria" if any(g in user_p_lower for g in ["1", "primer"]) else "1.° de Secundaria"
                 return (
                     f"# FICHA DE TRABAJO: ORGANIZACIÓN DE ARCHIVOS Y CARPETAS DIGITALES\n\n"
-                    f"**I.E. EMBLEMÁTICA INEI N.º 34 DE CHANCAY**  \n"
+                    f"**I.E. INEI N.º 34 DE CHANCAY**  \n"
                     f"**Área:** Educación para el Trabajo | **Especialidad:** Computación e Informática  \n"
                     f"**Grado y Sección:** {grade_match} — Sección A/B/C/D | **Duración:** 1 hora pedagógica (45 - 60 min)  \n"
                     f"**Docente:** {user_name} | **Año Lectivo:** 2026\n\n"
@@ -1453,7 +1454,7 @@ class AIProvider:
                 grade_match = "2.° de Secundaria" if any(g in user_p_lower for g in ["2", "segundo"]) else "2.° de Secundaria"
                 return (
                     f"# GUÍA DE PRÁCTICA DE LABORATORIO: HOJAS DE CÁLCULO CON EXCEL\n\n"
-                    f"**I.E. EMBLEMÁTICA INEI N.° 34 DE CHANCAY**  \n"
+                    f"**I.E. INEI N.° 34 DE CHANCAY**  \n"
                     f"**Área:** Educación para el Trabajo | **Especialidad:** Computación e Informática  \n"
                     f"**Grado:** {grade_match} | **Docente:** {user_name} | **Año Lectivo:** 2026  \n\n"
                     f"**Estudiante:** ________________________________________ **Sección:** ______ **Fecha:** __/__/2026\n\n"
@@ -1495,7 +1496,7 @@ class AIProvider:
                 grade_match = "3.° de Secundaria" if any(g in user_p_lower for g in ["3", "tercer"]) else "3.° de Secundaria"
                 return (
                     f"# EXAMEN TÉCNICO DE ELECTRICIDAD BÁSICA (10 PREGUNTAS)\n\n"
-                    f"**I.E. EMBLEMÁTICA INEI N.° 34 DE CHANCAY**  \n"
+                    f"**I.E. INEI N.° 34 DE CHANCAY**  \n"
                     f"**Área:** Educación para el Trabajo | **Especialidad:** Electricidad y Electrónica  \n"
                     f"**Grado:** {grade_match} | **Docente:** {user_name} | **Año:** 2026 | **Puntaje Total:** 20 puntos\n\n"
                     f"**Estudiante:** ________________________________________ **Sección:** ______ **Fecha:** __/__/2026\n\n"
@@ -1546,7 +1547,7 @@ class AIProvider:
                 grade_match = "5.° de Secundaria"
                 return (
                     f"# GUÍA DE CLASE: MANTENIMIENTO PREVENTIVO DE MOTORES DE COMBUSTIÓN\n\n"
-                    f"**I.E. EMBLEMÁTICA INEI N.° 34 DE CHANCAY**  \n"
+                    f"**I.E. INEI N.° 34 DE CHANCAY**  \n"
                     f"**Área:** Educación para el Trabajo | **Especialidad:** Mecánica de Producción / Automotriz  \n"
                     f"**Grado:** {grade_match} | **Docente:** {user_name} | **Año Lectivo:** 2026  \n\n"
                     f"---\n\n"
@@ -1598,7 +1599,7 @@ class AIProvider:
 
                 return (
                     f"# FICHA GUÍA DE APRENDIZAJE: {topic_match.upper()}\n\n"
-                    f"**I.E. EMBLEMÁTICA INEI N.° 34 DE CHANCAY**  \n"
+                    f"**I.E. INEI N.° 34 DE CHANCAY**  \n"
                     f"**Área / Especialidad:** {specialty_match}  \n"
                     f"**Grado y Nivel:** {grade_match} | **Nivel de Dificultad:** Inicial / Básico (Lenguaje Claro y Sencillo)  \n"
                     f"**Docente Responsable:** {user_name} | **Año Lectivo:** 2026  \n\n"
@@ -1647,7 +1648,7 @@ class AIProvider:
                         break
                 return (
                     f"# PRÁCTICA DE EJERCICIOS Y PROBLEMAS TÉCNICOS: {topic_match.upper()}\n\n"
-                    f"**I.E. EMBLEMÁTICA INEI N.° 34 DE CHANCAY**  \n"
+                    f"**I.E. INEI N.° 34 DE CHANCAY**  \n"
                     f"**Especialidad:** Educación para el Trabajo | **Docente:** {user_name} | **Año:** 2026\n\n"
                     f"**Estudiante:** ________________________________________ **Grado/Secc:** ______ **Fecha:** __/__/2026\n\n"
                     f"---\n\n"
@@ -1685,7 +1686,7 @@ class AIProvider:
                         break
                 return (
                     f"# RÚBRICA ANALÍTICA DE EVALUACIÓN FORMATIVA CNEB\n\n"
-                    f"**I.E. EMBLEMÁTICA INEI N.° 34 — CHANCAY**  \n"
+                    f"**I.E. INEI N.° 34 — CHANCAY**  \n"
                     f"**Área:** Educación para el Trabajo (EPT) | **Tema:** {topic_match}  \n"
                     f"**Competencia:** Gestiona proyectos de emprendimiento económico o social  \n"
                     f"**Docente Evaluador:** {user_name} | **Año Lectivo:** 2026\n\n"
@@ -1709,7 +1710,7 @@ class AIProvider:
                         break
                 return (
                     f"# SOLUCIONARIO DOCENTE Y PAUTAS PEDAGÓGICAS DE CORRECCIÓN\n\n"
-                    f"**I.E. EMBLEMÁTICA INEI N.° 34 — CHANCAY**  \n"
+                    f"**I.E. INEI N.° 34 — CHANCAY**  \n"
                     f"**Documento Reservado Exclusivo para el Docente Calificador**  \n"
                     f"**Tema:** {topic_match} | **Docente:** {user_name} | **Año:** 2026\n\n"
                     f"---\n\n"
