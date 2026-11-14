@@ -240,13 +240,16 @@ def send_chat_message(req: ChatMessageRequest, user: dict = Depends(get_current_
         else:
             target_link = "admin_help"
 
-        communication_service.create_notification(
-            user_id=req.target_user_id,
-            title="💬 Mensaje de Soporte TI",
-            message=f"El Administrador TI te respondió: {text[:65]}...",
-            type="chat",
-            link=target_link
-        )
+        try:
+            communication_service.create_notification(
+                user_id=req.target_user_id,
+                title="💬 Mensaje de Soporte TI",
+                message=f"El Administrador TI te respondió: {text[:65]}...",
+                n_type="chat",
+                link=target_link
+            )
+        except Exception as e:
+            logger.warning(f"Error creando notificación de chat para usuario {req.target_user_id}: {e}")
 
         return {"success": True, "message": msg}
     else:
@@ -259,13 +262,16 @@ def send_chat_message(req: ChatMessageRequest, user: dict = Depends(get_current_
             text=text
         )
 
-        communication_service.create_notification_for_role(
-            role="ADMINISTRADOR",
-            title=f"💬 Chat de {user_name} ({user_role})",
-            message=f"Consulta: {text[:65]}...",
-            type="chat",
-            link="admin_help"
-        )
+        try:
+            communication_service.create_notification_for_role(
+                role="ADMINISTRADOR",
+                title=f"💬 Chat de {user_name} ({user_role})",
+                message=f"Consulta: {text[:65]}...",
+                n_type="chat",
+                link="admin_help"
+            )
+        except Exception as e:
+            logger.warning(f"Error creando notificación de chat para ADMINISTRADOR: {e}")
 
         # Solo si el usuario ejecutó explícitamente un chip de ayuda rápida FAQ
         bot_msg = None

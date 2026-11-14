@@ -34105,18 +34105,22 @@ Estructura la respuesta con:
             const text = input.value.trim();
             if (!text) return;
 
-            input.value = '';
-
             try {
-                const res = await fetch('/api/support/chat', {
+                const response = await fetch('/api/support/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text: text })
-                }).then(r => r.json());
+                });
+                const res = await response.json();
 
-                const container = (document.getElementById('moduleViewContainer') || document.getElementById('mainContentArea'));
-                if (container) {
-                    await renderUserSupportDesk(container);
+                if (response.ok && res.success) {
+                    input.value = '';
+                    const container = (document.getElementById('moduleViewContainer') || document.getElementById('mainContentArea'));
+                    if (container) {
+                        await renderUserSupportDesk(container);
+                    }
+                } else {
+                    showToastNotification(res.detail || "Error al enviar mensaje al servidor.", "error");
                 }
             } catch (err) {
                 showToastNotification("Error al enviar mensaje al servidor.", "error");

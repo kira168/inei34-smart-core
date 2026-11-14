@@ -130,14 +130,28 @@ class CommunicationService:
         return CommunicationService.mark_all_read(user_id)
 
     @staticmethod
-    def create_notification(user_id: int, title: str, message: str, n_type: str = "INFO", link: Optional[str] = None):
+    def create_notification(user_id: int, title: str, message: str, n_type: str = "INFO", link: Optional[str] = None, **kwargs):
+        actual_type = kwargs.get("type", n_type)
         with get_db() as conn:
             conn.execute(
                 """
                 INSERT INTO notifications (user_id, title, message, type, link)
                 VALUES (?, ?, ?, ?, ?)
-                """, (user_id, title, message, n_type, link)
+                """, (user_id, title, message, actual_type, link)
             )
+
+    @staticmethod
+    def create_notification_for_role(role: str, title: str, message: str, n_type: str = "INFO", link: Optional[str] = None, **kwargs):
+        actual_type = kwargs.get("type", n_type)
+        with get_db() as conn:
+            rows = conn.execute("SELECT id FROM users WHERE UPPER(role) = UPPER(?)", (role,)).fetchall()
+            for r in rows:
+                conn.execute(
+                    """
+                    INSERT INTO notifications (user_id, title, message, type, link)
+                    VALUES (?, ?, ?, ?, ?)
+                    """, (r["id"], title, message, actual_type, link)
+                )
 
     @staticmethod
     def get_parent_appointments(parent_id: int) -> List[Dict[str, Any]]:
