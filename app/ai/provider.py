@@ -375,42 +375,44 @@ class AIProvider:
         # 0. Proveedores de IA en la Nube (Groq Cloud / DeepSeek) - Prioritarios si están configurados
         groq_key = os.getenv("GROQ_API_KEY", "").strip() or GROQ_API_KEY
         if groq_key:
-            try:
-                t0 = time.time()
-                groq_payload = {
-                    "model": "llama-3.3-70b-versatile",
-                    "messages": messages_payload,
-                    "temperature": gen_temp,
-                    "max_tokens": max_predict
-                }
-                resp = requests.post(
-                    "https://api.groq.com/openai/v1/chat/completions",
-                    headers={"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"},
-                    json=groq_payload,
-                    timeout=timeout_req
-                )
-                if resp.status_code == 200:
-                    data = resp.json()
-                    content = data["choices"][0]["message"]["content"].strip()
-                    total_dur_ms = int((time.time() - t0) * 1000)
-                    eval_count = len(content.split())
-                    return {
-                        "success": True,
-                        "content": content,
-                        "model": "llama-3.3-70b (GroqCloud)",
-                        "provider": "groq_cloud",
-                        "is_fallback": False,
-                        "is_complete": True,
-                        "is_truncated": False,
-                        "is_repaired": False,
-                        "done_reason": "natural_stop",
-                        "tokens_eval": eval_count,
-                        "duration_ms": total_dur_ms
+            for g_model in ["qwen/qwen3.8-27b", "openai/gpt-oss-120b", "openai/gpt-oss-20b"]:
+                try:
+                    t0 = time.time()
+                    groq_payload = {
+                        "model": g_model,
+                        "messages": messages_payload,
+                        "temperature": gen_temp,
+                        "max_tokens": max_predict
                     }
-                else:
-                    logger.warning(f"Groq Cloud status {resp.status_code}: {resp.text[:200]}")
-            except Exception as e:
-                logger.warning(f"Groq Cloud request failed: {e}")
+                    resp = requests.post(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        headers={"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"},
+                        json=groq_payload,
+                        timeout=timeout_req
+                    )
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        content = data["choices"][0]["message"]["content"].strip()
+                        total_dur_ms = int((time.time() - t0) * 1000)
+                        eval_count = len(content.split())
+                        display_name = "Qwen 27B (GroqCloud)" if "qwen" in g_model else "GPT-OSS 120B (GroqCloud)"
+                        return {
+                            "success": True,
+                            "content": content,
+                            "model": display_name,
+                            "provider": "groq_cloud",
+                            "is_fallback": False,
+                            "is_complete": True,
+                            "is_truncated": False,
+                            "is_repaired": False,
+                            "done_reason": "natural_stop",
+                            "tokens_eval": eval_count,
+                            "duration_ms": total_dur_ms
+                        }
+                    else:
+                        logger.warning(f"Groq Cloud model {g_model} status {resp.status_code}: {resp.text[:200]}")
+                except Exception as e:
+                    logger.warning(f"Groq Cloud request failed for {g_model}: {e}")
 
         deepseek_key = os.getenv("DEEPSEEK_API_KEY", "").strip() or DEEPSEEK_API_KEY
         if deepseek_key:

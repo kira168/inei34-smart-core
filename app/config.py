@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 
 # Directorios base
@@ -88,10 +89,36 @@ AI_KEEP_ALIVE = os.getenv("AI_KEEP_ALIVE", "60m")
 AI_FALLBACK_ACTIVE = True
 
 # Proveedores de IA en la Nube (Opcionales - Ultra Rápidos para servidores en producción)
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "").strip()
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+def _load_cloud_key(key_name: str) -> str:
+    # 1. Variable de entorno
+    val = os.getenv(key_name, "").strip()
+    if val:
+        return val
+    # 2. Archivo data/ai_keys.json (protegido por .gitignore)
+    try:
+        keys_path = os.path.join(DATA_DIR, "ai_keys.json")
+        if os.path.exists(keys_path):
+            with open(keys_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return str(data.get(key_name, "")).strip()
+    except Exception:
+        pass
+    # 3. Archivo .env local
+    try:
+        for env_candidate in [ROOT_DIR / ".env", BASE_DIR / ".env"]:
+            if env_candidate.exists():
+                with open(env_candidate, "r", encoding="utf-8") as f:
+                    for line in f:
+                        if line.strip().startswith(f"{key_name}="):
+                            return line.strip().split("=", 1)[1].strip().strip('"').strip("'")
+    except Exception:
+        pass
+    return ""
+
+GROQ_API_KEY = _load_cloud_key("GROQ_API_KEY")
+DEEPSEEK_API_KEY = _load_cloud_key("DEEPSEEK_API_KEY")
+GEMINI_API_KEY = _load_cloud_key("GEMINI_API_KEY")
+OPENAI_API_KEY = _load_cloud_key("OPENAI_API_KEY")
 
 # Institución
 INSTITUTION_NAME = "I.E. INEI N° 34"
