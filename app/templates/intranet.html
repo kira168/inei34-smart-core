@@ -4874,8 +4874,14 @@
                     const formData = new FormData();
                     formData.append('file', file);
 
+                    const token = localStorage.getItem('inei_token') || sessionStorage.getItem('inei_token') || '';
+                    const uploadHeaders = {};
+                    if (token) uploadHeaders['Authorization'] = `Bearer ${token}`;
+
                     const res = await fetch('/api/ai/upload', {
                         method: 'POST',
+                        headers: uploadHeaders,
+                        credentials: 'include',
                         body: formData
                     });
 
@@ -5127,7 +5133,15 @@
                 try {
                     const fd = new FormData();
                     fd.append('file', attachedFile);
-                    const upRes = await fetch('/api/ai/upload', { method: 'POST', body: fd });
+                    const token = localStorage.getItem('inei_token') || sessionStorage.getItem('inei_token') || '';
+                    const uploadHeaders = {};
+                    if (token) uploadHeaders['Authorization'] = `Bearer ${token}`;
+                    const upRes = await fetch('/api/ai/upload', {
+                        method: 'POST',
+                        headers: uploadHeaders,
+                        credentials: 'include',
+                        body: fd
+                    });
                     extractedData = await upRes.json();
                     smartTutorState.extractedData = extractedData;
                 } catch (eUp) {
@@ -8381,8 +8395,14 @@ I.E. INEI N° 34 Chancay - UGEL 10 Huaral
                 const formData = new FormData();
                 formData.append('file', file);
 
+                const token = localStorage.getItem('inei_token') || sessionStorage.getItem('inei_token') || '';
+                const uploadHeaders = {};
+                if (token) uploadHeaders['Authorization'] = `Bearer ${token}`;
+
                 const res = await fetch('/api/ai/upload', {
                     method: 'POST',
+                    headers: uploadHeaders,
+                    credentials: 'include',
                     body: formData
                 });
                 const data = await res.json();
