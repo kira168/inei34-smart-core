@@ -621,32 +621,156 @@ class AIProvider:
         model: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Processes image OCR / visual comprehension using Ollama multimodal vision models (e.g. llava:latest).
-        Transcribes homework exercises, mathematical equations, and text from photos.
+        Processes image OCR / visual comprehension using Groq Cloud multimodal vision models
+        (llama-3.2-11b-vision-preview, llama-3.2-90b-vision-preview), OpenAI vision, or local Ollama vision.
+        Transcribes homework exercises, mathematical equations, and text from photos with high precision.
         """
-        vision_model = model or AI_VISION_MODEL or "llava:latest"
-        available = self.list_models()
-        if available and not any(vision_model.lower() in m.lower() for m in available):
-            # Check for any vision-capable model
-            for m in available:
-                if "llava" in m or "vision" in m:
-                    vision_model = m
-                    break
-
-        img_b64 = base64.b64encode(image_bytes).decode("utf-8")
-        payload = {
-            "model": vision_model,
-            "prompt": prompt,
-            "images": [img_b64],
-            "stream": False,
-            "keep_alive": AI_KEEP_ALIVE,
-            "options": {
-                "temperature": 0.1,
-                "num_predict": 512
+        if not image_bytes:
+            return {
+                "success": False,
+                "content": "",
+                "model": "none",
+                "provider": "none",
+                "is_fallback": True,
+                "error": "empty_image_bytes"
             }
-        }
 
+        # Normalize and optimize image dimensions for fast cloud inference
+        proc_bytes = image_bytes
+        try:
+            import io
+            from PIL import Image
+            im = Image.open(io.BytesIO(image_bytes))
+            if im.mode not in ("RGB", "L"):
+                im = im.convert("RGB")
+            # Downscale if larger than 1600px to maintain speed without sacrificing legibility
+            if max(im.size) > 1600:
+                im.thumbnail((1600, 1600), Image.Resampling.LANCZOS)
+            buf = io.BytesIO()
+            im.save(buf, format="JPEG", quality=85)
+            proc_bytes = buf.getvalue()
+        except Exception as e_proc:
+            logger.warning(f"Error optimizing image for vision: {e_proc}")
+
+        img_b64 = base64.b64encode(proc_bytes).decode("utf-8")
+
+        # 1. Prioritize Groq Cloud Multimodal Vision (High speed, zero VRAM)
+        groq_key = os.getenv("GROQ_API_KEY", "").strip() or GROQ_API_KEY
+        if groq_key:
+            groq_vision_models = [
+                "llama-3.2-11b-vision-preview",
+                "llama-3.2-90b-vision-preview"
+            ]
+            for g_vis in groq_vision_models:
+                try:
+                    t0 = time.time()
+                    groq_vis_payload = {
+                        "model": g_vis,
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": [
+                                    {"type": "text", "text": prompt},
+                                    {
+                                        "type": "image_url",
+                                        "image_url": {
+                                            "url": f"data:image/jpeg;base64,{img_b64}"
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "temperature": 0.1,
+                        "max_tokens": 1500
+                    }
+                    resp = requests.post(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        headers={"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"},
+                        json=groq_vis_payload,
+                        timeout=35.0
+                    )
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        extracted_text = data["choices"][0]["message"]["content"].strip()
+                        if extracted_text:
+                            return {
+                                "success": True,
+                                "content": extracted_text,
+                                "model": f"Groq Vision ({g_vis})",
+                                "provider": "groq_cloud",
+                                "is_fallback": False
+                            }
+                    else:
+                        logger.warning(f"Groq vision model {g_vis} status {resp.status_code}: {resp.text[:200]}")
+                except Exception as eg:
+                    logger.warning(f"Groq vision request failed for {g_vis}: {eg}")
+
+        # 2. OpenAI Multimodal Vision fallback if configured
+        openai_key = os.getenv("OPENAI_API_KEY", "").strip() or OPENAI_API_KEY
+        if openai_key:
+            for o_vis in ["gpt-4o-mini", "gpt-4o"]:
+                try:
+                    openai_vis_payload = {
+                        "model": o_vis,
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": [
+                                    {"type": "text", "text": prompt},
+                                    {
+                                        "type": "image_url",
+                                        "image_url": {
+                                            "url": f"data:image/jpeg;base64,{img_b64}"
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "temperature": 0.1,
+                        "max_tokens": 1500
+                    }
+                    resp = requests.post(
+                        "https://api.openai.com/v1/chat/completions",
+                        headers={"Authorization": f"Bearer {openai_key}", "Content-Type": "application/json"},
+                        json=openai_vis_payload,
+                        timeout=35.0
+                    )
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        extracted_text = data["choices"][0]["message"]["content"].strip()
+                        if extracted_text:
+                            return {
+                                "success": True,
+                                "content": extracted_text,
+                                "model": f"OpenAI Vision ({o_vis})",
+                                "provider": "openai",
+                                "is_fallback": False
+                            }
+                except Exception as eo:
+                    logger.warning(f"OpenAI vision request failed for {o_vis}: {eo}")
+
+        # 3. Local Ollama Multimodal Vision fallback (e.g. llava:latest)
         if self.is_available():
+            vision_model = model or AI_VISION_MODEL or "llava:latest"
+            available = self.list_models()
+            if available and not any(vision_model.lower() in m.lower() for m in available):
+                for m in available:
+                    if "llava" in m or "vision" in m:
+                        vision_model = m
+                        break
+
+            payload = {
+                "model": vision_model,
+                "prompt": prompt,
+                "images": [img_b64],
+                "stream": False,
+                "keep_alive": AI_KEEP_ALIVE,
+                "options": {
+                    "temperature": 0.1,
+                    "num_predict": 512
+                }
+            }
+
             try:
                 resp = requests.post(
                     f"{self.base_url}/api/generate",
@@ -664,15 +788,13 @@ class AIProvider:
                             "provider": "ollama_vision",
                             "is_fallback": False
                         }
-            except requests.exceptions.Timeout:
-                logger.warning(f"Vision request timed out ({AI_TIMEOUT_SECONDS}s) for {vision_model}")
             except Exception as e:
-                logger.warning(f"Vision inference error: {e}")
+                logger.warning(f"Ollama vision inference error: {e}")
 
         return {
             "success": False,
             "content": "",
-            "model": vision_model,
+            "model": "none",
             "provider": "none",
             "is_fallback": True,
             "error": "vision_service_unavailable"

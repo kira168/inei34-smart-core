@@ -103,7 +103,7 @@ class DocumentProcessor:
 
     @classmethod
     def extract_from_pdf(cls, file_bytes: bytes) -> Dict[str, Any]:
-        """Extracts selectable digital text from PDF."""
+        """Extracts selectable digital text from PDF and performs OCR on embedded images if text is scarce."""
         try:
             reader = pypdf.PdfReader(io.BytesIO(file_bytes))
             if reader.is_encrypted:
@@ -117,21 +117,50 @@ class DocumentProcessor:
             pages_to_read = min(total_pages, MAX_PDF_PAGES)
             extracted_parts = []
 
+            ocr_prompt = (
+                "Transcribe de forma exacta, ordenada y clara todos los ejercicios, preguntas, enunciados y fórmulas "
+                "matemáticas que aparecen en esta página escolar. Devuelve la transcripción de los ejercicios para que puedan resolverse paso a paso."
+            )
+
             for i in range(pages_to_read):
                 page = reader.pages[i]
-                page_text = page.extract_text() or ""
-                if page_text.strip():
-                    extracted_parts.append(f"[Página {i+1}]:\n{page_text.strip()}")
+                page_text = (page.extract_text() or "").strip()
+
+                # If page has very little or no selectable digital text, attempt OCR on embedded page images
+                if len(page_text) < 80:
+                    page_images = getattr(page, "images", [])
+                    img_ocr_texts = []
+                    if page_images:
+                        for img_obj in list(page_images)[:2]:
+                            try:
+                                img_data = getattr(img_obj, "data", None)
+                                if img_data and len(img_data) > 500:
+                                    vis_res = ai_provider.generate_vision(ocr_prompt, img_data)
+                                    if vis_res.get("success") and vis_res.get("content"):
+                                        img_ocr_texts.append(vis_res["content"].strip())
+                            except Exception as e_p_img:
+                                logger.warning(f"PDF page {i+1} image OCR failed: {e_p_img}")
+
+                    if img_ocr_texts:
+                        combined_ocr = "\n".join(img_ocr_texts)
+                        if page_text:
+                            extracted_parts.append(f"[Página {i+1}]:\n{page_text}\n\n[Ejercicios extraídos por Visión OCR]:\n{combined_ocr}")
+                        else:
+                            extracted_parts.append(f"[Página {i+1} - Transcripción OCR]:\n{combined_ocr}")
+                    elif page_text:
+                        extracted_parts.append(f"[Página {i+1}]:\n{page_text}")
+                else:
+                    extracted_parts.append(f"[Página {i+1}]:\n{page_text}")
 
             full_text = "\n\n".join(extracted_parts).strip()
 
-            if len(full_text) < 10:
+            if len(full_text) < 15:
                 return {
                     "status": "insuficiente_escaneado",
-                    "text": full_text,
+                    "text": "",
                     "pages_read": pages_to_read,
                     "total_pages": total_pages,
-                    "message": "El documento PDF parece ser un archivo escaneado o una imagen sin capa de texto seleccionable. Te recomendamos subir una fotografía nítida o transcribir el ejercicio."
+                    "message": "El documento PDF es una imagen escaneada sin capa de texto digital ni imágenes legibles. Te sugerimos tomarle una foto nítida al ejercicio y subirla como imagen para leerla con Visión IA."
                 }
 
             # Truncate if exceeding maximum allowed characters
@@ -143,7 +172,7 @@ class DocumentProcessor:
                 "text": full_text,
                 "pages_read": pages_to_read,
                 "total_pages": total_pages,
-                "message": f"Se extrajo el texto de {pages_to_read} página(s) correctamente."
+                "message": f"Se extrajo el contenido de {pages_to_read} página(s) correctamente."
             }
 
         except Exception as e:
@@ -156,7 +185,7 @@ class DocumentProcessor:
 
     @classmethod
     def extract_from_docx(cls, file_bytes: bytes) -> Dict[str, Any]:
-        """Extracts text and tables from DOCX document."""
+        """Extracts text and tables from DOCX document and runs OCR on embedded images if text is scarce."""
         try:
             doc = docx.Document(io.BytesIO(file_bytes))
             text_parts = []
@@ -173,7 +202,6 @@ class DocumentProcessor:
                 for row in table.rows:
                     row_cells = [cell.text.strip().replace("\n", " ") for cell in row.cells if cell.text.strip()]
                     if row_cells:
-                        # Deduplicate adjacent cells if merged
                         dedup = []
                         for c in row_cells:
                             if not dedup or dedup[-1] != c:
@@ -184,11 +212,32 @@ class DocumentProcessor:
 
             full_text = "\n\n".join(text_parts).strip()
 
+            # If DOCX has very little digital text, look for pasted images of homework sheets
+            if len(full_text) < 80:
+                ocr_prompt = (
+                    "Transcribe de forma exacta, ordenada y clara todos los ejercicios, preguntas, enunciados y fórmulas "
+                    "matemáticas que aparecen en esta imagen escolar. Devuelve la transcripción de los ejercicios para que puedan resolverse paso a paso."
+                )
+                img_ocr_parts = []
+                try:
+                    for part in getattr(getattr(doc, "part", None), "related_parts", {}).values():
+                        if "image" in getattr(part, "content_type", ""):
+                            img_blob = getattr(part, "blob", None)
+                            if img_blob and len(img_blob) > 500:
+                                vis = ai_provider.generate_vision(ocr_prompt, img_blob)
+                                if vis.get("success") and vis.get("content"):
+                                    img_ocr_parts.append(vis["content"].strip())
+                except Exception as e_docx_img:
+                    logger.warning(f"DOCX image OCR failed: {e_docx_img}")
+
+                if img_ocr_parts:
+                    full_text += ("\n\n" if full_text else "") + "[Contenido extraído de imágenes del documento Word por Visión OCR]:\n" + "\n\n".join(img_ocr_parts)
+
             if len(full_text) < 15:
                 return {
                     "status": "insuficiente_vacio",
                     "text": "",
-                    "message": "El documento Word no contiene texto o párrafos legibles."
+                    "message": "El documento Word no contiene texto ni imágenes con ejercicios legibles."
                 }
 
             if len(full_text) > MAX_EXTRACTED_CHARS:
@@ -210,7 +259,7 @@ class DocumentProcessor:
 
     @classmethod
     def extract_from_image(cls, file_bytes: bytes) -> Dict[str, Any]:
-        """Validates image integrity and runs multimodal OCR using LLaVA in Ollama."""
+        """Validates image integrity and runs multimodal OCR using Groq Vision or fallback models."""
         try:
             # Validate image with Pillow
             img = Image.open(io.BytesIO(file_bytes))
@@ -227,11 +276,11 @@ class DocumentProcessor:
                     "message": "La imagen es demasiado pequeña para contener texto legible de una tarea."
                 }
 
-            # Run OCR / Transcription with Ollama vision model (llava:latest)
+            # Run OCR / Transcription with Vision models (Groq Cloud Llama 3.2 Vision / OpenAI / LLaVA)
             ocr_prompt = (
-                "Transcribe de forma exacta y clara el texto, preguntas, enunciados y fórmulas matemáticas "
-                "que aparecen en esta imagen escolar. Si hay una ecuación o ejercicio, escríbelo con precisión. "
-                "Devuelve únicamente la transcripción del ejercicio sin comentarios adicionales."
+                "Transcribe de forma exacta, ordenada y clara todo el texto, preguntas, enunciados y fórmulas matemáticas "
+                "que aparecen en esta imagen escolar o tarea. Si hay ecuaciones, fracciones o ejercicios numerados (1, 2, 3...), "
+                "transcríbelos con máxima precisión para que puedan resolverse paso a paso."
             )
             
             vision_resp = ai_provider.generate_vision(ocr_prompt, file_bytes)
@@ -265,7 +314,7 @@ class DocumentProcessor:
             return {
                 "status": "extraido_con_exito",
                 "text": extracted_text,
-                "model_used": vision_resp.get("model", "llava:latest"),
+                "model_used": vision_resp.get("model", "vision_ocr"),
                 "message": "Se transcribió el contenido de la imagen correctamente mediante OCR visual."
             }
 
