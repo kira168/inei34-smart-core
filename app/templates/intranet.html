@@ -31766,140 +31766,381 @@ Estructura la respuesta con:
 
         async function renderStuHelp(container) {
             container.innerHTML = `
-                <div class="space-y-6">
-                    <!-- Top Header Cyber-Gamer -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/95 p-5 rounded-3xl border border-rose-500/40 shadow-[0_0_30px_rgba(244,63,94,0.15)] relative overflow-hidden">
-                        <div class="absolute -right-12 -top-12 w-48 h-48 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="space-y-6 select-none font-sans">
+                    <!-- Top Header: Guía del Estudiante e Inteligencia Artificial -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/95 p-6 rounded-3xl border border-cyan-500/40 shadow-[0_0_35px_rgba(6,182,212,0.2)] relative overflow-hidden">
+                        <div class="absolute -right-12 -top-12 w-56 h-56 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
                         <div class="flex items-center gap-4 relative z-10">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-950 via-slate-900 to-rose-900 border border-rose-400/60 p-2.5 flex items-center justify-center shadow-[0_0_20px_rgba(244,63,94,0.5)] flex-shrink-0">
-                                <i class="fa-solid fa-headset anim-electric text-rose-300 text-2xl"></i>
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-950 via-slate-900 to-blue-900 border border-cyan-400/60 p-3 flex items-center justify-center shadow-[0_0_25px_rgba(6,182,212,0.5)] flex-shrink-0">
+                                <i class="fa-solid fa-graduation-cap anim-electric text-cyan-300 text-3xl"></i>
                             </div>
                             <div>
                                 <div class="flex items-center gap-2 flex-wrap">
-                                    <h2 class="text-xl font-black text-white flex items-center gap-2">
-                                        Centro de Ayuda & Orientación Estudiantil
+                                    <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2">
+                                        Guía del Estudiante • INEI SMART-CORE
                                     </h2>
-                                    <span class="bg-gradient-to-r from-rose-600 to-red-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-[0_0_15px_rgba(244,63,94,0.5)]">SOPORTE AL ESTUDIANTE</span>
+                                    <span class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-[10px] font-black px-3 py-0.5 rounded-full uppercase tracking-wider shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+                                        GUÍA OFICIAL 2026
+                                    </span>
                                 </div>
-                                <p class="text-xs text-slate-300 mt-1">Guías de uso, soporte técnico, dudas con tus talleres y canales oficiales de la I.E. INEI Nº 34.</p>
+                                <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                                    Aprende a dominar todas las herramientas de tu Intranet y descubre cómo estudiar eficientemente con tu <strong>Tutor de Inteligencia Artificial (SmartTutor IA)</strong>.
+                                </p>
                             </div>
                         </div>
-                        <button onclick="navigateModule('ai_center')" class="relative z-10 bg-gradient-to-r from-cyan-600 via-blue-600 to-cyan-700 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-black px-4 py-2.5 rounded-xl transition shadow-lg shadow-cyan-600/40 border border-cyan-400/50 flex items-center gap-2 transform active:scale-95 cursor-pointer">
-                            <i class="fa-solid fa-robot anim-robot text-cyan-200"></i> Preguntar a SmartTutor IA
+                        <button onclick="navigateModule('ai_center')" class="relative z-10 bg-gradient-to-r from-cyan-500 via-blue-600 to-cyan-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-black px-5 py-3 rounded-2xl transition shadow-xl shadow-cyan-500/30 border border-cyan-300/40 flex items-center gap-2.5 transform active:scale-95 cursor-pointer flex-shrink-0">
+                            <i class="fa-solid fa-robot anim-robot text-cyan-200 text-base"></i> Abrir SmartTutor IA
                         </button>
                     </div>
 
-                    <!-- 4 Tarjetas de Soporte Rápido con Iconos Animados -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div onclick="navigateModule('ai_center')" class="bg-slate-900/90 border border-cyan-500/40 hover:border-cyan-400 hover:shadow-[0_0_25px_rgba(6,182,212,0.35)] student-game-card p-5 rounded-2xl cursor-pointer transition flex flex-col justify-between">
-                            <div class="space-y-3">
-                                <div class="w-12 h-12 rounded-xl bg-cyan-950/80 border border-cyan-500/60 flex items-center justify-center text-cyan-300 text-xl shadow-inner">
-                                    <i class="fa-solid fa-robot anim-robot"></i>
-                                </div>
-                                <h3 class="font-extrabold text-sm text-white">SmartTutor IA</h3>
-                                <p class="text-xs text-slate-300 leading-relaxed">Resuelve dudas académicas, prepara tus exámenes y comprende temas de taller 24/7.</p>
-                            </div>
-                            <span class="text-cyan-400 font-bold text-xs mt-4 flex items-center gap-1 group-hover:translate-x-1 transition">
-                                Abrir Tutor <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                            </span>
-                        </div>
+                    <!-- Selector de Pestañas Interactivas -->
+                    <div class="flex flex-wrap items-center gap-2 p-1.5 bg-slate-900/90 border border-slate-800 rounded-2xl text-xs font-bold">
+                        <button id="btnTabStuPlatform" onclick="switchStuHelpTab('platform')" class="px-5 py-2.5 rounded-xl transition cursor-pointer bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-laptop text-sm"></i> 1. ¿Cómo usar la Plataforma?
+                        </button>
+                        <button id="btnTabStuAi" onclick="switchStuHelpTab('ai')" class="px-5 py-2.5 rounded-xl transition cursor-pointer text-slate-400 hover:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-brain text-sm text-cyan-400"></i> 2. ¿Cómo estudiar con la IA?
+                        </button>
+                        <button id="btnTabStuFaq" onclick="switchStuHelpTab('faq')" class="px-5 py-2.5 rounded-xl transition cursor-pointer text-slate-400 hover:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-circle-question text-sm text-amber-400"></i> 3. Preguntas & Soluciones
+                        </button>
+                    </div>
 
-                        <div onclick="navigateModule('stu_tramites')" class="bg-slate-900/90 border border-purple-500/40 hover:border-purple-400 hover:shadow-[0_0_25px_rgba(168,85,247,0.35)] student-game-card p-5 rounded-2xl cursor-pointer transition flex flex-col justify-between">
-                            <div class="space-y-3">
-                                <div class="w-12 h-12 rounded-xl bg-purple-950/80 border border-purple-500/60 flex items-center justify-center text-purple-300 text-xl shadow-inner">
-                                    <i class="fa-solid fa-file-signature anim-star"></i>
+                    <!-- ================= TAB 1: CÓMO USAR LA PLATAFORMA ================= -->
+                    <div id="stuHelpTabPlatform" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Paso 1 -->
+                            <div class="bg-slate-900/90 border border-slate-800 hover:border-cyan-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-10 h-10 rounded-xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-black text-sm">
+                                            01
+                                        </div>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded-md border border-cyan-800/40">
+                                            AULA VIRTUAL
+                                        </span>
+                                    </div>
+                                    <h3 class="font-extrabold text-white text-sm group-hover:text-cyan-300 transition">Mis Cursos y Talleres Técnicos</h3>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        En el menú lateral pulsa <strong>Mis Cursos</strong> para ver tus materias y taller técnico (Mecánica, Electricidad, Computación, etc.). Podrás consultar las sesiones de clase, diapositivas y temas de la semana.
+                                    </p>
                                 </div>
-                                <h3 class="font-extrabold text-sm text-white">Trámites FUM Digital</h3>
-                                <p class="text-xs text-slate-300 leading-relaxed">Solicita constancias de estudio, certificados de taller o cartas para prácticas en empresas.</p>
+                                <button onclick="navigateModule('courses')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-cyan-600/20 text-cyan-300 hover:text-cyan-200 border border-slate-700/80 hover:border-cyan-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                    Ir a Mis Cursos <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button>
                             </div>
-                            <span class="text-purple-400 font-bold text-xs mt-4 flex items-center gap-1 group-hover:translate-x-1 transition">
-                                Gestionar FUM <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                            </span>
-                        </div>
 
-                        <div onclick="navigateModule('knowledge_base')" class="bg-slate-900/90 border border-blue-500/40 hover:border-blue-400 hover:shadow-[0_0_25px_rgba(59,130,246,0.35)] student-game-card p-5 rounded-2xl cursor-pointer transition flex flex-col justify-between">
-                            <div class="space-y-3">
-                                <div class="w-12 h-12 rounded-xl bg-blue-950/80 border border-blue-500/60 flex items-center justify-center text-blue-300 text-xl shadow-inner">
-                                    <i class="fa-solid fa-book-atlas anim-pulse-subtle"></i>
+                            <!-- Paso 2 -->
+                            <div class="bg-slate-900/90 border border-slate-800 hover:border-purple-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-10 h-10 rounded-xl bg-purple-950/80 border border-purple-500/40 flex items-center justify-center text-purple-400 font-black text-sm">
+                                            02
+                                        </div>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded-md border border-purple-800/40">
+                                            EVIDENCIAS
+                                        </span>
+                                    </div>
+                                    <h3 class="font-extrabold text-white text-sm group-hover:text-purple-300 transition">Entrega de Tareas y Prácticas</h3>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Dentro de cada curso, entra a la pestaña <strong>Tareas</strong> y pulsa <strong>Entregar Evidencia</strong>. Puedes adjuntar fotos de tus prácticas en taller, informes en PDF o planos técnicos antes del plazo límite.
+                                    </p>
                                 </div>
-                                <h3 class="font-extrabold text-sm text-white">Biblioteca RAG</h3>
-                                <p class="text-xs text-slate-300 leading-relaxed">Accede a manuales de maquinaria, guías de bioseguridad 5S y textos escolares oficiales.</p>
+                                <button onclick="navigateModule('courses')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-purple-600/20 text-purple-300 hover:text-purple-200 border border-slate-700/80 hover:border-purple-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                    Ver Tareas Pendientes <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button>
                             </div>
-                            <span class="text-blue-400 font-bold text-xs mt-4 flex items-center gap-1 group-hover:translate-x-1 transition">
-                                Ver Catálogo <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                            </span>
-                        </div>
 
-                        <div onclick="window.open('https://wa.me/51960579374', '_blank')" class="bg-slate-900/90 border border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_25px_rgba(16,185,129,0.35)] student-game-card p-5 rounded-2xl cursor-pointer transition flex flex-col justify-between">
-                            <div class="space-y-3">
-                                <div class="w-12 h-12 rounded-xl bg-emerald-950/80 border border-emerald-500/60 flex items-center justify-center text-emerald-400 text-xl shadow-inner">
-                                    <i class="fa-brands fa-whatsapp anim-electric"></i>
+                            <!-- Paso 3 -->
+                            <div class="bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black text-sm">
+                                            03
+                                        </div>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-800/40">
+                                            SIAGIE CNEB
+                                        </span>
+                                    </div>
+                                    <h3 class="font-extrabold text-white text-sm group-hover:text-emerald-300 transition">Calificaciones y Libreta Oficial</h3>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        En <strong>Mis Calificaciones</strong> revisa tus notas por competencias (AD, A, B, C) de cada bimestre, lee las conclusiones de tus docentes y descarga tu boleta oficial en formato PDF.
+                                    </p>
                                 </div>
-                                <h3 class="font-extrabold text-sm text-white">Secretaría WhatsApp</h3>
-                                <p class="text-xs text-slate-300 leading-relaxed">Canal directo de atención para apoderados y estudiantes de la I.E. INEI Nº 34 Chancay.</p>
+                                <button onclick="navigateModule('evaluations')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-emerald-600/20 text-emerald-300 hover:text-emerald-200 border border-slate-700/80 hover:border-emerald-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                    Consultar Notas <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button>
                             </div>
-                            <span class="text-emerald-400 font-bold text-xs mt-4 flex items-center gap-1 group-hover:translate-x-1 transition">
-                                Enviar Mensaje <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                            </span>
+
+                            <!-- Paso 4 -->
+                            <div class="bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-500/40 flex items-center justify-center text-amber-400 font-black text-sm">
+                                            04
+                                        </div>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-800/40">
+                                            CONTROL DIARIO
+                                        </span>
+                                    </div>
+                                    <h3 class="font-extrabold text-white text-sm group-hover:text-amber-300 transition">Asistencia y Justificaciones</h3>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        En <strong>Mi Asistencia</strong> verifica tu porcentaje de asistencia en vivo. Si tuviste un problema de salud o imprevisto, usa el botón <strong>Justificar</strong> adjuntando el sustento de tu apoderado.
+                                    </p>
+                                </div>
+                                <button onclick="navigateModule('attendance')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-amber-600/20 text-amber-300 hover:text-amber-200 border border-slate-700/80 hover:border-amber-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                    Revisar Asistencia <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button>
+                            </div>
+
+                            <!-- Paso 5 -->
+                            <div class="bg-slate-900/90 border border-slate-800 hover:border-rose-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-10 h-10 rounded-xl bg-rose-950/80 border border-rose-500/40 flex items-center justify-center text-rose-400 font-black text-sm">
+                                            05
+                                        </div>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-800/40">
+                                            SECRETARÍA VIRTUAL
+                                        </span>
+                                    </div>
+                                    <h3 class="font-extrabold text-white text-sm group-hover:text-rose-300 transition">Trámites FUM Digital 24/7</h3>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        ¿Necesitas una constancia de matrícula, certificado de estudios o carta para prácticas en empresas? Ingresa a <strong>Trámites (FUM)</strong>, llena la solicitud y recíbela con firma digital y código QR oficial.
+                                    </p>
+                                </div>
+                                <button onclick="navigateModule('stu_tramites')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-rose-600/20 text-rose-300 hover:text-rose-200 border border-slate-700/80 hover:border-rose-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                    Nueva Solicitud FUM <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button>
+                            </div>
+
+                            <!-- Paso 6 -->
+                            <div class="bg-slate-900/90 border border-slate-800 hover:border-blue-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div class="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-500/40 flex items-center justify-center text-blue-400 font-black text-sm">
+                                            06
+                                        </div>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-800/40">
+                                            RECURSOS
+                                        </span>
+                                    </div>
+                                    <h3 class="font-extrabold text-white text-sm group-hover:text-blue-300 transition">Manuales Técnicos y Biblioteca</h3>
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        Accede a la <strong>Biblioteca RAG</strong> para consultar manuales de taller, protocolos de seguridad 5S, guías de soldadura, normas técnicas y libros digitales oficiales.
+                                    </p>
+                                </div>
+                                <button onclick="navigateModule('knowledge_base')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-blue-600/20 text-blue-300 hover:text-blue-200 border border-slate-700/80 hover:border-blue-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                    Abrir Biblioteca <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Acordeón de Preguntas Frecuentes -->
-                    <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4">
-                        <div class="flex items-center gap-3 pb-3 border-b border-slate-800">
-                            <div class="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-500/50 flex items-center justify-center text-amber-400 text-lg">
-                                <i class="fa-solid fa-circle-question anim-star"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-black text-sm text-white">Preguntas Frecuentes para Estudiantes</h3>
-                                <p class="text-xs text-slate-400">Respuestas rápidas a las consultas más habituales en la plataforma.</p>
+                    <!-- ================= TAB 2: GUÍA DE LA INTELIGENCIA ARTIFICIAL (SMARTTUTOR IA) ================= -->
+                    <div id="stuHelpTabAi" class="hidden space-y-5">
+                        <!-- Banner Explicativo -->
+                        <div class="bg-gradient-to-r from-slate-900 via-cyan-950/40 to-slate-900 p-6 rounded-3xl border border-cyan-500/40 shadow-xl space-y-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 border border-cyan-400/60 flex items-center justify-center text-cyan-300 text-2xl shadow-inner">
+                                    <i class="fa-solid fa-robot anim-robot"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-black text-white">¿Qué es SmartTutor IA y cómo te ayuda a estudiar?</h3>
+                                    <p class="text-xs text-slate-300">
+                                        Es tu tutor pedagógico inteligente 24/7 de la <strong>I.E. INEI N.° 34 de Chancay</strong>. Su misión <strong>no es hacerte la tarea para copiar</strong>, sino explicarte cómo razonar y resolverla por ti mismo mediante el método socrático.
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="space-y-3 text-xs">
-                            <details class="group bg-slate-950/80 p-3.5 rounded-xl border border-slate-800/80 cursor-pointer">
-                                <summary class="font-bold text-slate-200 flex justify-between items-center group-hover:text-cyan-300 transition">
-                                    <span>¿Cómo entrego mis tareas y prácticas de taller en el Aula Virtual?</span>
+                        <!-- 4 Formas de Usar SmartTutor IA -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Forma 1 -->
+                            <div class="bg-slate-900/90 border border-cyan-500/30 p-5 rounded-2xl space-y-2.5">
+                                <div class="flex items-center gap-2.5 text-cyan-400 font-extrabold text-sm">
+                                    <i class="fa-solid fa-lightbulb text-base"></i> 1. Explicación de Temas Difíciles
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Si no entendiste un tema en clase (como la ley de Ohm, balanceo químico, o cómo leer el vernier), pídele que te lo explique <strong>con analogías sencillas y ejemplos de la vida real en Chancay</strong>.
+                                </p>
+                            </div>
+
+                            <!-- Forma 2 -->
+                            <div class="bg-slate-900/90 border border-purple-500/30 p-5 rounded-2xl space-y-2.5">
+                                <div class="flex items-center gap-2.5 text-purple-400 font-extrabold text-sm">
+                                    <i class="fa-solid fa-gamepad text-base"></i> 2. Simulador y Repaso para Exámenes
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Escríbele: <em>"Hazme 5 preguntas de opción múltiple sobre la célula eucariota para practicar antes de mi examen"</em>. La IA evaluará tus respuestas y te dirá exactamente en qué mejorar.
+                                </p>
+                            </div>
+
+                            <!-- Forma 3 -->
+                            <div class="bg-slate-900/90 border border-emerald-500/30 p-5 rounded-2xl space-y-2.5">
+                                <div class="flex items-center gap-2.5 text-emerald-400 font-extrabold text-sm">
+                                    <i class="fa-solid fa-wrench text-base"></i> 3. Preguntas de Taller Técnico y 5S
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Resuelve dudas sobre protocolos de bioseguridad en talleres técnicos, código de colores de resistencias, tipos de electrodos para soldadura o estructuración de tu informe técnico.
+                                </p>
+                            </div>
+
+                            <!-- Forma 4 -->
+                            <div class="bg-slate-900/90 border border-amber-500/30 p-5 rounded-2xl space-y-2.5">
+                                <div class="flex items-center gap-2.5 text-amber-400 font-extrabold text-sm">
+                                    <i class="fa-solid fa-route text-base"></i> 4. Guía Paso a Paso (Pistas Anti-Plagio)
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Si estás atascado en un ejercicio, pídele: <em>"No me des la respuesta, solo dame una pista de qué fórmula usar primero"</em>. La IA te guiará para que lo descubras por ti mismo.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Ejemplos con 1-Clic para Probar la IA -->
+                        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-3">
+                            <h4 class="font-extrabold text-xs text-white uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-hand-pointer text-cyan-400"></i> Ejemplos recomendados para probar en SmartTutor IA (Haz clic para preguntar):
+                            </h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                <button onclick="askSmartTutorFromGuide('¿Cómo funciona el calibrador vernier de 0.02 mm y cómo debo leerlo en el taller?')" class="p-3 bg-slate-950/80 hover:bg-cyan-950/60 border border-slate-800 hover:border-cyan-500/60 rounded-xl text-left text-slate-300 hover:text-white transition flex items-center justify-between cursor-pointer group">
+                                    <span>⚙️ "¿Cómo leer el calibrador vernier en taller?"</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-cyan-400 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition"></i>
+                                </button>
+                                <button onclick="askSmartTutorFromGuide('Explícame de forma sencilla la diferencia entre célula animal y vegetal con una analogía')" class="p-3 bg-slate-950/80 hover:bg-cyan-950/60 border border-slate-800 hover:border-cyan-500/60 rounded-xl text-left text-slate-300 hover:text-white transition flex items-center justify-between cursor-pointer group">
+                                    <span>🔬 "Diferencia entre célula animal y vegetal"</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-cyan-400 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition"></i>
+                                </button>
+                                <button onclick="askSmartTutorFromGuide('Hazme 5 preguntas de repaso sobre la ley de Ohm en circuitos eléctricos')" class="p-3 bg-slate-950/80 hover:bg-cyan-950/60 border border-slate-800 hover:border-cyan-500/60 rounded-xl text-left text-slate-300 hover:text-white transition flex items-center justify-between cursor-pointer group">
+                                    <span>⚡ "5 preguntas de repaso sobre la ley de Ohm"</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-cyan-400 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition"></i>
+                                </button>
+                                <button onclick="askSmartTutorFromGuide('¿Cuáles son las 5S de seguridad y orden que debemos cumplir en el taller del colegio?')" class="p-3 bg-slate-950/80 hover:bg-cyan-950/60 border border-slate-800 hover:border-cyan-500/60 rounded-xl text-left text-slate-300 hover:text-white transition flex items-center justify-between cursor-pointer group">
+                                    <span>🛡️ "¿Cuáles son las 5S de seguridad de taller?"</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-cyan-400 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Botón de Acción -->
+                        <div class="text-center pt-2">
+                            <button onclick="navigateModule('ai_center')" class="bg-gradient-to-r from-cyan-600 via-blue-600 to-cyan-700 hover:from-cyan-500 hover:to-blue-500 text-white font-extrabold px-8 py-3 rounded-2xl text-xs sm:text-sm transition shadow-lg shadow-cyan-600/30 border border-cyan-400/50 inline-flex items-center gap-2 cursor-pointer active:scale-95">
+                                <i class="fa-solid fa-comments text-base"></i> Comenzar a chatear con SmartTutor IA ahora
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ================= TAB 3: PREGUNTAS Y SOLUCIONES ================= -->
+                    <div id="stuHelpTabFaq" class="hidden space-y-4">
+                        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-3.5">
+                            <h3 class="font-black text-sm text-white flex items-center gap-2 mb-2">
+                                <i class="fa-solid fa-circle-question text-amber-400"></i> Respuestas a Preguntas Frecuentes
+                            </h3>
+
+                            <details class="group bg-slate-950/80 p-4 rounded-xl border border-slate-800/80 cursor-pointer">
+                                <summary class="font-bold text-slate-200 flex justify-between items-center group-hover:text-cyan-300 transition text-xs">
+                                    <span>¿Qué formatos y tamaños de archivo puedo subir para mis tareas?</span>
                                     <i class="fa-solid fa-chevron-down text-slate-500 group-open:rotate-180 transition"></i>
                                 </summary>
-                                <p class="text-slate-400 mt-2.5 leading-relaxed pl-1">
-                                    Ingresa a <strong>Mis Cursos y Tareas</strong>, selecciona tu curso o taller técnico, haz clic en la pestaña <strong>Tareas</strong> y presiona el botón <strong>Entregar Evidencia</strong>. Puedes subir tu informe técnico en PDF o fotos de tu práctica.
+                                <p class="text-slate-400 mt-2.5 leading-relaxed text-xs pl-1">
+                                    Puedes subir documentos en <strong>PDF</strong>, Word (.docx), Excel (.xlsx), imágenes (.png, .jpg) y planos técnicos (.dwg). El tamaño máximo permitido es de <strong>25 MB</strong> por archivo.
                                 </p>
                             </details>
 
-                            <details class="group bg-slate-950/80 p-3.5 rounded-xl border border-slate-800/80 cursor-pointer">
-                                <summary class="font-bold text-slate-200 flex justify-between items-center group-hover:text-cyan-300 transition">
-                                    <span>¿Cómo consulto mis calificaciones y logros de aprendizaje CNEB?</span>
+                            <details class="group bg-slate-950/80 p-4 rounded-xl border border-slate-800/80 cursor-pointer">
+                                <summary class="font-bold text-slate-200 flex justify-between items-center group-hover:text-cyan-300 transition text-xs">
+                                    <span>¿Cómo sé si mi profesor ya revisó y calificó mi entrega?</span>
                                     <i class="fa-solid fa-chevron-down text-slate-500 group-open:rotate-180 transition"></i>
                                 </summary>
-                                <p class="text-slate-400 mt-2.5 leading-relaxed pl-1">
-                                    En el menú lateral haz clic en <strong>Mis Calificaciones (SIAGIE)</strong>. Podrás ver tus notas por bimestres (AD, A, B, C), las conclusiones descriptivas de tus profesores y descargar tu boleta oficial en formato PDF.
+                                <p class="text-slate-400 mt-2.5 leading-relaxed text-xs pl-1">
+                                    En la sección de la tarea, el estado cambiará de <span class="text-amber-400 font-bold">"Pendiente de Revisión"</span> a <span class="text-emerald-400 font-bold">"Calificado"</span>. Podrás ver tu nota cualitativa (AD, A, B, C) y los comentarios de retroalimentación de tu profesor.
                                 </p>
                             </details>
 
-                            <details class="group bg-slate-950/80 p-3.5 rounded-xl border border-slate-800/80 cursor-pointer">
-                                <summary class="font-bold text-slate-200 flex justify-between items-center group-hover:text-cyan-300 transition">
-                                    <span>¿Qué debo hacer si llego tarde o falto a una clase?</span>
+                            <details class="group bg-slate-950/80 p-4 rounded-xl border border-slate-800/80 cursor-pointer">
+                                <summary class="font-bold text-slate-200 flex justify-between items-center group-hover:text-cyan-300 transition text-xs">
+                                    <span>¿Cómo justifico una inasistencia o tardanza médica?</span>
                                     <i class="fa-solid fa-chevron-down text-slate-500 group-open:rotate-180 transition"></i>
                                 </summary>
-                                <p class="text-slate-400 mt-2.5 leading-relaxed pl-1">
-                                    Ve a <strong>Mi Asistencia</strong> y pulsa el botón <strong>Justificar Asistencia</strong>. Llena el motivo e ingresa el sustento médico o justificación de tu apoderado para que el auxiliar de educación la valide.
+                                <p class="text-slate-400 mt-2.5 leading-relaxed text-xs pl-1">
+                                    Ingresa a <strong>Mi Asistencia</strong> y presiona el botón <strong>Justificar Asistencia</strong>. Escribe el motivo e ingresa el sustento o número de teléfono de tu apoderado para que el auxiliar o tutoría valide la justificación en el sistema.
                                 </p>
                             </details>
 
-                            <details class="group bg-slate-950/80 p-3.5 rounded-xl border border-slate-800/80 cursor-pointer">
-                                <summary class="font-bold text-slate-200 flex justify-between items-center group-hover:text-cyan-300 transition">
-                                    <span>¿Cómo solicito una constancia de matrícula por FUM Digital?</span>
+                            <details class="group bg-slate-950/80 p-4 rounded-xl border border-slate-800/80 cursor-pointer">
+                                <summary class="font-bold text-slate-200 flex justify-between items-center group-hover:text-cyan-300 transition text-xs">
+                                    <span>¿Qué debo hacer si olvidé mi contraseña de acceso?</span>
                                     <i class="fa-solid fa-chevron-down text-slate-500 group-open:rotate-180 transition"></i>
                                 </summary>
-                                <p class="text-slate-400 mt-2.5 leading-relaxed pl-1">
-                                    Ingresa a <strong>Trámites (FUM)</strong> y presiona <strong>+ Nueva Solicitud FUM</strong>. Selecciona el tipo de constancia y escribe el motivo. Secretaría la emitirá con firma digital y código QR de validación en 24 horas.
+                                <p class="text-slate-400 mt-2.5 leading-relaxed text-xs pl-1">
+                                    Tu contraseña inicial es tu número de <strong>DNI</strong> o <strong>alumno123</strong>. Si la cambiaste y no la recuerdas, acércate a la oficina de Innovación Tecnológica (Aula de Cómputo) o avísale a tu tutor para que el Administrador restablezca tu acceso en 1 minuto.
                                 </p>
                             </details>
+
+                            <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                                <span class="text-slate-400">¿Deseas descargar la guía en tu celular?</span>
+                                <button onclick="downloadManualPDF('Guia_Estudiante_INEI34.pdf')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold rounded-xl border border-slate-700 flex items-center gap-2 cursor-pointer transition">
+                                    <i class="fa-solid fa-file-pdf text-rose-400"></i> Descargar Guía Oficial del Estudiante (PDF)
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
+        }
+
+        // Controlador de Pestañas de la Guía del Estudiante
+        function switchStuHelpTab(tab) {
+            const tabPlatform = document.getElementById('stuHelpTabPlatform');
+            const tabAi = document.getElementById('stuHelpTabAi');
+            const tabFaq = document.getElementById('stuHelpTabFaq');
+            const btnPlatform = document.getElementById('btnTabStuPlatform');
+            const btnAi = document.getElementById('btnTabStuAi');
+            const btnFaq = document.getElementById('btnTabStuFaq');
+
+            if (!tabPlatform || !tabAi || !tabFaq) return;
+
+            const activeBtnClass = "px-5 py-2.5 rounded-xl transition cursor-pointer bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md flex items-center gap-2";
+            const inactiveBtnClass = "px-5 py-2.5 rounded-xl transition cursor-pointer text-slate-400 hover:text-white flex items-center gap-2";
+
+            tabPlatform.classList.add('hidden');
+            tabAi.classList.add('hidden');
+            tabFaq.classList.add('hidden');
+
+            btnPlatform.className = inactiveBtnClass;
+            btnAi.className = inactiveBtnClass;
+            btnFaq.className = inactiveBtnClass;
+
+            if (tab === 'platform') {
+                tabPlatform.classList.remove('hidden');
+                btnPlatform.className = activeBtnClass;
+            } else if (tab === 'ai') {
+                tabAi.classList.remove('hidden');
+                btnAi.className = activeBtnClass;
+            } else if (tab === 'faq') {
+                tabFaq.classList.remove('hidden');
+                btnFaq.className = activeBtnClass;
+            }
+        }
+
+        // Redirige a SmartTutor IA con una pregunta precargada desde la guía
+        function askSmartTutorFromGuide(promptText) {
+            navigateModule('ai_center');
+            setTimeout(() => {
+                const inputs = [
+                    document.getElementById('chatInput'),
+                    document.getElementById('studentChatInput'),
+                    document.getElementById('tutorInput'),
+                    document.querySelector('textarea')
+                ];
+                for (const input of inputs) {
+                    if (input) {
+                        input.value = promptText;
+                        input.focus();
+                        break;
+                    }
+                }
+            }, 350);
         }
 
         // =========================================================================
