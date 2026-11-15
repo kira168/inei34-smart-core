@@ -201,31 +201,34 @@ class AIProvider:
             "ecuacion", "ecuación", "resuelve", "resolver", "despeja", "despejar",
             "fraccion", "fracción", "planteo", "incognita", "incógnita", "porcentaje",
             "pitagoras", "pitágoras", "area", "área", "perimetro", "perímetro",
-            "cuanto tiene", "cuánto tiene", "cuanto es", "cuánto es"
-        ]) or ctx.get("tool_type") in ["paso_a_paso", "pistas", "socratico"]
+            "cuanto tiene", "cuánto tiene", "cuanto es", "cuánto es", "calcula", "calcular"
+        ])
         if is_math_task:
             return {
                 "intent": "STUDENT_MATH_PROBLEM",
-                "max_predict": 450,
-                "num_ctx": 1600,
+                "max_predict": 750,
+                "num_ctx": 2048,
                 "timeout_seconds": 75.0,
                 "temperature": 0.2
             }
 
-        # 5. Student Concept Explanation with Examples / Analysis / Comparison
+        # 5. Student Concept Explanation with Examples / Analysis / Comparison / History / General
         is_explanation = any(k in user_lower for k in [
             "ejemplo", "ejemplos", "explica", "explicar", "explicame", "explícame", "diferencia",
             "diferencias", "compara", "comparar", "analiza", "análisis", "desarrolla", "ensayo",
             "paso a paso", "por qué", "porque", "cómo funciona", "como funciona", "analogía",
-            "qué es", "que es", "en qué consiste", "en que consiste", "significado", "definición", "definicion", "quién fue", "quien fue"
-        ])
+            "qué es", "que es", "en qué consiste", "en que consiste", "significado", "definición",
+            "definicion", "quién fue", "quien fue", "quién es", "quien es", "a quien le dicen",
+            "a quién le dicen", "resumen", "resumir", "historia", "biografía", "biografia",
+            "cuéntame", "cuentame", "sabes a quien", "sabes quién", "imperio", "cultura"
+        ]) or ctx.get("tool_type") in ["paso_a_paso", "pistas", "socratico"]
         if is_explanation:
             return {
                 "intent": "STUDENT_CONCEPT_EXPLANATION",
-                "max_predict": 420,
-                "num_ctx": 1536,
+                "max_predict": 1200,
+                "num_ctx": 2048,
                 "timeout_seconds": 60.0,
-                "temperature": 0.25
+                "temperature": 0.3
             }
 
         # 6. Student Greeting / Ambiguous / Clarification
@@ -375,14 +378,21 @@ class AIProvider:
         # 0. Proveedores de IA en la Nube (Groq Cloud / DeepSeek) - Prioritarios si están configurados
         groq_key = os.getenv("GROQ_API_KEY", "").strip() or GROQ_API_KEY
         if groq_key:
-            for g_model in ["qwen/qwen3.8-27b", "openai/gpt-oss-120b", "openai/gpt-oss-20b"]:
+            groq_models = [
+                "llama-3.3-70b-versatile",
+                "qwen/qwen3.8-27b",
+                "llama-3.1-8b-instant",
+                "openai/gpt-oss-120b",
+                "openai/gpt-oss-20b"
+            ]
+            for g_model in groq_models:
                 try:
                     t0 = time.time()
                     groq_payload = {
                         "model": g_model,
                         "messages": messages_payload,
                         "temperature": gen_temp,
-                        "max_tokens": max_predict
+                        "max_tokens": max(max_predict, 1200)
                     }
                     resp = requests.post(
                         "https://api.groq.com/openai/v1/chat/completions",
@@ -395,7 +405,16 @@ class AIProvider:
                         content = data["choices"][0]["message"]["content"].strip()
                         total_dur_ms = int((time.time() - t0) * 1000)
                         eval_count = len(content.split())
-                        display_name = "Qwen 27B (GroqCloud)" if "qwen" in g_model else "GPT-OSS 120B (GroqCloud)"
+                        if "llama-3.3-70b" in g_model:
+                            display_name = "Llama 3.3 70B (GroqCloud)"
+                        elif "llama-3.1-8b" in g_model:
+                            display_name = "Llama 3.1 8B (GroqCloud)"
+                        elif "qwen" in g_model:
+                            display_name = "Qwen 27B (GroqCloud)"
+                        elif "gpt-oss-120b" in g_model:
+                            display_name = "GPT-OSS 120B (GroqCloud)"
+                        else:
+                            display_name = f"GroqCloud ({g_model})"
                         return {
                             "success": True,
                             "content": content,
