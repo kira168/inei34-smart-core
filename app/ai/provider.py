@@ -657,7 +657,7 @@ class AIProvider:
         # 1. Google Gemini Multimodal Vision API (World-Class OCR, Free & Fast)
         gemini_key = os.getenv("GEMINI_API_KEY", "").strip() or GEMINI_API_KEY
         if gemini_key:
-            for g_model in ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]:
+            for g_model in ["gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]:
                 try:
                     url = f"https://generativelanguage.googleapis.com/v1beta/models/{g_model}:generateContent?key={gemini_key}"
                     payload = {
