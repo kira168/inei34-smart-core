@@ -475,6 +475,69 @@ class AIProvider:
             except Exception as e:
                 logger.warning(f"DeepSeek API request failed: {e}")
 
+        # Google Gemini API Fallback / Alternative (GPT-level intelligence, fast & reliable)
+        gemini_key = os.getenv("GEMINI_API_KEY", "").strip() or GEMINI_API_KEY
+        if gemini_key:
+            for gm in ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-3.5-flash"]:
+                try:
+                    t0 = time.time()
+                    system_text = ""
+                    contents_gemini = []
+                    for m in messages_payload:
+                        r = m.get("role", "user")
+                        txt = m.get("content", "")
+                        if r == "system":
+                            system_text += txt + "\n"
+                        else:
+                            role_mapped = "model" if r == "assistant" else "user"
+                            contents_gemini.append({
+                                "role": role_mapped,
+                                "parts": [{"text": txt}]
+                            })
+                    if not contents_gemini:
+                        contents_gemini.append({"role": "user", "parts": [{"text": prompt}]})
+
+                    g_body = {
+                        "contents": contents_gemini,
+                        "generationConfig": {
+                            "temperature": gen_temp,
+                            "maxOutputTokens": max(max_predict, 1800)
+                        }
+                    }
+                    if system_text:
+                        g_body["system_instruction"] = {"parts": [{"text": system_text.strip()}]}
+
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{gm}:generateContent?key={gemini_key}"
+                    resp = requests.post(url, json=g_body, timeout=timeout_req)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        candidates = data.get("candidates", [])
+                        if candidates:
+                            parts = candidates[0].get("content", {}).get("parts", [])
+                            if parts:
+                                content = parts[0].get("text", "").strip()
+                                content = re.sub(r'\n+---*\s*$', '', content).strip()
+                                content = re.sub(r'\n+#+\s+[^#\n]*$', '', content).strip()
+                                total_dur_ms = int((time.time() - t0) * 1000)
+                                eval_count = len(content.split())
+                                return {
+                                    "success": True,
+                                    "content": content,
+                                    "model": f"Gemini ({gm})",
+                                    "provider": "gemini_cloud",
+                                    "is_fallback": False,
+                                    "is_complete": True,
+                                    "is_truncated": False,
+                                    "is_repaired": False,
+                                    "done_reason": "natural_stop",
+                                    "tokens_eval": eval_count,
+                                    "duration_ms": total_dur_ms
+                                }
+                    else:
+                        logger.warning(f"Gemini API status {resp.status_code} for {gm}: {resp.text[:200]}")
+                except Exception as eg:
+                    logger.warning(f"Gemini API error for {gm}: {eg}")
+
         if self.is_available():
             try:
                 t0 = time.time()
@@ -657,7 +720,7 @@ class AIProvider:
         # 1. Google Gemini Multimodal Vision API (World-Class OCR, Free & Fast)
         gemini_key = os.getenv("GEMINI_API_KEY", "").strip() or GEMINI_API_KEY
         if gemini_key:
-            for g_model in ["gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]:
+            for g_model in ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-3.5-flash", "gemini-3.8-flash", "gemini-2.5-flash", "gemini-flash-latest"]:
                 try:
                     url = f"https://generativelanguage.googleapis.com/v1beta/models/{g_model}:generateContent?key={gemini_key}"
                     payload = {
