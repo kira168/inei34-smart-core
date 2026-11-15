@@ -1395,6 +1395,8 @@
     <!-- Application Script -->
     <script>
         let currentUser = null;
+        let currentRole = 'ESTUDIANTE';
+        window.currentRole = currentRole;
         let currentModule = 'dashboard';
         let chartInstances = {};
 
@@ -2051,12 +2053,24 @@
             `;
 
             try {
-                const role = (currentUser.role || 'ESTUDIANTE').toUpperCase();
+                const role = (currentUser && currentUser.role ? currentUser.role : 'ESTUDIANTE').toUpperCase();
+                const currentRole = role;
+                window.currentRole = role;
 
                 if (moduleId === 'dashboard') await renderRoleDashboard(container, role);
                 else if (moduleId === 'ai_center' || moduleId === 'ai') await renderAICenter(container, role);
                 else if (moduleId === 'knowledge_base') await renderKnowledgeBase(container, role);
                 else if (moduleId === 'admin_courses' || moduleId === 'director_courses' || moduleId === 'sec_courses') await renderAdminCoursesManagement(container, role);
+                else if (moduleId === 'courses') {
+                    if (role === 'ESTUDIANTE') await renderStuCourses(container, 'all');
+                    else if (role === 'DOCENTE') await renderDocCourses(container);
+                    else await renderAdminCoursesManagement(container, role);
+                }
+                else if (moduleId === 'assignments') {
+                    if (role === 'ESTUDIANTE') await renderStuCourses(container, 'tasks');
+                    else if (role === 'DOCENTE') { openDocCourseClassroom(1); switchDocTab('tareas'); }
+                    else await renderDocCourses(container);
+                }
                 else if (moduleId === 'admin_users') await renderAdminUsers(container);
                 else if (moduleId === 'admin_roles') await renderAdminRoles(container);
                 else if (moduleId === 'admin_security') await renderAdminSecurity(container);
@@ -2081,7 +2095,9 @@
                 else if (moduleId === 'doc_courses') await renderDocCourses(container);
                 else if (moduleId === 'doc_students') await renderDocStudents(container);
                 else if (moduleId === 'attendance') {
-                    if (currentRole === 'DOCENTE') {
+                    if (role === 'ESTUDIANTE') {
+                        await renderStuAttendance(container);
+                    } else if (role === 'DOCENTE') {
                         openDocCourseClassroom(1);
                         switchDocTab('asistencia');
                     } else {
@@ -2089,7 +2105,9 @@
                     }
                 }
                 else if (moduleId === 'evaluations') {
-                    if (currentRole === 'DOCENTE') {
+                    if (role === 'ESTUDIANTE') {
+                        await renderStuGrades(container);
+                    } else if (role === 'DOCENTE') {
                         openDocCourseClassroom(1);
                         switchDocTab('siagie');
                     } else {
@@ -31808,9 +31826,9 @@ Estructura la respuesta con:
 
                     <!-- ================= TAB 1: CÓMO USAR LA PLATAFORMA ================= -->
                     <div id="stuHelpTabPlatform" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <!-- Paso 1 -->
-                            <div class="bg-slate-900/90 border border-slate-800 hover:border-cyan-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
+                            <div class="bg-slate-900/90 border border-slate-800 hover:border-cyan-500/50 p-6 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
                                 <div class="space-y-3">
                                     <div class="flex items-center justify-between">
                                         <div class="w-10 h-10 rounded-xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-black text-sm">
@@ -31820,18 +31838,18 @@ Estructura la respuesta con:
                                             AULA VIRTUAL
                                         </span>
                                     </div>
-                                    <h3 class="font-extrabold text-white text-sm group-hover:text-cyan-300 transition">Mis Cursos y Talleres Técnicos</h3>
-                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                    <h3 class="font-extrabold text-white text-base group-hover:text-cyan-300 transition">Mis Cursos y Talleres Técnicos</h3>
+                                    <p class="text-xs text-slate-300 leading-relaxed">
                                         En el menú lateral pulsa <strong>Mis Cursos</strong> para ver tus materias y taller técnico (Mecánica, Electricidad, Computación, etc.). Podrás consultar las sesiones de clase, diapositivas y temas de la semana.
                                     </p>
                                 </div>
-                                <button onclick="navigateModule('courses')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-cyan-600/20 text-cyan-300 hover:text-cyan-200 border border-slate-700/80 hover:border-cyan-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
-                                    Ir a Mis Cursos <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                <button onclick="navigateModule('stu_courses')" class="w-full py-2.5 px-4 bg-slate-800/90 hover:bg-cyan-600/20 text-cyan-300 hover:text-cyan-200 border border-slate-700/80 hover:border-cyan-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+                                    Ir a Mis Cursos <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
                             </div>
 
                             <!-- Paso 2 -->
-                            <div class="bg-slate-900/90 border border-slate-800 hover:border-purple-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
+                            <div class="bg-slate-900/90 border border-slate-800 hover:border-purple-500/50 p-6 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
                                 <div class="space-y-3">
                                     <div class="flex items-center justify-between">
                                         <div class="w-10 h-10 rounded-xl bg-purple-950/80 border border-purple-500/40 flex items-center justify-center text-purple-400 font-black text-sm">
@@ -31841,18 +31859,18 @@ Estructura la respuesta con:
                                             EVIDENCIAS
                                         </span>
                                     </div>
-                                    <h3 class="font-extrabold text-white text-sm group-hover:text-purple-300 transition">Entrega de Tareas y Prácticas</h3>
-                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                    <h3 class="font-extrabold text-white text-base group-hover:text-purple-300 transition">Entrega de Tareas y Prácticas</h3>
+                                    <p class="text-xs text-slate-300 leading-relaxed">
                                         Dentro de cada curso, entra a la pestaña <strong>Tareas</strong> y pulsa <strong>Entregar Evidencia</strong>. Puedes adjuntar fotos de tus prácticas en taller, informes en PDF o planos técnicos antes del plazo límite.
                                     </p>
                                 </div>
-                                <button onclick="navigateModule('courses')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-purple-600/20 text-purple-300 hover:text-purple-200 border border-slate-700/80 hover:border-purple-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
-                                    Ver Tareas Pendientes <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                <button onclick="navigateModule('stu_assignments')" class="w-full py-2.5 px-4 bg-slate-800/90 hover:bg-purple-600/20 text-purple-300 hover:text-purple-200 border border-slate-700/80 hover:border-purple-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+                                    Ver Tareas Pendientes <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
                             </div>
 
                             <!-- Paso 3 -->
-                            <div class="bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
+                            <div class="bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
                                 <div class="space-y-3">
                                     <div class="flex items-center justify-between">
                                         <div class="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black text-sm">
@@ -31862,76 +31880,13 @@ Estructura la respuesta con:
                                             SIAGIE CNEB
                                         </span>
                                     </div>
-                                    <h3 class="font-extrabold text-white text-sm group-hover:text-emerald-300 transition">Calificaciones y Libreta Oficial</h3>
-                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                    <h3 class="font-extrabold text-white text-base group-hover:text-emerald-300 transition">Calificaciones y Libreta Oficial</h3>
+                                    <p class="text-xs text-slate-300 leading-relaxed">
                                         En <strong>Mis Calificaciones</strong> revisa tus notas por competencias (AD, A, B, C) de cada bimestre, lee las conclusiones de tus docentes y descarga tu boleta oficial en formato PDF.
                                     </p>
                                 </div>
-                                <button onclick="navigateModule('evaluations')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-emerald-600/20 text-emerald-300 hover:text-emerald-200 border border-slate-700/80 hover:border-emerald-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
-                                    Consultar Notas <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                </button>
-                            </div>
-
-                            <!-- Paso 4 -->
-                            <div class="bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
-                                <div class="space-y-3">
-                                    <div class="flex items-center justify-between">
-                                        <div class="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-500/40 flex items-center justify-center text-amber-400 font-black text-sm">
-                                            04
-                                        </div>
-                                        <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded-md border border-amber-800/40">
-                                            CONTROL DIARIO
-                                        </span>
-                                    </div>
-                                    <h3 class="font-extrabold text-white text-sm group-hover:text-amber-300 transition">Asistencia y Justificaciones</h3>
-                                    <p class="text-xs text-slate-400 leading-relaxed">
-                                        En <strong>Mi Asistencia</strong> verifica tu porcentaje de asistencia en vivo. Si tuviste un problema de salud o imprevisto, usa el botón <strong>Justificar</strong> adjuntando el sustento de tu apoderado.
-                                    </p>
-                                </div>
-                                <button onclick="navigateModule('attendance')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-amber-600/20 text-amber-300 hover:text-amber-200 border border-slate-700/80 hover:border-amber-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
-                                    Revisar Asistencia <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                </button>
-                            </div>
-
-                            <!-- Paso 5 -->
-                            <div class="bg-slate-900/90 border border-slate-800 hover:border-rose-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
-                                <div class="space-y-3">
-                                    <div class="flex items-center justify-between">
-                                        <div class="w-10 h-10 rounded-xl bg-rose-950/80 border border-rose-500/40 flex items-center justify-center text-rose-400 font-black text-sm">
-                                            05
-                                        </div>
-                                        <span class="text-[10px] font-bold uppercase tracking-wider text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-800/40">
-                                            SECRETARÍA VIRTUAL
-                                        </span>
-                                    </div>
-                                    <h3 class="font-extrabold text-white text-sm group-hover:text-rose-300 transition">Trámites FUM Digital 24/7</h3>
-                                    <p class="text-xs text-slate-400 leading-relaxed">
-                                        ¿Necesitas una constancia de matrícula, certificado de estudios o carta para prácticas en empresas? Ingresa a <strong>Trámites (FUM)</strong>, llena la solicitud y recíbela con firma digital y código QR oficial.
-                                    </p>
-                                </div>
-                                <button onclick="navigateModule('stu_tramites')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-rose-600/20 text-rose-300 hover:text-rose-200 border border-slate-700/80 hover:border-rose-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
-                                    Nueva Solicitud FUM <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                </button>
-                            </div>
-
-                            <!-- Paso 6 -->
-                            <div class="bg-slate-900/90 border border-slate-800 hover:border-blue-500/50 p-5 rounded-2xl transition flex flex-col justify-between space-y-4 shadow-sm group">
-                                <div class="space-y-3">
-                                    <div class="flex items-center justify-between">
-                                        <div class="w-10 h-10 rounded-xl bg-blue-950/80 border border-blue-500/40 flex items-center justify-center text-blue-400 font-black text-sm">
-                                            06
-                                        </div>
-                                        <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-800/40">
-                                            RECURSOS
-                                        </span>
-                                    </div>
-                                    <h3 class="font-extrabold text-white text-sm group-hover:text-blue-300 transition">Manuales Técnicos y Biblioteca</h3>
-                                    <p class="text-xs text-slate-400 leading-relaxed">
-                                        Accede a la <strong>Biblioteca RAG</strong> para consultar manuales de taller, protocolos de seguridad 5S, guías de soldadura, normas técnicas y libros digitales oficiales.
-                                    </p>
-                                </div>
-                                <button onclick="navigateModule('knowledge_base')" class="w-full py-2 px-3 bg-slate-800/90 hover:bg-blue-600/20 text-blue-300 hover:text-blue-200 border border-slate-700/80 hover:border-blue-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
-                                    Abrir Biblioteca <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                <button onclick="navigateModule('stu_grades')" class="w-full py-2.5 px-4 bg-slate-800/90 hover:bg-emerald-600/20 text-emerald-300 hover:text-emerald-200 border border-slate-700/80 hover:border-emerald-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+                                    Consultar Notas <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
                             </div>
                         </div>
