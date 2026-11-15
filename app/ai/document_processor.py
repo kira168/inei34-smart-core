@@ -289,7 +289,7 @@ class DocumentProcessor:
                 return {
                     "status": "ocr_no_disponible",
                     "text": "",
-                    "message": "El motor de visión OCR no está disponible en este momento. Por favor, escribe el enunciado de tu ejercicio para resolverlo."
+                    "message": "Para activar la lectura de fotos y ejercicios escaneados, el servidor necesita un motor visual activo (agrega GEMINI_API_KEY en .env o ejecuta 'ollama pull moondream' en el servidor). Mientras tanto, transcribe el ejercicio directamente en el chat."
                 }
 
             extracted_text = vision_resp.get("content", "").strip()

@@ -654,56 +654,47 @@ class AIProvider:
 
         img_b64 = base64.b64encode(proc_bytes).decode("utf-8")
 
-        # 1. Prioritize Groq Cloud Multimodal Vision (High speed, zero VRAM)
-        groq_key = os.getenv("GROQ_API_KEY", "").strip() or GROQ_API_KEY
-        if groq_key:
-            groq_vision_models = [
-                "llama-3.2-11b-vision-preview",
-                "llama-3.2-90b-vision-preview"
-            ]
-            for g_vis in groq_vision_models:
+        # 1. Google Gemini Multimodal Vision API (World-Class OCR, Free & Fast)
+        gemini_key = os.getenv("GEMINI_API_KEY", "").strip() or GEMINI_API_KEY
+        if gemini_key:
+            for g_model in ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]:
                 try:
-                    t0 = time.time()
-                    groq_vis_payload = {
-                        "model": g_vis,
-                        "messages": [
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{g_model}:generateContent?key={gemini_key}"
+                    payload = {
+                        "contents": [
                             {
-                                "role": "user",
-                                "content": [
-                                    {"type": "text", "text": prompt},
+                                "parts": [
+                                    {"text": prompt},
                                     {
-                                        "type": "image_url",
-                                        "image_url": {
-                                            "url": f"data:image/jpeg;base64,{img_b64}"
+                                        "inline_data": {
+                                            "mime_type": "image/jpeg",
+                                            "data": img_b64
                                         }
                                     }
                                 ]
                             }
-                        ],
-                        "temperature": 0.1,
-                        "max_tokens": 1500
+                        ]
                     }
-                    resp = requests.post(
-                        "https://api.groq.com/openai/v1/chat/completions",
-                        headers={"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"},
-                        json=groq_vis_payload,
-                        timeout=35.0
-                    )
+                    resp = requests.post(url, json=payload, timeout=35.0)
                     if resp.status_code == 200:
                         data = resp.json()
-                        extracted_text = data["choices"][0]["message"]["content"].strip()
-                        if extracted_text:
-                            return {
-                                "success": True,
-                                "content": extracted_text,
-                                "model": f"Groq Vision ({g_vis})",
-                                "provider": "groq_cloud",
-                                "is_fallback": False
-                            }
+                        candidates = data.get("candidates", [])
+                        if candidates:
+                            parts = candidates[0].get("content", {}).get("parts", [])
+                            if parts:
+                                extracted_text = parts[0].get("text", "").strip()
+                                if extracted_text:
+                                    return {
+                                        "success": True,
+                                        "content": extracted_text,
+                                        "model": f"Gemini Vision ({g_model})",
+                                        "provider": "gemini_cloud",
+                                        "is_fallback": False
+                                    }
                     else:
-                        logger.warning(f"Groq vision model {g_vis} status {resp.status_code}: {resp.text[:200]}")
+                        logger.warning(f"Gemini vision {g_model} returned status {resp.status_code}: {resp.text[:200]}")
                 except Exception as eg:
-                    logger.warning(f"Groq vision request failed for {g_vis}: {eg}")
+                    logger.warning(f"Gemini vision error for {g_model}: {eg}")
 
         # 2. OpenAI Multimodal Vision fallback if configured
         openai_key = os.getenv("OPENAI_API_KEY", "").strip() or OPENAI_API_KEY
@@ -749,15 +740,14 @@ class AIProvider:
                 except Exception as eo:
                     logger.warning(f"OpenAI vision request failed for {o_vis}: {eo}")
 
-        # 3. Local Ollama Multimodal Vision fallback (e.g. llava:latest)
+        # 3. Local Ollama Multimodal Vision fallback (moondream, llava, llama3.2-vision)
         if self.is_available():
-            vision_model = model or AI_VISION_MODEL or "llava:latest"
             available = self.list_models()
-            if available and not any(vision_model.lower() in m.lower() for m in available):
-                for m in available:
-                    if "llava" in m or "vision" in m:
-                        vision_model = m
-                        break
+            vision_model = model or AI_VISION_MODEL or "moondream:latest"
+            for m in available:
+                if any(k in m.lower() for k in ["moondream", "llava", "llama3.2-vision", "bakllava", "vision"]):
+                    vision_model = m
+                    break
 
             payload = {
                 "model": vision_model,
@@ -790,6 +780,35 @@ class AIProvider:
                         }
             except Exception as e:
                 logger.warning(f"Ollama vision inference error: {e}")
+
+        # 4. Local System Tesseract OCR CLI fallback (if tesseract is installed on VM)
+        try:
+            import subprocess
+            import tempfile
+            with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tf:
+                tf.write(proc_bytes)
+                tf_path = tf.name
+            try:
+                tess_cmd = ["tesseract", tf_path, "stdout", "-l", "spa+eng"]
+                tess_res = subprocess.run(
+                    tess_cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=15.0
+                )
+                if tess_res.returncode == 0 and tess_res.stdout.strip():
+                    return {
+                        "success": True,
+                        "content": tess_res.stdout.strip(),
+                        "model": "Tesseract OCR (Local VM)",
+                        "provider": "tesseract_local",
+                        "is_fallback": False
+                    }
+            finally:
+                if os.path.exists(tf_path):
+                    os.unlink(tf_path)
+        except Exception as e_tess:
+            logger.debug(f"Local tesseract CLI not available: {e_tess}")
 
         return {
             "success": False,
