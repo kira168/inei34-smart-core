@@ -4088,15 +4088,6 @@
             openSmartTutorConversation(convId, true);
         }
 
-            // Load conversations in the background
-            loadSmartTutorConversations();
-            
-            // If an active conversation was remembered, load its messages
-            if (smartTutorState.activeConversationId) {
-                openSmartTutorConversation(smartTutorState.activeConversationId, false);
-            }
-        }
-
         async function loadSmartTutorConversations() {
             try {
                 const res = await fetch('/api/ai/conversations');
@@ -4589,7 +4580,6 @@
                         </div>
                     </div>
                 `;
-            }
             }
 
             return history.map(msg => renderSmartTutorMessageItem(msg)).join('');
