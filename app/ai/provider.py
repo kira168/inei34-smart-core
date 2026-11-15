@@ -392,7 +392,7 @@ class AIProvider:
                         "model": g_model,
                         "messages": messages_payload,
                         "temperature": gen_temp,
-                        "max_tokens": max(max_predict, 1200)
+                        "max_tokens": max(max_predict, 1800)
                     }
                     resp = requests.post(
                         "https://api.groq.com/openai/v1/chat/completions",
@@ -403,6 +403,9 @@ class AIProvider:
                     if resp.status_code == 200:
                         data = resp.json()
                         content = data["choices"][0]["message"]["content"].strip()
+                        # Clean any trailing cut-off heading or orphaned markdown divider
+                        content = re.sub(r'\n+---*\s*$', '', content).strip()
+                        content = re.sub(r'\n+#+\s+[^#\n]*$', '', content).strip()
                         total_dur_ms = int((time.time() - t0) * 1000)
                         eval_count = len(content.split())
                         if "llama-3.3-70b" in g_model:
