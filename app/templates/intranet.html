@@ -3683,170 +3683,194 @@
             }
 
             container.innerHTML = `
-                <div class="space-y-3.5 max-w-6xl mx-auto animate-in fade-in duration-300">
-                    <!-- Top Unified Modern Header -->
-                    <div class="bg-gradient-to-r from-[#0d162d] via-[#101b38] to-[#0c1427] border border-indigo-500/30 rounded-3xl p-4 sm:p-5 text-white shadow-xl flex flex-wrap items-center justify-between gap-3.5 relative overflow-hidden">
-                        <div class="absolute -top-10 -right-10 w-48 h-48 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="h-[calc(100vh-92px)] min-h-[640px] flex rounded-3xl border border-slate-800 bg-[#070b16] overflow-hidden shadow-2xl relative font-sans text-slate-100 max-w-7xl mx-auto animate-in fade-in duration-300">
+                    
+                    <!-- -------------------------------------------------------------
+                         PANEL 1: BARRA LATERAL IZQUIERDA (HISTORIAL & NUEVO CHAT)
+                         ------------------------------------------------------------- -->
+                    <aside id="stStudentSidebar" class="w-72 sm:w-80 border-r border-slate-800/80 bg-[#0a1122] flex flex-col flex-shrink-0 transition-all duration-300 z-20">
                         
-                        <!-- Bot Identity & School Info -->
-                        <div class="flex items-center gap-3.5 relative z-10">
-                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-500/30 flex-shrink-0 ring-4 ring-cyan-400/20">
-                                🤖
+                        <!-- Encabezado Sidebar -->
+                        <div class="p-3.5 border-b border-slate-800/80 flex items-center justify-between bg-[#0b1326]">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white flex items-center justify-center text-sm shadow-md">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <div class="leading-tight">
+                                    <h2 class="font-black text-sm text-white tracking-tight flex items-center gap-1.5">
+                                        <span>SmartTutor</span>
+                                        <span class="bg-blue-500/20 text-cyan-300 border border-blue-400/30 text-[9px] font-mono px-1.5 py-0.2 rounded font-black">AI</span>
+                                    </h2>
+                                    <span class="text-[10px] text-slate-400 font-medium">Copiloto Escolar INEI 34</span>
+                                </div>
                             </div>
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <h1 class="font-black text-base sm:text-lg text-white tracking-tight flex items-center gap-2">
-                                        <span>SmartTutor IA</span>
-                                        <span class="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">Copiloto</span>
-                                    </h1>
+                            <button onclick="toggleStudentSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1.5 rounded-lg transition" title="Ocultar barra">
+                                <i class="fa-solid fa-xmark text-sm"></i>
+                            </button>
+                        </div>
+
+                        <!-- Botón Principal: + Nuevo Chat / Consulta -->
+                        <div class="p-3 pb-2 bg-[#0a1122] border-b border-slate-800/60">
+                            <button type="button" onclick="clearSmartTutorChat()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 active:scale-98 text-white font-bold text-xs shadow-md shadow-indigo-950/50 transition flex items-center justify-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-plus text-xs"></i>
+                                <span>Nueva Consulta / Tarea</span>
+                            </button>
+                        </div>
+
+                        <!-- Selector de Materia en Sidebar -->
+                        <div class="p-3 pb-2 border-b border-slate-800/60 space-y-1.5">
+                            <div class="flex items-center justify-between text-[10px] font-black tracking-wider text-slate-400 uppercase">
+                                <span>Materia Activa</span>
+                                <button type="button" onclick="openSmartTutorSubjectModal()" class="text-cyan-400 hover:text-cyan-300 font-bold transition">Cambiar</button>
+                            </div>
+                            <button type="button" onclick="openSmartTutorSubjectModal()" class="w-full text-left p-2.5 rounded-xl bg-[#070d1a] hover:bg-[#101b33] border border-slate-800 hover:border-cyan-500/40 transition flex items-center justify-between group">
+                                <div class="flex items-center gap-2.5 truncate">
+                                    <span class="text-lg group-hover:scale-110 transition flex-shrink-0">${subIcon}</span>
+                                    <div class="truncate">
+                                        <div class="text-xs font-bold text-white truncate">${currentSub.name}</div>
+                                        <div class="text-[10px] text-slate-400 truncate">${currentSub.teacher}</div>
+                                    </div>
                                 </div>
-                                <div class="text-xs text-slate-300 font-medium mt-0.5">
-                                    Tutor Pedagógico &bull; <strong class="text-white">I.E. INEI N.° 34 Chancay</strong>
-                                </div>
+                                <i class="fa-solid fa-chevron-right text-slate-500 text-[10px] group-hover:text-cyan-300 group-hover:translate-x-0.5 transition"></i>
+                            </button>
+                        </div>
+
+                        <!-- Buscador de Historial -->
+                        <div class="p-3 pb-2">
+                            <div class="relative">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                                <input type="text" id="stStudentConvSearch" oninput="filterStudentConversations(this.value)" placeholder="Buscar en el chat..." class="w-full pl-8 pr-3 py-1.5 bg-[#070d1a] border border-slate-800 rounded-xl text-xs outline-none focus:border-cyan-500 text-slate-200 placeholder-slate-500 font-medium shadow-inner">
                             </div>
                         </div>
 
-                        <!-- Top Action Controls -->
-                        <div class="flex items-center gap-2 flex-wrap relative z-10">
-                            <!-- Active Subject Selector Pill -->
-                            <button type="button" onclick="openSmartTutorSubjectModal()" class="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-blue-900/60 to-indigo-900/60 hover:from-blue-800 hover:to-indigo-800 text-white border border-cyan-400/40 text-xs font-bold flex items-center gap-2 transition shadow-md active:scale-95 group" title="Cambiar de materia">
-                                <span class="text-base group-hover:scale-110 transition">${subIcon}</span>
-                                <span class="max-w-[130px] sm:max-w-[180px] truncate">${currentSub.name}</span>
-                                <i class="fa-solid fa-chevron-down text-[10px] text-cyan-300 ml-0.5"></i>
-                            </button>
-
-                            <!-- History Modal Trigger -->
-                            <button type="button" onclick="openSmartTutorHistoryModal()" class="px-3.5 py-2 rounded-2xl bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Ver mis conversaciones anteriores">
-                                <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i>
-                                <span class="hidden sm:inline">Historial</span>
-                                <span id="stConvCountBadge" class="bg-indigo-900/80 text-cyan-300 text-[10px] px-2 py-0.5 rounded-full font-mono">${smartTutorState.savedConversations.length}</span>
-                            </button>
-
-                            <!-- New Chat Button -->
-                            <button type="button" onclick="clearSmartTutorChat()" class="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 active:scale-95 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-indigo-900/40 transition">
-                                <i class="fa-solid fa-plus text-cyan-300"></i>
-                                <span>Nuevo Chat</span>
-                            </button>
-
-                            <!-- Quiz Button -->
-                            <button type="button" onclick="openSmartTutorQuizModal()" class="p-2.5 rounded-2xl bg-slate-800/80 hover:bg-slate-700 text-amber-300 hover:text-white border border-slate-700 text-xs transition" title="🎯 Practicar Quiz tipo examen">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            </button>
-
-                            <!-- Settings Button -->
-                            <button type="button" onclick="openSmartTutorConfigModal()" class="p-2.5 rounded-2xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs transition" title="Ajustes de Inteligencia Artificial">
-                                <i class="fa-solid fa-sliders"></i>
-                            </button>
+                        <!-- Título de Sección Historial -->
+                        <div class="px-3 pt-1 pb-1 flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                            <span class="flex items-center gap-1.5">
+                                <i class="fa-regular fa-comments text-xs text-indigo-400"></i> Historial de tareas
+                            </span>
+                            <span id="stSessionCountBadge" class="text-[10px] bg-indigo-950 text-cyan-300 border border-indigo-800/40 px-2 py-0.2 rounded-full font-mono">${smartTutorState.savedConversations.length}</span>
                         </div>
-                    </div>
 
-                    <!-- Horizontal Quick Subject Chips Carousel -->
-                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 text-xs">
-                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider pl-1 mr-1 flex items-center gap-1 flex-shrink-0">
-                            <i class="fa-solid fa-layer-group text-indigo-400"></i> Materias:
-                        </span>
-                        ${renderQuickSubjectPillsHtml()}
-                        <button type="button" onclick="openSmartTutorSubjectModal()" class="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-cyan-300 hover:text-white border border-slate-700 text-xs font-bold flex items-center gap-1 transition flex-shrink-0">
-                            <i class="fa-solid fa-ellipsis"></i> Ver todas (16)
-                        </button>
-                    </div>
+                        <!-- Lista de Conversaciones Scrolleable -->
+                        <div class="flex-1 overflow-y-auto px-2 space-y-1 no-scrollbar" id="stStudentSessionsListContainer">
+                            ${renderStudentHistoryListHtml()}
+                        </div>
 
-                    <!-- Main Student Workspace (Full Width Chat Canvas) -->
-                    <div class="bg-gradient-to-b from-[#0b1222] via-[#080d1a] to-[#050811] border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col min-h-[580px]">
-                        
-                        <!-- Subject Info Banner -->
-                        <div id="smartTutorHeader" class="px-5 py-3 bg-[#0c1427]/90 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-3 flex-shrink-0 backdrop-blur-md">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center font-black text-xl shadow-md flex-shrink-0">
-                                    ${subIcon}
+                        <!-- Pie de la Barra Lateral: Perfil Estudiante & Botones Rápidos -->
+                        <div class="p-3 border-t border-slate-800/80 bg-[#0b1326] flex items-center justify-between">
+                            <div class="flex items-center gap-2 truncate">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">
+                                    <i class="fa-solid fa-user-graduate"></i>
                                 </div>
-                                <div>
-                                    <div class="flex items-center gap-2">
-                                        <h2 class="font-black text-sm sm:text-base text-white tracking-tight">${currentSub.name}</h2>
-                                        <span class="text-[9px] uppercase tracking-wider font-extrabold text-amber-300 bg-amber-500/20 border border-amber-500/40 px-2 py-0.5 rounded-full">${currentSub.category}</span>
-                                    </div>
-                                    <div class="text-[11px] text-slate-400 font-medium mt-0.5">
-                                        Docente: <strong class="text-slate-300">${currentSub.teacher}</strong> &bull; Código: <span class="font-mono text-slate-400">${currentSub.code}</span>
-                                    </div>
+                                <div class="truncate">
+                                    <div class="text-xs font-bold text-white truncate">${studentName}</div>
+                                    <div class="text-[10px] text-slate-400">Estudiante &bull; INEI 34</div>
                                 </div>
                             </div>
-
-                            <!-- Subject Quick Action -->
-                            <div class="flex items-center gap-2">
-                                <span class="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-mono text-slate-400 bg-[#070b16] px-2.5 py-1 rounded-full border border-slate-800">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ${smartTutorState.model}
-                                </span>
-                                <button type="button" onclick="clearSmartTutorChat()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-semibold text-xs flex items-center gap-1.5 transition">
-                                    <i class="fa-solid fa-arrows-rotate text-xs text-indigo-400"></i> Reiniciar Chat
+                            <div class="flex items-center gap-1">
+                                <button type="button" onclick="openSmartTutorQuizModal()" class="w-7 h-7 rounded-lg text-amber-400 hover:text-white hover:bg-slate-800 transition flex items-center justify-center cursor-pointer" title="Practicar Quiz">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                                </button>
+                                <button type="button" onclick="openSmartTutorConfigModal()" class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center justify-center cursor-pointer" title="Ajustes">
+                                    <i class="fa-solid fa-sliders text-xs"></i>
                                 </button>
                             </div>
                         </div>
+                    </aside>
 
-                        <!-- Chat Messages Canvas -->
-                        <div id="smartTutorChatMessages" class="flex-1 p-4 sm:p-6 space-y-4 overflow-y-auto bg-gradient-to-b from-[#080d1b] to-[#050811] min-h-[380px] max-h-[540px]">
-                            ${renderSmartTutorMessagesContent(smartTutorState.activeSubjectId)}
-                        </div>
-
-                        <!-- Bottom Interactive Input Dock -->
-                        <div class="p-3.5 sm:p-4 bg-[#0c1427]/95 border-t border-slate-800/80 relative space-y-2.5 backdrop-blur-md">
-                            
-                            <!-- Mode Selector Pills -->
-                            <div class="flex flex-wrap items-center justify-between gap-2 text-xs px-1">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider mr-1">MODO:</span>
-                                    
-                                    <button type="button" id="btnModePaso" onclick="setSmartTutorMode('paso_a_paso')" class="px-3 py-1 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${smartTutorState.mode === 'paso_a_paso' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md' : 'bg-[#070b16] text-slate-400 hover:text-white border border-slate-800'}">
-                                        <i class="fa-solid fa-bolt text-xs text-amber-300"></i> Paso a paso
-                                    </button>
-
-                                    <button type="button" id="btnModePistas" onclick="setSmartTutorMode('pistas')" class="px-3 py-1 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${smartTutorState.mode === 'pistas' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md' : 'bg-[#070b16] text-slate-400 hover:text-white border border-slate-800'}">
-                                        <i class="fa-solid fa-lightbulb text-xs text-amber-300"></i> Con Pistas
-                                    </button>
-
-                                    <button type="button" id="btnModeSocratico" onclick="setSmartTutorMode('socratico')" class="px-3 py-1 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${smartTutorState.mode === 'socratico' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md' : 'bg-[#070b16] text-slate-400 hover:text-white border border-slate-800'}">
-                                        <i class="fa-solid fa-scale-balanced text-xs text-indigo-300"></i> Socrático
-                                    </button>
-                                </div>
-
-                                <div class="text-[11px] text-slate-400 font-mono hidden sm:block">
-                                    Materia activa: <span class="text-indigo-300 font-bold">${currentSub.name}</span>
+                    <!-- -------------------------------------------------------------
+                         PANEL 2: VENTANA CENTRAL PRINCIPAL (CHAT GEMINI STYLE)
+                         ------------------------------------------------------------- -->
+                    <section class="flex-1 flex flex-col min-w-0 bg-[#060a14] relative overflow-hidden">
+                        
+                        <!-- Barra de Navegación Superior -->
+                        <header id="smartTutorHeader" class="px-4 py-3 border-b border-slate-800/80 flex items-center justify-between gap-3 bg-[#0a1122]/90 backdrop-blur-md flex-shrink-0">
+                            <!-- Izquierda: Toggle Sidebar + Materia Actual -->
+                            <div class="flex items-center gap-3 min-w-0">
+                                <button type="button" onclick="toggleStudentSidebar()" class="w-8 h-8 rounded-xl border border-slate-800 hover:bg-slate-800/80 text-slate-300 hover:text-white flex items-center justify-center text-xs transition cursor-pointer" title="Mostrar/Ocultar menú">
+                                    <i class="fa-solid fa-bars"></i>
+                                </button>
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <span class="text-xl">${subIcon}</span>
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2">
+                                            <h1 class="text-sm sm:text-base font-extrabold text-white tracking-tight truncate">${currentSub.name}</h1>
+                                            <span class="text-[9px] uppercase tracking-wider font-extrabold text-amber-300 bg-amber-500/20 border border-amber-500/30 px-2 py-0.5 rounded-full hidden sm:inline">${currentSub.category}</span>
+                                            <button type="button" onclick="openSmartTutorSubjectModal()" class="text-xs text-cyan-400 hover:text-cyan-300 font-bold ml-1 transition" title="Cambiar materia">
+                                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                            </button>
+                                        </div>
+                                        <p class="text-[11px] text-slate-400 truncate hidden md:block">Docente: <strong class="text-slate-300">${currentSub.teacher}</strong> &bull; I.E. INEI N.° 34 Chancay</p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- File Attachment Preview Bar -->
+                            <!-- Centro/Derecha: Estado Motor + Selector de Modo + Reiniciar -->
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                <!-- Modo Selector Pills -->
+                                <div class="flex items-center p-0.5 bg-[#070d1a] rounded-full border border-slate-800 text-xs">
+                                    <button type="button" id="btnModePaso" onclick="setSmartTutorMode('paso_a_paso')" class="px-3 py-1 rounded-full text-xs font-bold transition flex items-center gap-1 ${smartTutorState.mode === 'paso_a_paso' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'}">
+                                        <i class="fa-solid fa-bolt text-[10px] text-amber-300"></i>
+                                        <span>Paso a paso</span>
+                                    </button>
+                                    <button type="button" id="btnModePistas" onclick="setSmartTutorMode('pistas')" class="px-3 py-1 rounded-full text-xs font-bold transition flex items-center gap-1 ${smartTutorState.mode === 'pistas' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'}">
+                                        <i class="fa-solid fa-lightbulb text-[10px] text-amber-300"></i>
+                                        <span>Con pistas</span>
+                                    </button>
+                                </div>
+
+                                <button type="button" onclick="clearSmartTutorChat()" class="px-2.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-semibold text-xs flex items-center gap-1.5 transition" title="Reiniciar conversación">
+                                    <i class="fa-solid fa-arrows-rotate text-xs text-indigo-400"></i>
+                                    <span class="hidden sm:inline">Reiniciar</span>
+                                </button>
+                            </div>
+                        </header>
+
+                        <!-- Canvas de Mensajes del Chat -->
+                        <div id="smartTutorChatMessages" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 no-scrollbar bg-gradient-to-b from-[#080d1b] to-[#050811]">
+                            ${renderSmartTutorMessagesContent(smartTutorState.activeSubjectId)}
+                        </div>
+
+                        <!-- Barra de Entrada Inferior Fija (Exact Gemini UI) -->
+                        <div class="p-3 sm:p-4 border-t border-slate-800/80 bg-[#0a1122]/95 relative backdrop-blur-md">
+                            <!-- Hidden File Input -->
                             <input type="file" id="smartTutorFileInput" onchange="handleSmartTutorFileUpload(event)" accept="image/*,.pdf,.doc,.docx,.txt" class="hidden">
 
-                            <div id="smartTutorFilePreviewBar" class="hidden p-2.5 bg-[#070b16] border border-cyan-500/40 rounded-2xl flex items-center justify-between text-xs animate-in fade-in">
+                            <!-- Barra de Archivo Adjunto -->
+                            <div id="smartTutorFilePreviewBar" class="hidden mb-2 p-2 bg-[#070d1a] border border-cyan-500/40 rounded-xl flex items-center justify-between text-xs animate-in fade-in">
                                 <div class="flex items-center gap-2 text-cyan-300 font-semibold truncate">
-                                    <i class="fa-solid fa-paperclip text-cyan-400"></i>
+                                    <i class="fa-solid fa-file-arrow-up text-cyan-400"></i>
                                     <span id="smartTutorFileName" class="truncate">archivo.png</span>
                                     <span id="smartTutorFileStatusBadge" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 font-mono"></span>
                                 </div>
-                                <button type="button" onclick="removeSmartTutorAttachment()" class="text-slate-400 hover:text-red-400 font-bold px-2 py-1 rounded-lg transition">
+                                <button type="button" onclick="removeSmartTutorAttachment()" class="text-slate-400 hover:text-red-400 font-bold px-1.5 py-0.5 rounded transition">
                                     <i class="fa-solid fa-xmark"></i>
                                 </button>
                             </div>
 
-                            <!-- Input Box Form -->
-                            <form onsubmit="sendSmartTutorMessage(event)" class="bg-[#070b16] border border-slate-800 hover:border-indigo-500/50 focus-within:border-indigo-500 rounded-2xl p-2 flex items-center gap-2 transition shadow-inner">
-                                <button type="button" onclick="document.getElementById('smartTutorFileInput')?.click()" title="Adjuntar foto o archivo de tarea" class="w-10 h-10 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-slate-800/60 flex items-center justify-center text-sm transition flex-shrink-0">
-                                    <i class="fa-solid fa-paperclip"></i>
+                            <!-- Formulario de Envío (Caja Estilo Gemini) -->
+                            <form onsubmit="sendSmartTutorMessage(event)" class="bg-[#070d1a] hover:bg-[#0c1428] focus-within:bg-[#0c1428] border border-slate-800 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 rounded-2xl p-1.5 sm:p-2 flex items-center gap-2 transition shadow-inner">
+                                
+                                <!-- Botón Clip Adjuntar Tarea / Foto -->
+                                <button type="button" onclick="document.getElementById('smartTutorFileInput')?.click()" title="Adjuntar foto de cuaderno o ficha de tarea" class="w-9 h-9 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-cyan-300 flex items-center justify-center transition flex-shrink-0 cursor-pointer">
+                                    <i class="fa-solid fa-paperclip text-sm"></i>
                                 </button>
 
-                                <input id="smartTutorInputPrompt" type="text" placeholder="Haz una pregunta o pide resolver un ejercicio de ${currentSub.name}..." autocomplete="off" class="flex-1 bg-transparent border-none outline-none text-xs sm:text-sm text-slate-100 placeholder-slate-400 px-2 font-normal focus:ring-0">
+                                <!-- Campo de Entrada Principal -->
+                                <input id="smartTutorInputPrompt" type="text" placeholder="Escribe tu pregunta o pega un ejercicio de ${currentSub.name}..." autocomplete="off" class="flex-1 bg-transparent border-none outline-none text-xs sm:text-sm text-slate-100 placeholder-slate-400 px-2 font-normal focus:ring-0">
 
-                                <div class="flex items-center gap-1.5 flex-shrink-0">
-                                    <button type="button" id="btnSmartTutorMic" onclick="toggleSmartTutorVoiceDictation()" title="Dictado por voz" class="w-10 h-10 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-slate-800/60 flex items-center justify-center text-xs transition">
-                                        <i id="smartTutorMicIcon" class="fa-solid fa-microphone"></i>
-                                    </button>
+                                <!-- Botón de Micrófono -->
+                                <button type="button" id="btnSmartTutorMic" onclick="toggleSmartTutorVoiceDictation()" title="Dictado por voz" class="w-9 h-9 rounded-full hover:bg-slate-800 text-slate-400 hover:text-cyan-300 flex items-center justify-center text-xs transition cursor-pointer">
+                                    <i id="smartTutorMicIcon" class="fa-solid fa-microphone"></i>
+                                </button>
 
-                                    <button type="submit" id="btnSmartTutorSend" class="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 hover:brightness-110 active:scale-95 text-white flex items-center justify-center text-xs shadow-md shadow-indigo-900/40 transition flex-shrink-0">
-                                        <i class="fa-solid fa-paper-plane"></i>
-                                    </button>
-                                </div>
+                                <!-- Botón Enviar Circular Azul con Avión -->
+                                <button type="submit" id="btnSmartTutorSend" class="w-9 h-9 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 active:scale-95 text-white flex items-center justify-center text-xs shadow-md shadow-indigo-950/50 transition flex-shrink-0 cursor-pointer">
+                                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                                </button>
                             </form>
                         </div>
-                    </div>
+                    </section>
                 </div>
             `;
 
@@ -3857,6 +3881,57 @@
             if (smartTutorState.activeConversationId) {
                 openSmartTutorConversation(smartTutorState.activeConversationId, false);
             }
+        }
+
+        function toggleStudentSidebar() {
+            const sb = document.getElementById('stStudentSidebar');
+            if (sb) {
+                sb.classList.toggle('hidden');
+            }
+        }
+
+        function filterStudentConversations(query) {
+            const container = document.getElementById('stStudentSessionsListContainer');
+            if (container) {
+                container.innerHTML = renderStudentHistoryListHtml(query);
+            }
+        }
+
+        function renderStudentHistoryListHtml(filterQuery = '') {
+            const q = (filterQuery || '').toLowerCase().trim();
+            const convs = smartTutorState.savedConversations || [];
+            const filtered = convs.filter(c => !q || (c.title && c.title.toLowerCase().includes(q)) || (c.subject_id && c.subject_id.toLowerCase().includes(q)));
+
+            if (filtered.length === 0) {
+                return `
+                    <div class="p-6 text-center text-xs text-slate-400 font-medium space-y-2 bg-[#070d1a] rounded-xl border border-slate-800/80 my-2">
+                        <i class="fa-regular fa-comments text-indigo-400 text-xl mb-0.5"></i>
+                        <div class="font-bold text-slate-300">${q ? 'Sin resultados' : 'Sin tareas guardadas'}</div>
+                        <div class="text-[11px] text-slate-500">${q ? 'No hay coincidencias' : 'Haz tu primera pregunta al tutor'}</div>
+                    </div>
+                `;
+            }
+
+            return filtered.map(c => {
+                const isActive = smartTutorState.activeConversationId === c.id;
+                const sub = getSmartTutorSubject(c.subject_id);
+                const icon = getSmartTutorIcon(c.subject_id);
+                return `
+                    <div onclick="openSmartTutorConversation(${c.id})" class="w-full text-left p-2.5 rounded-xl transition flex items-center justify-between group cursor-pointer ${isActive ? 'bg-gradient-to-r from-blue-900/60 to-indigo-900/60 border border-cyan-400/50 text-white shadow-md' : 'bg-[#070d1a] hover:bg-[#101b33] text-slate-300 border border-slate-800/80 hover:border-slate-700'}">
+                        <div class="truncate flex-1 pr-2">
+                            <div class="flex items-center gap-1.5 text-[10px] text-slate-400 mb-0.5">
+                                <span>${icon}</span>
+                                <span class="font-bold uppercase tracking-wider text-slate-300">${sub.name}</span>
+                                <span class="text-slate-500">&bull; ${c.message_count || 0} msgs</span>
+                            </div>
+                            <div class="text-xs font-semibold truncate ${isActive ? 'text-cyan-200 font-bold' : 'text-slate-200'}">${escapeHtml(c.title || 'Consulta sin título')}</div>
+                        </div>
+                        <button type="button" onclick="deleteSmartTutorConversation(${c.id}, event)" title="Eliminar consulta" class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-400 transition p-1 text-xs rounded hover:bg-red-500/10">
+                            <i class="fa-solid fa-trash-can text-[11px]"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
         }
 
         function renderQuickSubjectPillsHtml() {
@@ -4096,7 +4171,14 @@
                     smartTutorState.savedConversations = data || [];
                     const badge = document.getElementById('stConvCountBadge');
                     if (badge) badge.textContent = smartTutorState.savedConversations.length;
+                    const sessionBadge = document.getElementById('stSessionCountBadge');
+                    if (sessionBadge) sessionBadge.textContent = smartTutorState.savedConversations.length;
                     
+                    const listContainer = document.getElementById('stStudentSessionsListContainer');
+                    if (listContainer) {
+                        listContainer.innerHTML = renderStudentHistoryListHtml();
+                    }
+
                     if (smartTutorState.sidebarTab === 'history') {
                         const list = document.getElementById('smartTutorSubjectList');
                         if (list) list.innerHTML = renderSmartTutorSubjectListHtml();
@@ -4171,6 +4253,8 @@
                 } else {
                     const chatBox = document.getElementById('smartTutorChatMessages');
                     if (chatBox) chatBox.innerHTML = renderSmartTutorMessagesContent(smartTutorState.activeSubjectId);
+                    const stHistList = document.getElementById('stStudentSessionsListContainer');
+                    if (stHistList) stHistList.innerHTML = renderStudentHistoryListHtml();
                 }
             } catch (err) {
                 console.error('Error opening conversation:', err);
@@ -4988,6 +5072,10 @@
             const chatBox = document.getElementById('smartTutorChatMessages');
             if (chatBox) {
                 chatBox.innerHTML = renderSmartTutorMessagesContent(smartTutorState.activeSubjectId);
+            }
+            const stHistList = document.getElementById('stStudentSessionsListContainer');
+            if (stHistList) {
+                stHistList.innerHTML = renderStudentHistoryListHtml();
             }
             const list = document.getElementById('smartTutorSubjectList');
             if (list && smartTutorState.sidebarTab === 'history') {
