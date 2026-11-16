@@ -221,6 +221,12 @@ class MathEngine:
 
         # Reject if query indicates factorization, ordering, or geometry
         norm_lower = norm.lower()
+        # Reject dates like 2026-11-15, 2026/11/15, 15-11-2026 or file attachment requests
+        if re.search(r'\b\d{4}[-/]\d{1,2}[-/]\d{1,2}\b|\b\d{1,2}[-/]\d{1,2}[-/]\d{4}\b', norm):
+            return None
+        if any(w in norm_lower for w in ["archivo adjunto", "captura", "imagen", "pdf", "docx", "pantalla", "adjunto", "screenshot"]):
+            return None
+
         if any(w in norm_lower for w in [
             "factoriza", "factorizar", "factorice", "descompon", "descomponer", 
             "ordena", "ordenar", "clasifica", "área", "area", "perímetro", "perimetro", 

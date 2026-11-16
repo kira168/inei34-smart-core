@@ -162,6 +162,16 @@ class AIProvider:
                 "temperature": 0.35
             }
 
+        # 0. Document Attachment Analysis (Worksheets, Exams, Exercises from PDF/Image)
+        if "--- inicio de documento adjunto" in user_lower or any(k in user_lower for k in ["archivo adjunto", "guía n", "guia n", "resuelve este archivo", "analiza este archivo", "captura de pantalla"]):
+            return {
+                "intent": "STUDENT_ATTACHED_DOCUMENT_ANALYSIS",
+                "max_predict": 3500,
+                "num_ctx": 4096,
+                "timeout_seconds": 90.0,
+                "temperature": 0.2
+            }
+
         # 1. Teacher Curriculum Unit / Comprehensive Planning Artifact
         is_teacher_unit = (
             role in ["DOCENTE", "ADMINISTRADOR", "DIRECTOR"] and
@@ -379,10 +389,10 @@ class AIProvider:
         groq_key = os.getenv("GROQ_API_KEY", "").strip() or GROQ_API_KEY
         if groq_key:
             groq_models = [
-                "llama-3.3-70b-versatile",
                 "qwen/qwen3.8-27b",
-                "llama-3.1-8b-instant",
                 "openai/gpt-oss-120b",
+                "llama-3.1-8b-instant",
+                "llama-3.3-70b-versatile",
                 "openai/gpt-oss-20b"
             ]
             for g_model in groq_models:

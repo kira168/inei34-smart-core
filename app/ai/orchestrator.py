@@ -635,10 +635,16 @@ class AIOrchestrator:
             role_norm in ["DOCENTE", "ADMINISTRADOR", "DIRECTOR", "SECRETARIA"] and
             any(k in str(tool_type) for k in ["cneb", "teacher", "activity", "exam", "session", "material", "section", "refine", "administrative"])
         )
-        if not is_teacher_or_admin_tool:
+        is_attachment_request = (
+            has_document or
+            any(k in clean_query.lower() for k in [
+                "archivo adjunto", "captura de pantalla", "subí un archivo", "subi un archivo",
+                "analiza este archivo", "analiza el archivo", "resuelve este archivo",
+                ".png", ".jpg", ".jpeg", ".pdf", ".docx", ".webp"
+            ])
+        )
+        if not is_teacher_or_admin_tool and not is_attachment_request:
             math_analysis = math_engine.analyze_and_solve(clean_query, tool_type)
-            if not math_analysis.get("is_math") and has_document and extracted_doc_text:
-                math_analysis = math_engine.analyze_and_solve(extracted_doc_text, tool_type)
         else:
             math_analysis = {"is_math": False}
         math_duration_ms = (time.time() - t_math_0) * 1000
