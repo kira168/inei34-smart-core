@@ -100,7 +100,9 @@ def _load_cloud_key(key_name: str) -> str:
         if os.path.exists(keys_path):
             with open(keys_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                return str(data.get(key_name, "")).strip()
+                val = str(data.get(key_name, "")).strip()
+                if val:
+                    return val
     except Exception:
         pass
     # 3. Archivo .env local
@@ -109,8 +111,11 @@ def _load_cloud_key(key_name: str) -> str:
             if env_candidate.exists():
                 with open(env_candidate, "r", encoding="utf-8") as f:
                     for line in f:
-                        if line.strip().startswith(f"{key_name}="):
-                            return line.strip().split("=", 1)[1].strip().strip('"').strip("'")
+                        line_s = line.strip()
+                        if line_s.startswith(f"{key_name}="):
+                            val = line_s.split("=", 1)[1].strip().strip('"').strip("'")
+                            if val:
+                                return val
     except Exception:
         pass
     return ""
@@ -119,6 +124,10 @@ GROQ_API_KEY = _load_cloud_key("GROQ_API_KEY")
 DEEPSEEK_API_KEY = _load_cloud_key("DEEPSEEK_API_KEY")
 GEMINI_API_KEY = _load_cloud_key("GEMINI_API_KEY")
 OPENAI_API_KEY = _load_cloud_key("OPENAI_API_KEY")
+
+for _k, _v in [("GROQ_API_KEY", GROQ_API_KEY), ("GEMINI_API_KEY", GEMINI_API_KEY), ("DEEPSEEK_API_KEY", DEEPSEEK_API_KEY), ("OPENAI_API_KEY", OPENAI_API_KEY)]:
+    if _v and not os.getenv(_k):
+        os.environ[_k] = _v
 
 # Institución
 INSTITUTION_NAME = "I.E. INEI N° 34"

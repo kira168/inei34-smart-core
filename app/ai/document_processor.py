@@ -122,31 +122,57 @@ class DocumentProcessor:
                 "matemáticas que aparecen en esta página escolar. Devuelve la transcripción de los ejercicios para que puedan resolverse paso a paso."
             )
 
+            # Pre-render PDF pages to images if pypdfium2 is installed (enables reading of 100% scanned worksheets)
+            pdfium_doc = None
+            try:
+                import pypdfium2 as pdfium
+                pdfium_doc = pdfium.PdfDocument(file_bytes)
+            except Exception as e_pdfium:
+                logger.debug(f"pypdfium2 not available or failed to load: {e_pdfium}")
+
             for i in range(pages_to_read):
                 page = reader.pages[i]
                 page_text = (page.extract_text() or "").strip()
 
-                # If page has very little or no selectable digital text, attempt OCR on embedded page images
-                if len(page_text) < 80:
-                    page_images = getattr(page, "images", [])
-                    img_ocr_texts = []
-                    if page_images:
-                        for img_obj in list(page_images)[:2]:
-                            try:
-                                img_data = getattr(img_obj, "data", None)
-                                if img_data and len(img_data) > 500:
-                                    vis_res = ai_provider.generate_vision(ocr_prompt, img_data)
-                                    if vis_res.get("success") and vis_res.get("content"):
-                                        img_ocr_texts.append(vis_res["content"].strip())
-                            except Exception as e_p_img:
-                                logger.warning(f"PDF page {i+1} image OCR failed: {e_p_img}")
+                # If page has very little or no selectable digital text, attempt OCR
+                if len(page_text) < 100:
+                    ocr_extracted = ""
 
-                    if img_ocr_texts:
-                        combined_ocr = "\n".join(img_ocr_texts)
+                    # 1. High-fidelity page render via pypdfium2
+                    if pdfium_doc is not None and i < len(pdfium_doc):
+                        try:
+                            pdfium_page = pdfium_doc[i]
+                            pil_img = pdfium_page.render(scale=1.5).to_pil()
+                            buf = io.BytesIO()
+                            pil_img.save(buf, format="JPEG", quality=85)
+                            vis_res = ai_provider.generate_vision(ocr_prompt, buf.getvalue())
+                            if vis_res.get("success") and vis_res.get("content"):
+                                ocr_extracted = vis_res["content"].strip()
+                        except Exception as e_rend:
+                            logger.warning(f"PDF page {i+1} pdfium render OCR failed: {e_rend}")
+
+                    # 2. Fallback to embedded images
+                    if not ocr_extracted:
+                        page_images = getattr(page, "images", [])
+                        img_ocr_texts = []
+                        if page_images:
+                            for img_obj in list(page_images)[:2]:
+                                try:
+                                    img_data = getattr(img_obj, "data", None)
+                                    if img_data and len(img_data) > 500:
+                                        vis_res = ai_provider.generate_vision(ocr_prompt, img_data)
+                                        if vis_res.get("success") and vis_res.get("content"):
+                                            img_ocr_texts.append(vis_res["content"].strip())
+                                except Exception as e_p_img:
+                                    logger.warning(f"PDF page {i+1} image OCR failed: {e_p_img}")
+                            if img_ocr_texts:
+                                ocr_extracted = "\n".join(img_ocr_texts)
+
+                    if ocr_extracted:
                         if page_text:
-                            extracted_parts.append(f"[Página {i+1}]:\n{page_text}\n\n[Ejercicios extraídos por Visión OCR]:\n{combined_ocr}")
+                            extracted_parts.append(f"[Página {i+1}]:\n{page_text}\n\n[Ejercicios extraídos por Visión OCR]:\n{ocr_extracted}")
                         else:
-                            extracted_parts.append(f"[Página {i+1} - Transcripción OCR]:\n{combined_ocr}")
+                            extracted_parts.append(f"[Página {i+1} - Transcripción OCR]:\n{ocr_extracted}")
                     elif page_text:
                         extracted_parts.append(f"[Página {i+1}]:\n{page_text}")
                 else:
