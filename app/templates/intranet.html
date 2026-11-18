@@ -21537,13 +21537,19 @@ if (draftCont) draftCont.classList.remove('hidden');
                 if (chatHistory) {
                     chatHistory.innerHTML += `
                         <div class="flex gap-2 items-start">
-                            <div class="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">ST</div>
-                            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm max-w-[85%] text-slate-800 space-y-1">
-                                <div class="font-bold text-[11px] text-ineiRed flex items-center justify-between">
-                                    <span>SmartTeacher AI</span>
-                                    <span class="text-[9px] font-mono text-slate-400 font-normal">${data.model || 'hermes3:latest'}</span>
+                            <div class="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold shadow-xs">ST</div>
+                            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm max-w-[88%] text-slate-800 space-y-2">
+                                <div class="font-bold text-[11px] text-ineiRed flex items-center justify-between pb-1.5 border-b border-slate-100">
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-graduation-cap"></i> SmartTeacher AI</span>
+                                    <span class="text-[9px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full font-normal">${data.model || 'Gemini / GPT'}</span>
                                 </div>
-                                <div class="text-xs leading-relaxed whitespace-pre-wrap font-sans text-slate-700">${escapeHtml(botContent)}</div>
+                                <div class="prose max-w-none text-xs leading-relaxed font-sans text-slate-800 space-y-2 ai-response-content">${formatTeacherMarkdown(botContent)}</div>
+                                <div class="pt-2 flex items-center justify-between border-t border-slate-100 mt-2 text-[10px] text-slate-400">
+                                    <span class="font-medium text-slate-500 flex items-center gap-1"><i class="fa-solid fa-school text-ineiRed"></i> I.E. INEI N.° 34 Chancay</span>
+                                    <button type="button" onclick="navigator.clipboard.writeText(this.closest('.space-y-2').querySelector('.ai-response-content').innerText); if(typeof showToastNotification==='function') showToastNotification('Respuesta copiada al portapapeles', 'success');" class="hover:text-slate-700 font-bold flex items-center gap-1 transition px-2 py-0.5 rounded hover:bg-slate-100 text-slate-500">
+                                        <i class="fa-solid fa-copy"></i> Copiar
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     `;
